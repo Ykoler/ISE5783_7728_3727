@@ -1,10 +1,12 @@
 package test;
 
+
 import static java.lang.System.out;
 import static primitives.Util.isZero;
 
 import primitives.Point;
 import primitives.Vector;
+
 
 /** Test program for the 1st stage
  * @author Dan Zilberstein */
