@@ -6,6 +6,7 @@ import static primitives.Util.isZero;
 import primitives.Point;
 import primitives.Vector;
 
+
 /**
  * Test program for the 1st stage
  * 
