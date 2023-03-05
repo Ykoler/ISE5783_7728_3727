@@ -6,7 +6,7 @@ public class Ray {
 	
 	public Ray(Point p0, Vector dir) {
 		this.p0 = new Point(p0.xyz);
-		this.dir = new Vector(dir.xyz).normilize();
+		this.dir = new Vector(dir.xyz).normalize();
 	}
 	
 	public Point getP0() {

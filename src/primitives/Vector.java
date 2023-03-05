@@ -55,7 +55,7 @@ public class Vector extends Point {
 		return Math.sqrt(this.lengthSquared());
 	}
 	
-	public Vector normilize() {
+	public Vector normalize() {
 		return new Vector(xyz.reduce(this.length()));
 	}
 	
