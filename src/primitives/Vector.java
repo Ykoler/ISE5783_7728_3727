@@ -1,7 +1,12 @@
 package primitives;
 
 import static primitives.Util.isZero;
-
+/**
+ * Vector Class is the basic class representing a Vector of Euclidean geometry in
+ * Cartesian 3-Dimensional coordinate system.
+ * 
+ * @author Yahel and Ashi
+ */
 public class Vector extends Point {
 	public Vector(double d1, double d2, double d3) {
 		super(d1, d2, d3);
