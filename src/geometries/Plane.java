@@ -51,10 +51,10 @@ public class Plane implements Geometry {
 	/**
 	 * Return the normal vector of the plane.
 	 * 
-	 * @return
+	 * @return The normal to the plane.
 	 */
 	public Vector getNormal() {
-		return null;
+		return normal;
 	}
 
 	/**

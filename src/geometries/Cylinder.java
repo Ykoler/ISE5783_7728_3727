@@ -42,4 +42,9 @@ public class Cylinder extends Tube {
 		return hight;
 	}
 
+	@Override
+	public String toString() {
+		return "Cylinder{" + "\nhight=" + hight + "\n" + super.toString().substring(6);
+	}
+
 }

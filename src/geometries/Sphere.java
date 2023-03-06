@@ -37,4 +37,8 @@ public class Sphere extends RadialGeometry {
 		return null;
 	}
 
+	@Override
+	public String toString() {
+		return "Sphere{" + "\ncenter=" + center + "\nradius=" + radius + "\n}";
+	}
 }

@@ -37,4 +37,9 @@ public class Tube extends RadialGeometry {
 	public Vector getNormal(Point p) {
 		return null;
 	}
+
+	@Override
+	public String toString() {
+		return "Tube{" + "\naxisRay=" + axisRay + "\nradius=" + radius + "\n}";
+	}
 }
