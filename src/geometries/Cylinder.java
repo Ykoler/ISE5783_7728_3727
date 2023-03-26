@@ -2,7 +2,8 @@ package geometries;
 
 import primitives.Point;
 import primitives.Vector;
-import primitives.Ray;;
+import primitives.Ray;
+import primitives.Util;;
 
 /**
  * Cylinder Class is the basic class representing a Cylinder (a tube with a
@@ -25,6 +26,9 @@ public class Cylinder extends Tube {
 	 */
 	public Cylinder(double hight, Ray axisRay, double radius) {
 		super(radius, axisRay);
+		if(Util.isZero(hight) || hight < 0) {
+			throw new IllegalArgumentException("Hight  must be greater than zero");
+		}
 		this.hight = hight;
 	}
 

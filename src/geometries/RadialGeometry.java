@@ -1,5 +1,7 @@
 package geometries;
 
+import primitives.Util;
+
 /**
  * Class RadialGeomtry is the basic class representing a Vector of Euclidean
  * geometry in Cartesian 3-Dimensional coordinate system.
@@ -18,6 +20,9 @@ public abstract class RadialGeometry implements Geometry {
 	 * @param radius The radius of the geometry.
 	 */
 	public RadialGeometry(double radius) {
+		if(Util.isZero(radius) || radius < 0) {
+			throw new IllegalArgumentException("Radius must be greater than zero");
+		}
 		this.radius = radius;
 	}
 
