@@ -16,9 +16,9 @@ public class Vector extends Point {
 	 * @param y for y coordinate
 	 * @param z for z coordinate
 	 */
-	public Vector(double d1, double d2, double d3) {
-		super(d1, d2, d3);
-		if (isZero(d1) && isZero(d2) && isZero(d3)) {
+	public Vector(double x, double y, double z) {
+		super(x, y, z);
+		if (xyz.equals(Double3.ZERO)) {
 			throw new IllegalArgumentException("Vector Zero is not allowed");
 		}
 
@@ -47,7 +47,7 @@ public class Vector extends Point {
 
 	@Override
 	public Vector add(Vector other) {
-		return new Vector(super.add(other).xyz);
+		return new Vector(other.xyz.add(this.xyz));
 	}
 
 	/**
@@ -77,26 +77,26 @@ public class Vector extends Point {
 	 * @return result of dotProduct
 	 */
 	public double dotProduct(Vector other) {
+		/*
+		 * Calculate dot product between two vectors where result is the sum of the
+		 * multiplication of equivalent coordinates of the two vectors. 
+		 * where the result is: a1*b1 + a2*b2 + a3*b3
+		 */
 		return (xyz.d1 * other.xyz.d1) + (xyz.d2 * other.xyz.d2) + (xyz.d3 * other.xyz.d3);
 	}
 
 	/**
-	 * Calculate cross product between two vectors where result is a new vector
-	 * which is perpendicular to both vectors. the result is calculated by the
-	 * following formula:
-	 * 
-	 * <pre>
-	 * i  j  k
-	 * a1 a2 a3
-	 * b1 b2 b3
-	 * </pre>
-	 * 
-	 * where the result is: <i>(a2*b3 - a3*b2, a3*b1 - a1*b3, a1*b2 - a2*b1)</i>
+	 * Calculate cross product between two vectors
 	 * 
 	 * @param other right hand side operand for cross product
 	 * @return result of crossProduct
 	 */
 	public Vector crossProduct(Vector other) {
+		/*
+		 * between two vectors where result is a new vector which is perpendicular to
+		 * both vectors.
+		 * where the result is: (a2*b3 - a3*b2, a3*b1 - a1*b3, a1*b2 - a2*b1)
+		 */
 		return new Vector(this.xyz.d2 * other.xyz.d3 - this.xyz.d3 * other.xyz.d2,
 				this.xyz.d3 * other.xyz.d1 - this.xyz.d1 * other.xyz.d3,
 				this.xyz.d1 * other.xyz.d2 - this.xyz.d2 * other.xyz.d1);

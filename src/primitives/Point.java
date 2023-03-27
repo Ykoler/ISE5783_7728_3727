@@ -35,9 +35,7 @@ public class Point {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj instanceof Point other)
-			return this.xyz.equals(other.xyz);
-		return false;
+		return (obj instanceof Point other) && this.xyz.equals(other.xyz);
 	}
 
 	@Override
@@ -75,9 +73,10 @@ public class Point {
 	 * @return result of distanceSquared
 	 */
 	public double distanceSquared(Point other) {
-		return (this.xyz.d1 - other.xyz.d1) * (this.xyz.d1 - other.xyz.d1)
-				+ (this.xyz.d2 - other.xyz.d2) * (this.xyz.d2 - other.xyz.d2)
-				+ (this.xyz.d3 - other.xyz.d3) * (this.xyz.d3 - other.xyz.d3);
+		double dx = this.xyz.d1 - other.xyz.d1;
+		double dy = this.xyz.d2 - other.xyz.d2;
+		double dz = this.xyz.d3 - other.xyz.d3;
+		return dx * dx + dy * dy + dz * dz;
 	}
 
 	/**

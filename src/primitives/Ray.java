@@ -21,14 +21,14 @@ public class Ray {
 	 * @param dir The directional vector of the ray.
 	 */
 	public Ray(Point p0, Vector dir) {
-		this.p0 = new Point(p0.xyz);
-		this.dir = new Vector(dir.xyz).normalize();
+		this.p0 = p0;
+		this.dir = dir.normalize();
 	}
 
 	/**
 	 * Returns the starting point of the ray.
 	 * 
-	 * @return The starting point of the ray.
+	 * @return starting point of ray.
 	 */
 	public Point getP0() {
 		return p0;
@@ -37,7 +37,7 @@ public class Ray {
 	/**
 	 * Returns the directional vector of the ray.
 	 * 
-	 * @return The directional vector of the ray.
+	 * @return directional vector of ray.
 	 */
 	public Vector getDir() {
 		return dir;
@@ -54,7 +54,7 @@ public class Ray {
 
 	@Override
 	public String toString() {
-		return "Origin point: " + p0.toString() + "\nDirectional vector: " + dir.toString();
+		return "Origin point: " + p0 + "\nDirectional vector: " + dir;
 	}
 
 }

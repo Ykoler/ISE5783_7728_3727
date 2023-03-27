@@ -10,10 +10,11 @@ import primitives.*;
  */
 public interface Geometry {
 	/**
-	 * Returns the normal vector at a specified point on the geometry.
+	 * Returns the normal vector at a specified point on the surface of the
+	 * geometry.
 	 * 
 	 * @param p0 The point to calculate the normal vector at.
-	 * @return The normal vector at the specified point.
+	 * @return The normal vector at a specified point on the surface.
 	 */
 	public abstract Vector getNormal(Point p0);
 }

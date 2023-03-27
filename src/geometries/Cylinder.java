@@ -7,29 +7,29 @@ import primitives.Util;;
 
 /**
  * Cylinder Class is the basic class representing a Cylinder (a tube with a
- * finite hight) of Euclidean geometry in Cartesian 3-Dimensional coordinate
+ * finite height) of Euclidean geometry in Cartesian 3-Dimensional coordinate
  * system.
  * 
  * @author Yahel and Ashi
  */
 public class Cylinder extends Tube {
 	/** The hight of the cylinder. */
-	final double hight;
+	private final double height;
 
 	/**
 	 * Constructs a new Cylinder object with the specified axis ray, radius and
-	 * hight.
+	 * height.
 	 * 
 	 * @param axisRay The axis ray of the cylinder.
 	 * @param radius  The radius of the cylinder.
-	 * @param hight   The hight of the cylinder.
+	 * @param height  The height of the cylinder.
 	 */
-	public Cylinder(double hight, Ray axisRay, double radius) {
+	public Cylinder(double height, Ray axisRay, double radius) {
 		super(radius, axisRay);
-		if(Util.isZero(hight) || hight < 0) {
+		if (Util.alignZero(height) <= 0) {
 			throw new IllegalArgumentException("Hight  must be greater than zero");
 		}
-		this.hight = hight;
+		this.height = height;
 	}
 
 	@Override
@@ -40,15 +40,15 @@ public class Cylinder extends Tube {
 	/**
 	 * Returns the hight of the cylinder.
 	 * 
-	 * @return The hight of the cylinder.
+	 * @return hight of cylinder.
 	 */
 	public double getHight() {
-		return hight;
+		return height;
 	}
 
 	@Override
 	public String toString() {
-		return "Cylinder{" + "\nhight=" + hight + "\n" + super.toString().substring(6);
+		return "Cylinder{" + "\nhight=" + height + "\n" + super.toString().substring(6);
 	}
 
 }

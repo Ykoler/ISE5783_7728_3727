@@ -12,7 +12,7 @@ import primitives.Ray;
  */
 public class Tube extends RadialGeometry {
 	/** The axis ray of the tube. */
-	final Ray axisRay;
+	protected final Ray axisRay;
 
 	/**
 	 * Constructs a new Tube object with the specified axis ray and radius.
@@ -28,7 +28,7 @@ public class Tube extends RadialGeometry {
 	/**
 	 * Returns the axis ray of the tube.
 	 * 
-	 * @return The axis ray of the tube.
+	 * @return axis ray of tube.
 	 */
 	public Ray getAxisRay() {
 		return axisRay;

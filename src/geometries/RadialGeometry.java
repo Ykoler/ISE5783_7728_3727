@@ -10,7 +10,7 @@ import primitives.Util;
  */
 public abstract class RadialGeometry implements Geometry {
 	/** The radius of the geometry. */
-	final double radius;
+	protected final double radius;
 
 	/**
 	 * Constructs a new RadialGeometry object with the specified radius.(the class
@@ -20,16 +20,15 @@ public abstract class RadialGeometry implements Geometry {
 	 * @param radius The radius of the geometry.
 	 */
 	public RadialGeometry(double radius) {
-		if(Util.isZero(radius) || radius < 0) {
+		if (Util.alignZero(radius) <= 0)
 			throw new IllegalArgumentException("Radius must be greater than zero");
-		}
 		this.radius = radius;
 	}
 
 	/**
 	 * Returns the radius of the geometry.
 	 * 
-	 * @return The radius of the geometry.
+	 * @return radius of geometry.
 	 */
 	public double getRadius() {
 		return radius;

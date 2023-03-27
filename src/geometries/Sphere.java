@@ -11,7 +11,7 @@ import primitives.Vector;
  */
 public class Sphere extends RadialGeometry {
 	/** The center point of the sphere. */
-	final Point center;
+	private final Point center;
 
 	/**
 	 * Constructs a new Sphere object with the specified center point and radius.
