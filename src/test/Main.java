@@ -9,7 +9,6 @@ import static primitives.Util.isZero;
 import primitives.Point;
 import primitives.Vector;
 
-
 /**
  * Test program for the 1st stage
  * 
@@ -103,6 +102,3 @@ public final class Main {
 		out.println("If there were no any other outputs - all tests succeeded!");
 	}
 }
-
-
-// is this connected?
