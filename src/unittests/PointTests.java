@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import primitives.Point;
-import primitives.Vector;
+import primitives.*;
+import static primitives.Util.isZero;
 
 /**
  * Unit test for primitives.Point class
@@ -42,7 +42,7 @@ class PointTests {
 		Point e1 = p1.subtract(p2);
 
 		// TC01: Test that the new point is the right one
-		assertEquals(e1, new Vector(1, 2, 3), "subtract() wrong result");
+		assertEquals(e1, new Vector(-1, -2, -3), "subtract() wrong result");
 
 		// =============== Boundary Values Tests ==================
 		// TC01: Test that exception is thrown for zero vector
@@ -61,11 +61,13 @@ class PointTests {
 		double e1 = p1.distanceSquared(p2);
 
 		// TC01: Test that the new point is the right one
-		assertEquals(e1, 3, 0.00001, "distanceSquared() wrong result");
+		assertEquals(e1, 14, 0.00001, "distanceSquared() wrong result");
 
 		// =============== Boundary Values Tests ==================
-		// TC01: Test that the new point is the right one
-		assertEquals(e1, new Point(2, 4, 6), "add() wrong result");
+		// TC01: Tests that distanceSquared works for the distance of a point from
+		// itself
+		double b1 = p1.distanceSquared(p1);
+		assertTrue(isZero(b1), "distanceSquared() does not work for distance between point and itself");
 	}
 
 	/**
@@ -73,7 +75,18 @@ class PointTests {
 	 */
 	@Test
 	void testDistance() {
-		fail("Not yet implemented");
-	}
+		Point p1 = new Point(1, 2, 3);
+		// ============ Equivalence Partitions Tests ==============
+		Point p2 = new Point(1, 5, 7);
+		double e1 = p1.distance(p2);
 
+		// TC01: Test that the new point is the right one
+		assertEquals(e1, 5, 0.00001, "distanceSquared() wrong result");
+
+		// =============== Boundary Values Tests ==================
+		// TC01: Tests that distanceSquared works for the distance of a point from
+		// itself
+		double b1 = p1.distanceSquared(p1);
+		assertTrue(isZero(b1), "distanceSquared() does not work for distance between point and itself");
+	}
 }
