@@ -8,7 +8,7 @@ import primitives.*;
 import static primitives.Util.isZero;
 
 /**
- * Unit test for primitives.Point class
+ * Unit test for Point class
  * 
  * @author Yahel and Ashi
  */
