@@ -32,7 +32,7 @@ public class Ray {
 	 */
 	public Point getP0() {
 		return p0;
-	}
+	} 
 
 	/**
 	 * Returns the directional vector of the ray.
