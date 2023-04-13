@@ -32,8 +32,13 @@ public class Sphere extends RadialGeometry {
 		return center;
 	}
 
+	/**
+	 * Returns the normal to the sphere at a given point.
+	 * 
+	 * @return The normal.
+	 */
 	public Vector getNormal(Point p0) {
-		return null;
+		return p0.subtract(center).normalize();
 	}
 
 	@Override

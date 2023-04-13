@@ -10,7 +10,7 @@ import primitives.*;
  * @author Yahel and Ashi
  */
 public class Cylinder extends Tube {
-	/** The hight of the cylinder. */
+	/** The height of the cylinder. */
 	private final double height;
 
 	/**
@@ -24,28 +24,35 @@ public class Cylinder extends Tube {
 	public Cylinder(Ray axisRay, double radius, double height) {
 		super(axisRay, radius);
 		if (Util.alignZero(height) <= 0) {
-			throw new IllegalArgumentException("Hight  must be greater than zero");
+			throw new IllegalArgumentException("Hight must be greater than zero");
 		}
 		this.height = height;
 	}
 
 	@Override
 	public Vector getNormal(Point p0) {
-		return null;
+		if (p0.equals(axisRay.getP0()))
+			return axisRay.getDir().normalize().scale(-1);
+		double t = axisRay.getDir().dotProduct(p0.subtract(axisRay.getP0()));
+		if (t==0)
+			return axisRay.getDir().normalize().scale(-1);
+		if (t==height)
+			return axisRay.getDir().normalize();
+		return super.getNormal(p0);
 	}
 
 	/**
-	 * Returns the hight of the cylinder.
+	 * Returns the height of the cylinder.
 	 * 
-	 * @return hight of cylinder.
+	 * @return height of cylinder.
 	 */
-	public double getHight() {
+	public double getHeight() {
 		return height;
 	}
 
 	@Override
 	public String toString() {
-		return "Cylinder{" + "\nhight=" + height + "\n" + super.toString().substring(6);
+		return "Cylinder{" + "\nheight=" + height + "\n" + super.toString().substring(6);
 	}
 
 }
