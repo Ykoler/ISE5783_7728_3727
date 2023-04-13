@@ -1,7 +1,6 @@
 package geometries;
 
-import primitives.Point;
-import primitives.Vector;
+import primitives.*;
 
 /**
  * Sphere Class is the basic class representing a Sphere of Euclidean geometry

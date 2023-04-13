@@ -1,8 +1,6 @@
 package geometries;
 
-import primitives.Point;
-import primitives.Vector;
-import primitives.Ray;
+import primitives.*;
 
 /**
  * 
@@ -20,7 +18,7 @@ public class Tube extends RadialGeometry {
 	 * @param axisRay The axis ray of the tube.
 	 * @param radius  The radius of the tube.
 	 */
-	public Tube(double radius, Ray axisRay) {
+	public Tube(Ray axisRay, double radius) {
 		super(radius);
 		this.axisRay = axisRay;
 	}

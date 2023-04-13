@@ -26,9 +26,6 @@ class PointTests {
 
 		// TC01: Test that the new point is the right one
 		assertEquals(e1, new Point(2, 4, 6), "add() wrong result");
-
-		// =============== Boundary Values Tests ==================
-
 	}
 
 	/**
