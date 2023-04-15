@@ -35,13 +35,16 @@ public class Plane implements Geometry {
 	 * @param p3 The third point of the plane.
 	 */
 	public Plane(Point p1, Point p2, Point p3) {
-		normal = null;
+		// calculate the normal vector of the plane
+		Vector v1 = p2.subtract(p1);
+		Vector v2 = p3.subtract(p1);
+		this.normal = v1.crossProduct(v2).normalize();
 		this.q0 = p2;
 	}
 
 	@Override
 	public Vector getNormal(Point p0) {
-		return null;
+		return normal;
 	}
 
 	/**
