@@ -46,5 +46,6 @@ class PlaneTests {
 		assertEquals(1, result.length(), 0.00001, "ERROR: the length of the normal is not 1");
 		// check the normal in orthogonal to the plane
 		assertTrue(isZero(result.dotProduct(new Vector(0, -1, 1))));
+		assertTrue(isZero(result.dotProduct(new Vector(-1, 1, 0))));
 	}
 }

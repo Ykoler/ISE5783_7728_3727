@@ -32,11 +32,7 @@ public class Tube extends RadialGeometry {
 		return axisRay;
 	}
 
-	/**
-	 * Returns the normal to the tube at a given point.
-	 * 
-	 * @return The normal.
-	 */
+
 	public Vector getNormal(Point p) {
 		// Finding the nearest point to the given point that is on the axis ray
 		double t = axisRay.getDir().dotProduct(p.subtract(axisRay.getP0()));

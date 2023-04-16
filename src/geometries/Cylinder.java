@@ -31,13 +31,19 @@ public class Cylinder extends Tube {
 
 	@Override
 	public Vector getNormal(Point p0) {
+		// Check that surface point is different from head of axisRay to avoid creating
+		// a zero vector
 		if (p0.equals(axisRay.getP0()))
 			return axisRay.getDir().normalize().scale(-1);
+		// Finding the nearest point to the given point that is on the axis ray
 		double t = axisRay.getDir().dotProduct(p0.subtract(axisRay.getP0()));
-		if (t==0)
+		// Finds out if surface point is on a base and returns a normal appropriately
+		if (t == 0)
 			return axisRay.getDir().normalize().scale(-1);
-		if (t==height)
+		if (t == height)
 			return axisRay.getDir().normalize();
+		// If surface point is on the side of the cylinder, the superclass (Tube) is
+		// used to find the normal
 		return super.getNormal(p0);
 	}
 
