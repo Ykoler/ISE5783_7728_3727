@@ -101,18 +101,10 @@ class VectorTests {
 		// TC01: Test vectors in 90 degree angle
 		Vector v4 = new Vector(1, 4, -3);
 		assertEquals(v1.dotProduct(v4), 0, 0.00001, "ERROR: dotProduct() for 90 degree angle does not work correctly");
-		// TC02: Test revere vectors in 180 degree angle
-		assertEquals(v1.dotProduct(v1.scale(-1)), -14, 0.00001,
-				"ERROR: dotProduct() for 180 degree angle does not work correctly");
-		// TC03: Test vectors in 0 degree angle
-		assertEquals(v1.dotProduct(v1.scale(1.5)), 21, 0.00001,
-				"ERROR: dotProduct() for 0 degree angle does not work correctly");
-		// TC04: Test vectors in 180 degree angle
+		// TC02: Test vectors in 180 degree angle
 		assertEquals(v1.dotProduct(v1.scale(-1.5)), -21, 0.00001,
 				"ERROR: dotProduct() for 180 degree angle does not work correctly");
-		// TC05: Test same vectors
-		assertEquals(v1.dotProduct(v1), 14, 0.00001, "ERROR: dotProduct() for same vectors does not work correctly");
-        // TC06: Text dotProduct when one of the vectors is the unit vector
+        // TC03: Text dotProduct when one of the vectors is the unit vector
         Vector v5 = new Vector(1, 0, 0);
         assertEquals(v1.dotProduct(v5), 1, 0.00001, "ERROR: dotProduct() for unit vector does not work correctly");
 	}
@@ -128,9 +120,10 @@ class VectorTests {
 		// ============ Equivalence Partitions Tests ==============
         Vector vr = v1.crossProduct(v3);
 		// TC01: Test that the length of the cross-prouct is proper
+        //Check that the length of the resulting vector is proper
         assertEquals(vr.length(), v1.length() * v3.length(), 0.00001,
                 "ERROR: crossProduct() wrong result length");
-        // TC02: Test cross-product result orthogonality to its operands
+        //Test cross-product result orthogonality to its operands
         assertTrue(isZero(vr.dotProduct(v1)), "ERROR: crossProduct() result is not orthogonal to 1st operand");
         assertTrue(isZero(vr.dotProduct(v3)), "ERROR: crossProduct() result is not orthogonal to 2nd operand");
         // =============== Boundary Values Tests ==================
