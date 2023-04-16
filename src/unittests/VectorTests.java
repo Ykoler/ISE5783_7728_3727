@@ -24,8 +24,6 @@ class VectorTests {
 	 */
 	@Test
 	void testVectorDoubleDoubleDouble() {
-		// ============ Equivalence Partitions Tests ==============
-
 		// =============== Boundary Values Tests ==================
 		// TC01: Tests that zero vector throws exception
 		assertThrows(IllegalArgumentException.class, () -> new Vector(0, 0, 0));
@@ -43,27 +41,27 @@ class VectorTests {
 		assertEquals(v1.add(v2), new Vector(-1, -2, -3), "ERROR: Vector + Vector does not work correctly");
 		// =============== Boundary Values Tests ==================
 		// TC01: Test opposite direction vector throws exception
-		assertThrows(IllegalArgumentException.class, () -> v1.add(new Vector (-1, -2, -3)),
+		assertThrows(IllegalArgumentException.class, () -> v1.add(new Vector(-1, -2, -3)),
 				"ERROR: does not throw exception for adding two vectors with opposite direction");
 
 	}
 
-    /**
-     * Test method for {@link primitives.Vector#subtract(primitives.Vector)}.
-     */
+	/**
+	 * Test method for {@link primitives.Vector#subtract(primitives.Vector)}.
+	 */
 
-    @Test
-    void testSubtract() {
-        Vector v1 = new Vector(1, 2, 3);
-        // ============ Equivalence Partitions Tests ==============
-        Vector v2 = new Vector(-2, -4, -6);
-        // TC01: Test that the new vector is the right one   
-        assertEquals(v1.subtract(v2), new Vector(3, 6, 9), "ERROR: Vector - Vector does not work correctly");
-        // =============== Boundary Values Tests ==================
-        // TC01 Test Vector - Itself = Zero Vector
-        assertThrows(IllegalArgumentException.class, () -> v1.subtract(v1),
-                "ERROR: does not throw exception for subtracting a vector from itself");
-    }
+	@Test
+	void testSubtract() {
+		Vector v1 = new Vector(1, 2, 3);
+		// ============ Equivalence Partitions Tests ==============
+		Vector v2 = new Vector(-2, -4, -6);
+		// TC01: Test that the new vector is the right one
+		assertEquals(v1.subtract(v2), new Vector(3, 6, 9), "ERROR: Vector - Vector does not work correctly");
+		// =============== Boundary Values Tests ==================
+		// TC01 Test Vector - Itself = Zero Vector
+		assertThrows(IllegalArgumentException.class, () -> v1.subtract(v1),
+				"ERROR: does not throw exception for subtracting a vector from itself");
+	}
 
 	/**
 	 * Test method for {@link primitives.Vector#scale(double)}.
@@ -104,9 +102,9 @@ class VectorTests {
 		// TC02: Test vectors in 180 degree angle
 		assertEquals(v1.dotProduct(v1.scale(-1.5)), -21, 0.00001,
 				"ERROR: dotProduct() for 180 degree angle does not work correctly");
-        // TC03: Text dotProduct when one of the vectors is the unit vector
-        Vector v5 = new Vector(1, 0, 0);
-        assertEquals(v1.dotProduct(v5), 1, 0.00001, "ERROR: dotProduct() for unit vector does not work correctly");
+		// TC03: Text dotProduct when one of the vectors is the unit vector
+		Vector v5 = new Vector(1, 0, 0);
+		assertEquals(v1.dotProduct(v5), 1, 0.00001, "ERROR: dotProduct() for unit vector does not work correctly");
 	}
 
 	/**
@@ -116,20 +114,19 @@ class VectorTests {
 	void testCrossProduct() {
 		Vector v1 = new Vector(1, 2, 3);
 		Vector v2 = new Vector(-2, -4, -6);
-        Vector v3 = new Vector(0, 3, -2);
+		Vector v3 = new Vector(0, 3, -2);
 		// ============ Equivalence Partitions Tests ==============
-        Vector vr = v1.crossProduct(v3);
+		Vector vr = v1.crossProduct(v3);
 		// TC01: Test that the length of the cross-prouct is proper
-        //Check that the length of the resulting vector is proper
-        assertEquals(vr.length(), v1.length() * v3.length(), 0.00001,
-                "ERROR: crossProduct() wrong result length");
-        //Test cross-product result orthogonality to its operands
-        assertTrue(isZero(vr.dotProduct(v1)), "ERROR: crossProduct() result is not orthogonal to 1st operand");
-        assertTrue(isZero(vr.dotProduct(v3)), "ERROR: crossProduct() result is not orthogonal to 2nd operand");
-        // =============== Boundary Values Tests ==================
-        // TC01: Test zero vector from cross-product of co-lined vectors
-        assertThrows(IllegalArgumentException.class, () -> v1.crossProduct(v2),
-                "ERROR: does not throw exception for cross-product of co-lined vectors");
+		// Check that the length of the resulting vector is proper
+		assertEquals(vr.length(), v1.length() * v3.length(), 0.00001, "ERROR: crossProduct() wrong result length");
+		// Test cross-product result orthogonality to its operands
+		assertTrue(isZero(vr.dotProduct(v1)), "ERROR: crossProduct() result is not orthogonal to 1st operand");
+		assertTrue(isZero(vr.dotProduct(v3)), "ERROR: crossProduct() result is not orthogonal to 2nd operand");
+		// =============== Boundary Values Tests ==================
+		// TC01: Test zero vector from cross-product of co-lined vectors
+		assertThrows(IllegalArgumentException.class, () -> v1.crossProduct(v2),
+				"ERROR: does not throw exception for cross-product of co-lined vectors");
 
 	}
 
@@ -141,7 +138,7 @@ class VectorTests {
 		Vector v1 = new Vector(1, 2, 3);
 		// ============ Equivalence Partitions Tests ==============
 		// TC01: Test length squared
-        assertEquals(v1.lengthSquared(), 14, 0.00001, "ERROR: lengthSquared() does not work correctly");
+		assertEquals(v1.lengthSquared(), 14, 0.00001, "ERROR: lengthSquared() does not work correctly");
 	}
 
 	/**
@@ -153,7 +150,7 @@ class VectorTests {
 		// ============ Equivalence Partitions Tests ==============
 
 		// TC01: Test length
-        assertEquals(v1.length(), 5, 0.00001, "ERROR: length() does not work correctly");
+		assertEquals(v1.length(), 5, 0.00001, "ERROR: length() does not work correctly");
 	}
 
 	/**
@@ -163,8 +160,8 @@ class VectorTests {
 	void testNormalize() {
 		Vector v1 = new Vector(1, 2, 3);
 		// ============ Equivalence Partitions Tests ==============
-        // TC01: Test normalize
-        assertEquals(v1.normalize().length(), 1, 0.00001, "ERROR: normalize() result is not a unit vector");
+		// TC01: Test normalize
+		assertEquals(v1.normalize().length(), 1, 0.00001, "ERROR: normalize() result is not a unit vector");
 
-    }
+	}
 }

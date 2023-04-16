@@ -32,19 +32,17 @@ public class Tube extends RadialGeometry {
 		return axisRay;
 	}
 
-
 	public Vector getNormal(Point p) {
 		// Finding the nearest point to the given point that is on the axis ray
 		double t = axisRay.getDir().dotProduct(p.subtract(axisRay.getP0()));
 		Point O;
-		if (t !=0)
+		if (t != 0)
 			O = axisRay.getP0().add(axisRay.getDir().scale(t));
 		else
 			O = axisRay.getP0();
 		// Returning the subtraction of one from the other
 		return p.subtract(O).normalize();
 	}
-	
 
 	@Override
 	public String toString() {

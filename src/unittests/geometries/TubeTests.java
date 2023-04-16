@@ -22,16 +22,16 @@ class TubeTests {
 	 */
 	@Test
 	void testGetNormal() {
-		Tube s1 = new Tube(new Ray(new Point(1, 1, 1), new Vector(0, 1, 0)), 1);
+		Tube t1 = new Tube(new Ray(new Point(1, 1, 1), new Vector(0, 1, 0)), 1);
 
 		// ============ Equivalence Partitions Tests ==============
-		Vector e1 = s1.getNormal(new Point(1, 3, 2));
+		Vector e1 = t1.getNormal(new Point(1, 3, 2));
 
 		// TC01: Test that the normal is the right one
 		assertEquals(new Vector(0, 0, 1), e1, "getNormal() wrong result");
 
 		// =============== Boundary Values Tests ==================
-		Vector b1 = s1.getNormal(new Point(1, 1, 2));
+		Vector b1 = t1.getNormal(new Point(1, 1, 2));
 
 		// TC01: Test that getNormal works for normal that is perpendicular to the axis
 		// ray
