@@ -35,4 +35,21 @@ class TriangleTests {
 		assertTrue(isZero(t.getNormal(new Point(0, 0, 1)).dotProduct(new Vector(-1, 0, 1))),
 				"ERROR: the normal is not orthogonal to the 3rd edge");
 	}
+	/**
+	 * Test method for {@link geometries.Triangle#findIntersections(primitives.Ray)}.
+	 */
+	@Test
+	void testFindIntersections(){
+		//all tests assume a point on the plane in which the triangle is on and check if the function identifies whether the point is inside the triangle or not
+		Triangle t = new Triangle(new Point(0, 0, 1), new Point(0, 1, 0), new Point(1, 0, 0));
+		// ============ Equivalence Partitions Tests ==============
+		// TC01: Ray intersects the triangle
+		assertEquals(1, t.findIntersections(new Ray(new Point(0.5, 0.5, 1), new Vector(-0.5,-1,1))).size(), "ERROR: findIntersections() did not return the right number of points");
+		// TC02: Ray outside against edge
+		assertNull(t.findIntersections(new Ray(new Point(0.5, 0.5, 1), new Vector(-2,-0.5,-1))), "ERROR: findIntersections() did not return null");
+		// TC03: Ray outside against vertex
+		assertNull(t.findIntersections(new Ray(new Point(0.5, 0.5, 1), new Vector(1,-0.5,-1))), "ERROR: findIntersections() did not return null");
+		// =============== Boundary Values Tests ==================
+		// TC04: Ray on edge
+	}
 }
