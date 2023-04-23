@@ -22,7 +22,7 @@ class SphereTests {
 	 */
 	@Test
 	void testGetNormal() {
-		Sphere s1 = new Sphere(new Point(1, 2, 3), 1);
+		Sphere s1 = new Sphere(1, new Point(1, 2, 3));
 		// ============ Equivalence Partitions Tests ==============
 		Vector e1 = s1.getNormal(new Point(2, 2, 3));
 		// TC01: Test that the normal is the right one
