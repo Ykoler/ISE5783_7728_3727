@@ -3,6 +3,8 @@ package geometries;
 import primitives.*;
 import static primitives.Util.isZero;
 
+import java.util.List;
+
 /**
  * 
  * Tube class represents a tube in 3D Cartesian coordinate system
@@ -50,5 +52,10 @@ public class Tube extends RadialGeometry {
 	@Override
 	public String toString() {
 		return "Tube{" + "\naxisRay=" + axisRay + "\nradius=" + radius + "\n}";
+	}
+
+	@Override
+	public List<Point> findIntersections(Ray ray) {
+		return null;
 	}
 }

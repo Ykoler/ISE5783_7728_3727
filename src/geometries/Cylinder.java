@@ -3,6 +3,8 @@ package geometries;
 import primitives.*;
 import static primitives.Util.isZero;
 
+import java.util.List;
+
 /**
  * Cylinder Class is the basic class representing a Cylinder (a tube with a
  * finite height) of Euclidean geometry in Cartesian 3-Dimensional coordinate
@@ -63,5 +65,9 @@ public class Cylinder extends Tube {
 	public String toString() {
 		return "Cylinder{" + "\nheight=" + height + "\n" + super.toString().substring(6);
 	}
-
+	
+	@Override
+	public List<Point> findIntersections(Ray ray){
+		return null;
+	}
 }
