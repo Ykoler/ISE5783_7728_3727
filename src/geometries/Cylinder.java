@@ -1,6 +1,9 @@
 package geometries;
 
 import primitives.*;
+import static primitives.Util.isZero;
+
+import java.util.List;
 
 /**
  * Cylinder Class is the basic class representing a Cylinder (a tube with a
@@ -30,21 +33,23 @@ public class Cylinder extends Tube {
 	}
 
 	@Override
-	public Vector getNormal(Point p0) {
+	public Vector getNormal(Point p) {
 		// Check that surface point is different from head of axisRay to avoid creating
 		// a zero vector
-		if (p0.equals(axisRay.getP0()))
-			return axisRay.getDir().normalize().scale(-1);
+		Vector dir = axisRay.getDir();
+		Point p0 = axisRay.getP0();
+		if (p.equals(p0))
+			return dir.scale(-1);
 		// Finding the nearest point to the given point that is on the axis ray
-		double t = axisRay.getDir().dotProduct(p0.subtract(axisRay.getP0()));
+		double t = dir.dotProduct(p.subtract(p0));
 		// Finds out if surface point is on a base and returns a normal appropriately
-		if (t == 0)
-			return axisRay.getDir().normalize().scale(-1);
+		if (isZero(t))
+			return dir.scale(-1);
 		if (t == height)
-			return axisRay.getDir().normalize();
+			return dir;
 		// If surface point is on the side of the cylinder, the superclass (Tube) is
 		// used to find the normal
-		return super.getNormal(p0);
+		return super.getNormal(p);
 	}
 
 	/**
@@ -60,5 +65,9 @@ public class Cylinder extends Tube {
 	public String toString() {
 		return "Cylinder{" + "\nheight=" + height + "\n" + super.toString().substring(6);
 	}
-
+	
+	@Override
+	public List<Point> findIntersections(Ray ray){
+		return null;
+	}
 }

@@ -1,6 +1,5 @@
 package primitives;
 
-import static primitives.Util.isZero;
 
 /**
  * Vector Class is the basic class representing a Vector of Euclidean geometry

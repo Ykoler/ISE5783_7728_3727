@@ -1,6 +1,9 @@
 package geometries;
 
 import primitives.*;
+import static primitives.Util.isZero;
+
+import java.util.List;
 
 /**
  * 
@@ -34,18 +37,25 @@ public class Tube extends RadialGeometry {
 
 	public Vector getNormal(Point p) {
 		// Finding the nearest point to the given point that is on the axis ray
-		double t = axisRay.getDir().dotProduct(p.subtract(axisRay.getP0()));
-		Point O;
-		if (t != 0)
-			O = axisRay.getP0().add(axisRay.getDir().scale(t));
+		Vector dir = axisRay.getDir();
+		Point p0 = axisRay.getP0();
+		double t = dir.dotProduct(p.subtract(p0));
+		Point o;
+		if (!isZero(t))
+			o = p0.add(dir.scale(t));
 		else
-			O = axisRay.getP0();
+			o = p0;
 		// Returning the subtraction of one from the other
-		return p.subtract(O).normalize();
+		return p.subtract(o).normalize();
 	}
 
 	@Override
 	public String toString() {
 		return "Tube{" + "\naxisRay=" + axisRay + "\nradius=" + radius + "\n}";
+	}
+
+	@Override
+	public List<Point> findIntersections(Ray ray) {
+		return null;
 	}
 }

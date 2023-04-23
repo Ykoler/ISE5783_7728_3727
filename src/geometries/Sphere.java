@@ -1,5 +1,7 @@
 package geometries;
 
+import java.util.List;
+
 import primitives.*;
 
 /**
@@ -39,5 +41,10 @@ public class Sphere extends RadialGeometry {
 	@Override
 	public String toString() {
 		return "Sphere{" + "\ncenter=" + center + "\nradius=" + radius + "\n}";
+	}
+
+	@Override
+	public List<Point> findIntersections(Ray ray) {
+		return null;
 	}
 }
