@@ -26,9 +26,11 @@ public class Triangle extends Polygon {
 
 	@Override
 	public List<Point> findIntersections(Ray ray) {
-		if (plane.findIntersections(ray) == null)
-			return null;
+		
 		Point q = plane.findIntersections(ray).get(0);
+		if(q == null) {
+			return null;
+		}
 		// Then, use barycentric coordinates technique to check if the intersection
 		// point is inside the triangle
 		// calculate the area of the respective triangle for each of the edges
