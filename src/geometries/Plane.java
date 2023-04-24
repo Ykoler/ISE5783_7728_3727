@@ -3,6 +3,7 @@ package geometries;
 import java.util.List;
 
 import primitives.*;
+import static primitives.Util.*;
 
 /**
  * Plane Class is the basic class representing a Plane of Euclidean geometry in
@@ -71,9 +72,22 @@ public class Plane implements Geometry {
 	public String toString() {
 		return "Refrence point: " + q0 + ", Normal vector: " + normal;
 	}
-	
+
 	@Override
-	public List<Point> findIntersections(Ray ray){
-		return null;
+	public List<Point> findIntersections(Ray ray) {
+		Point p0 = ray.getP0();
+		Vector v = ray.getDir();
+		if (q0.equals(p0)) {
+			return null;
+		}
+		double nv = normal.dotProduct(v);
+		if (isZero(nv)) {
+			return null;
+		}
+		double t = (q0.subtract(p0)).dotProduct(normal) / nv;
+		if (alignZero(t) <= 0) {
+			return null;
+		}
+		return List.of(p0.add(v.scale(t)));
 	}
 }
