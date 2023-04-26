@@ -1,7 +1,7 @@
 package geometries;
 
 import java.util.List;
-
+import java.lang.Math;
 import primitives.*;
 
 /**
@@ -45,6 +45,18 @@ public class Sphere extends RadialGeometry {
 
 	@Override
 	public List<Point> findIntersections(Ray ray) {
+		Point p0 = ray.getP0();
+		Vector dir = ray.getDir();
+		Vector hypotenuse = this.center.subtract(p0);
+		double base = dir.dotProduct(hypotenuse);
+		double perpendicular = Math.sqrt(hypotenuse.dotProduct(hypotenuse) - Math.pow(base, 2));
+		double inside = Math.sqrt(Math.pow(this.radius, 2) - Math.pow(perpendicular, 2));
+		if (base - inside > 0 && base + inside > 0)
+			return List.of(ray.getPoint(base - inside), ray.getPoint(base + inside));
+		else if (base - inside > 0)
+			return List.of(ray.getPoint(base - inside), ray.getPoint(base + inside));
+		if (base + inside > 0)
+			return List.of(ray.getPoint(base - inside), ray.getPoint(base + inside));
 		return null;
 	}
 }

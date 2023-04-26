@@ -56,5 +56,9 @@ public class Ray {
 	public String toString() {
 		return "Origin point: " + p0 + "\nDirectional vector: " + dir;
 	}
-
+	
+	public Point getPoint(double t)
+	{
+		return p0.add(dir.scale(t));
+	}
 }

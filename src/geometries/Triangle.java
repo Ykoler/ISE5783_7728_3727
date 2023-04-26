@@ -55,11 +55,11 @@ public class Triangle extends Polygon {
 		double bArea = a.subtract(c).crossProduct(q.subtract(c)).dotProduct(normal);
 		double cArea = b.subtract(a).crossProduct(q.subtract(a)).dotProduct(normal);
 
-		double aplha = aArea / area;
-		double betha = bArea / area;
+		double alpha = aArea / area;
+		double beta = bArea / area;
 		double gamma = cArea / area;
 
-		if (isZero(aplha + betha + gamma - 1) && alignZero(aplha) > 0 && alignZero(betha) > 0 && alignZero(gamma) > 0)
+		if (isZero(alpha + beta + gamma - 1) && alignZero(alpha) > 0 && alignZero(beta) > 0 && alignZero(gamma) > 0)
 			return List.of(q);
 
 		return null;
