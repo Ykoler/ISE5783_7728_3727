@@ -47,16 +47,32 @@ public class Sphere extends RadialGeometry {
 	public List<Point> findIntersections(Ray ray) {
 		Point p0 = ray.getP0();
 		Vector dir = ray.getDir();
+
+		// Deals with case where ray starts from the center of the sphere
+		if (p0.equals(center))
+			return List.of(ray.getPoint(this.radius));
+
+		// Finding the hypotenuse, base and perpendicular of the triangle formed by
+		// ray's starting point, the center of the sphere and the intersection point of
+		// the ray and the perpendicular line crosing the sphere's center.
 		Vector hypotenuse = this.center.subtract(p0);
 		double base = dir.dotProduct(hypotenuse);
 		double perpendicular = Math.sqrt(hypotenuse.dotProduct(hypotenuse) - Math.pow(base, 2));
+
+		// Dealing with a case in which the ray is perpendicular to the sphere at the
+		// intersection point.
+		if (perpendicular == this.radius)
+			return null;
+
+		// Returning intersection points, ensuring that only those intersected by the
+		// ray are returned..
 		double inside = Math.sqrt(Math.pow(this.radius, 2) - Math.pow(perpendicular, 2));
 		if (base - inside > 0 && base + inside > 0)
 			return List.of(ray.getPoint(base - inside), ray.getPoint(base + inside));
 		else if (base - inside > 0)
-			return List.of(ray.getPoint(base - inside), ray.getPoint(base + inside));
-		if (base + inside > 0)
-			return List.of(ray.getPoint(base - inside), ray.getPoint(base + inside));
+			return List.of(ray.getPoint(base - inside));
+		else if (base + inside > 0)
+			return List.of(ray.getPoint(base + inside));
 		return null;
 	}
 }
