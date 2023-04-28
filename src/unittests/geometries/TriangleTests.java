@@ -10,6 +10,8 @@ import primitives.*;
 import geometries.Triangle;
 import static primitives.Util.isZero;
 
+import java.util.List;
+
 /**
  * @author Yahel and Ashi
  *
@@ -47,8 +49,9 @@ class TriangleTests {
 		Triangle t = new Triangle(new Point(0, 0, 1), new Point(0, 1, 0), new Point(1, 0, 0));
 		// ============ Equivalence Partitions Tests ==============
 		// TC01: Ray intersects the triangle
-		assertEquals(1, t.findIntersections(new Ray(new Point(0.5, 0.5, 1), new Vector(-0.5, -1, -1))).size(),
-				"ERROR: findIntersections() did not return the right number of points");
+		List<Point> result = t.findIntersections(new Ray(new Point(0.5, 0.5, 1), new Vector(-0.5, -1, -1)));
+		assertEquals(1, result.size(), "ERROR: findIntersections() did not return the right number of points");
+		assertEquals(List.of(new Point(0.3, 0.1, 0.6)), result, "Incorrect intersection points");
 		// TC02: Ray outside against edge
 		assertNull(t.findIntersections(new Ray(new Point(0.5, 0.5, 1), new Vector(-2, -0.5, -1))),
 				"ERROR: findIntersections() did not return null");

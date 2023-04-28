@@ -88,6 +88,6 @@ public class Plane implements Geometry {
 		if (alignZero(t) <= 0) {
 			return null;
 		}
-		return List.of(p0.add(v.scale(t)));
+		return List.of(ray.getPoint(t));
 	}
 }
