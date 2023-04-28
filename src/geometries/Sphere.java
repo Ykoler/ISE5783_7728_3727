@@ -65,7 +65,7 @@ public class Sphere extends RadialGeometry {
 			return null;
 
 		// Returning intersection points, ensuring that only those intersected by the
-		// ray are returned..
+		// ray are returned.
 		double inside = Math.sqrt(Math.pow(this.radius, 2) - Math.pow(perpendicular, 2));
 		if (base - inside > 0 && base + inside > 0)
 			return List.of(ray.getPoint(base - inside), ray.getPoint(base + inside));

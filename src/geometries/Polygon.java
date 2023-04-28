@@ -1,7 +1,8 @@
 package geometries;
 
-import static primitives.Util.isZero;
+import static primitives.Util.*;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import primitives.Point;
@@ -90,6 +91,30 @@ public class Polygon implements Geometry {
 
 	@Override
 	public List<Point> findIntersections(Ray ray) {
-		return null;
+		List<Point> points = this.plane.findIntersections(ray);
+
+		if (points == null)
+			return null;
+
+		Point p0 = ray.getP0();
+		Vector v = ray.getDir();
+		List<Vector> vectors = new LinkedList<>();
+
+		for (Point p : this.vertices) {
+			vectors.add(p.subtract(p0));
+		}
+		int vSize = vectors.size();
+
+		double normal = alignZero(vectors.get(vSize - 1).crossProduct(vectors.get(0)).dotProduct(v));
+		if (isZero(normal))
+			return null;
+		boolean sign = normal > 0;
+		for (int i = 0; i < vSize - 1; i++) {
+			normal = alignZero(vectors.get(i).crossProduct(vectors.get(i + 1)).dotProduct(v));
+			if ((normal > 0) ^ sign || isZero(normal))
+				return null;
+		}
+
+		return points;
 	}
 }

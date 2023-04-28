@@ -30,6 +30,7 @@ class PlaneTests {
 		assertThrows(IllegalArgumentException.class,
 				() -> new Plane(new Point(1, 2, 3), new Point(1, 2, 3), new Point(1, 2, 4)),
 				"ERROR: does not throw exception for two points are the same");
+
 		// TC02: Test three points are on the same line
 		assertThrows(IllegalArgumentException.class,
 				() -> new Plane(new Point(1, 2, 3), new Point(2, 4, 6), new Point(3, 6, 9)),
@@ -58,38 +59,47 @@ class PlaneTests {
 	@Test
 	void testFindIntersections() {
 		Plane p = new Plane(new Point(0, 0, 1), new Point(0, 1, 0), new Point(1, 0, 0));
+
 		// ============ Equivalence Partitions Tests ==============
 		// TC01: Ray intersects the plane (the ray is not orthogonal or parallel to the
 		// plane)
 		List<Point> result = p.findIntersections(new Ray(new Point(0.5, 0.5, 1), new Vector(-0.5, -1, -1)));
 		assertEquals(1, result.size(), "ERROR: findIntersections() did not return the right number of points");
 		assertEquals(List.of(new Point(0.3, 0.1, 0.6)), result, "Incorrect intersection points");
+
 		// TC02: Ray does not intersect the plane
 		assertNull(p.findIntersections(new Ray(new Point(0, 0, 1.5), new Vector(1, 0, 1.5))),
 				"ERROR: findIntersections() did not return null when the ray does not intersect the plane");
+
 		// =============== Boundary Values Tests ==================
 		// **** Group: the ray is parallel to the plane
 		// TC03: Ray is parallel to the plane and included in the plane
 		assertNull(p.findIntersections(new Ray(new Point(0.5, 0.25, 0.25), new Vector(-0.5, 0.2, 0.3))),
 				"ERROR: findIntersections() did not return null when the ray is parallel to the plane and included in the plane");
+
 		// TC04: ray is parallel to the plane and not included in the plane
 		assertNull(p.findIntersections(new Ray(new Point(0.6, 0.25, 0.25), new Vector(-0.5, 0.2, 0.3))),
 				"ERROR: findIntersections() did not return null when the ray is parallel to the plane and not included in the plane");
+
 		// **** Group: the ray is orthogonal to the plane
 		// TC05: Ray is orthogonal to the plane and begins before the plane
 		result = p.findIntersections(new Ray(new Point(0.6, 0.25, 0.25), new Vector(-1, -1, -1)));
 		assertEquals(1, result.size(),
 				"ERROR: findIntersections() returned incorrect number of points when the ray is orthogonal to the plane and begins before the plane");
+
 		// TC06: Ray is orthogonal to the plane and begins in the plane
 		assertNull(p.findIntersections(new Ray(new Point(0.5, 0.25, 0.25), new Vector(-1, -1, -1))),
 				"ERROR: findIntersections() did not return null when the ray is orthogonal to the plane and begins in the plane");
+
 		// TC07: Ray is orthogonal to the plane and begins after the plane
 		assertNull(p.findIntersections(new Ray(new Point(0.4, 0.25, 0.25), new Vector(-1, -1, -1))),
 				"ERROR: findIntersections() did not return null when the ray is orthogonal to the plane and begins after the plane");
+
 		// **** Group: the ray is neither orthogonal nor parallel to the plane
 		// TC08: Ray begins in the plane
 		assertNull(p.findIntersections(new Ray(new Point(0.5, 0.25, 0.25), new Vector(-3, 5, 2))),
 				"ERROR: findIntersections() did not return null when the ray begins in the plane");
+
 		// Ray is neither orthogonal nor parallel to the plane and begins in the same
 		// point which appears as reference point in the plane
 		assertNull(p.findIntersections(new Ray(p.getQ0(), new Vector(-3, 5, 2))),

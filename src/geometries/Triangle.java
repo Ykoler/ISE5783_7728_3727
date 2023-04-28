@@ -60,7 +60,7 @@ public class Triangle extends Polygon {
 		double beta = bArea / area;
 		double gamma = cArea / area;
 
-		if (isZero(alpha + beta + gamma - 1) && alignZero(alpha) > 0 && alignZero(beta) > 0 && alignZero(gamma) > 0)
+		if (alignZero(alpha) > 0 && alignZero(beta) > 0 && alignZero(gamma) > 0)
 			return List.of(q);
 
 		return null;
