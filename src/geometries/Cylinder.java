@@ -45,7 +45,7 @@ public class Cylinder extends Tube {
 		// Finds out if surface point is on a base and returns a normal appropriately
 		if (isZero(t))
 			return dir.scale(-1);
-		if (t == height)
+		if (isZero(t - height))
 			return dir;
 		// If surface point is on the side of the cylinder, the superclass (Tube) is
 		// used to find the normal
@@ -65,9 +65,9 @@ public class Cylinder extends Tube {
 	public String toString() {
 		return "Cylinder{" + "\nheight=" + height + "\n" + super.toString().substring(6);
 	}
-	
+
 	@Override
-	public List<Point> findIntersections(Ray ray){
+	public List<Point> findIntersections(Ray ray) {
 		return null;
 	}
 }

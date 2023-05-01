@@ -92,19 +92,20 @@ public class Polygon implements Geometry {
 	@Override
 	public List<Point> findIntersections(Ray ray) {
 		List<Point> points = this.plane.findIntersections(ray);
-
+		// Only check point if the ray intersects the plane of the polygon.
 		if (points == null)
 			return null;
 
 		Point p0 = ray.getP0();
 		Vector v = ray.getDir();
 		List<Vector> vectors = new LinkedList<>();
-
+		// Construct vectors to the vertices
 		for (Point p : this.vertices) {
 			vectors.add(p.subtract(p0));
 		}
 		int vSize = vectors.size();
-
+		// Cross product each adjacent pair of vectors and check they all share the same
+		// sign
 		double normal = alignZero(vectors.get(vSize - 1).crossProduct(vectors.get(0)).dotProduct(v));
 		if (isZero(normal))
 			return null;

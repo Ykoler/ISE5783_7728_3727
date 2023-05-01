@@ -26,8 +26,8 @@ public class Triangle extends Polygon {
 
 	@Override
 	public List<Point> findIntersections(Ray ray) {
-
 		List<Point> res = plane.findIntersections(ray);
+		// Only check point if the ray intersects the plane of the triangle.
 		if (res == null) {
 			return null;
 		}
@@ -41,6 +41,8 @@ public class Triangle extends Polygon {
 
 		Vector normal = plane.getNormal();
 
+		// Return no intersection points if the point is either of the edge, the vertex,
+		// or the edge's continuation.
 		try {
 			if (isZero(a.subtract(b).crossProduct(q.subtract(b)).dotProduct(normal))
 					|| isZero(c.subtract(b).crossProduct(q.subtract(b)).dotProduct(normal))
@@ -49,17 +51,14 @@ public class Triangle extends Polygon {
 		} catch (IllegalArgumentException e) {
 			return null;
 		}
-
+		// Alpha, beta, and gamma are calculated by the ratio between the respective
+		// triangles and the entire one.
 		double area = a.subtract(b).crossProduct(a.subtract(c)).dotProduct(normal);
 
-		double aArea = c.subtract(b).crossProduct(q.subtract(b)).dotProduct(normal);
-		double bArea = a.subtract(c).crossProduct(q.subtract(c)).dotProduct(normal);
-		double cArea = b.subtract(a).crossProduct(q.subtract(a)).dotProduct(normal);
-
-		double alpha = aArea / area;
-		double beta = bArea / area;
-		double gamma = cArea / area;
-
+		double alpha = c.subtract(b).crossProduct(q.subtract(b)).dotProduct(normal) / area;
+		double beta = a.subtract(c).crossProduct(q.subtract(c)).dotProduct(normal) / area;
+		double gamma = b.subtract(a).crossProduct(q.subtract(a)).dotProduct(normal) / area;
+		// Point is inside if all the coordinates are positive
 		if (alignZero(alpha) > 0 && alignZero(beta) > 0 && alignZero(gamma) > 0)
 			return List.of(q);
 

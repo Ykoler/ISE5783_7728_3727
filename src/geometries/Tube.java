@@ -36,17 +36,10 @@ public class Tube extends RadialGeometry {
 	}
 
 	public Vector getNormal(Point p) {
-		// Finding the nearest point to the given point that is on the axis ray
-		Vector dir = axisRay.getDir();
-		Point p0 = axisRay.getP0();
-		double t = dir.dotProduct(p.subtract(p0));
-		Point o;
-		if (!isZero(t))
-			o = p0.add(dir.scale(t));
-		else
-			o = p0;
+		// Finding the offset of the nearest point to the given point that is on the axis ray
+		double t = axisRay.getDir().dotProduct(p.subtract(axisRay.getP0()));
 		// Returning the subtraction of one from the other
-		return p.subtract(o).normalize();
+		return p.subtract(axisRay.getPoint(t)).normalize();
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package geometries;
 import java.util.List;
 import java.lang.Math;
 import primitives.*;
+import static primitives.Util.*;
 
 /**
  * Sphere Class is the basic class representing a Sphere of Euclidean geometry
@@ -57,22 +58,21 @@ public class Sphere extends RadialGeometry {
 		// the ray and the perpendicular line crosing the sphere's center.
 		Vector hypotenuse = this.center.subtract(p0);
 		double base = dir.dotProduct(hypotenuse);
-		double perpendicular = Math.sqrt(hypotenuse.dotProduct(hypotenuse) - Math.pow(base, 2));
-
+		double perpendicular = hypotenuse.lengthSquared() - base * base;
 		// Dealing with a case in which the ray is perpendicular to the sphere at the
 		// intersection point.
-		if (perpendicular == this.radius)
+		if (isZero(perpendicular - this.radiusSquared))
 			return null;
 
 		// Returning intersection points, ensuring that only those intersected by the
 		// ray are returned.
-		double inside = Math.sqrt(Math.pow(this.radius, 2) - Math.pow(perpendicular, 2));
-		if (base - inside > 0 && base + inside > 0)
-			return List.of(ray.getPoint(base - inside), ray.getPoint(base + inside));
-		else if (base - inside > 0)
-			return List.of(ray.getPoint(base - inside));
-		else if (base + inside > 0)
-			return List.of(ray.getPoint(base + inside));
-		return null;
+		double inside = Math.sqrt(this.radiusSquared - perpendicular);
+		double t2 = base - inside;
+		if (alignZero(t2) <= 0)
+			return null;
+		double t1 = base + inside;
+		if (alignZero(t1) > 0)
+			return List.of(ray.getPoint(t2), ray.getPoint(base + inside));
+		return List.of(ray.getPoint(t1));
 	}
 }

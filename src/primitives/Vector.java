@@ -1,6 +1,5 @@
 package primitives;
 
-
 /**
  * Vector Class is the basic class representing a Vector of Euclidean geometry
  * in Cartesian 3-Dimensional coordinate system.
@@ -78,8 +77,8 @@ public class Vector extends Point {
 	public double dotProduct(Vector other) {
 		/*
 		 * Calculate dot product between two vectors where result is the sum of the
-		 * multiplication of equivalent coordinates of the two vectors. 
-		 * where the result is: a1*b1 + a2*b2 + a3*b3
+		 * multiplication of equivalent coordinates of the two vectors. where the result
+		 * is: a1*b1 + a2*b2 + a3*b3
 		 */
 		return (xyz.d1 * other.xyz.d1) + (xyz.d2 * other.xyz.d2) + (xyz.d3 * other.xyz.d3);
 	}
@@ -93,8 +92,8 @@ public class Vector extends Point {
 	public Vector crossProduct(Vector other) {
 		/*
 		 * between two vectors where result is a new vector which is perpendicular to
-		 * both vectors.
-		 * where the result is: (a2*b3 - a3*b2, a3*b1 - a1*b3, a1*b2 - a2*b1)
+		 * both vectors. where the result is: (a2*b3 - a3*b2, a3*b1 - a1*b3, a1*b2 -
+		 * a2*b1)
 		 */
 		return new Vector(this.xyz.d2 * other.xyz.d3 - this.xyz.d3 * other.xyz.d2,
 				this.xyz.d3 * other.xyz.d1 - this.xyz.d1 * other.xyz.d3,
