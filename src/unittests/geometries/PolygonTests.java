@@ -13,7 +13,6 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import geometries.Polygon;
-import geometries.Polygon;
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;

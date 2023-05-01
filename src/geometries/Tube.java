@@ -1,7 +1,6 @@
 package geometries;
 
 import primitives.*;
-import static primitives.Util.isZero;
 
 import java.util.List;
 
@@ -36,7 +35,8 @@ public class Tube extends RadialGeometry {
 	}
 
 	public Vector getNormal(Point p) {
-		// Finding the offset of the nearest point to the given point that is on the axis ray
+		// Finding the offset of the nearest point to the given point that is on the
+		// axis ray
 		double t = axisRay.getDir().dotProduct(p.subtract(axisRay.getP0()));
 		// Returning the subtraction of one from the other
 		return p.subtract(axisRay.getPoint(t)).normalize();

@@ -40,29 +40,34 @@ public class Triangle extends Polygon {
 		Point c = vertices.get(2);
 
 		Vector normal = plane.getNormal();
-
 		// Return no intersection points if the point is either of the edge, the vertex,
 		// or the edge's continuation.
+
+		Vector ab, bc, aq, bq, cq;
+
 		try {
-			if (isZero(a.subtract(b).crossProduct(q.subtract(b)).dotProduct(normal))
-					|| isZero(c.subtract(b).crossProduct(q.subtract(b)).dotProduct(normal))
-					|| isZero(a.subtract(c).crossProduct(q.subtract(c)).dotProduct(normal)))
+			ab = b.subtract(a); // a->b
+			bc = c.subtract(b); // b->c
+			aq = q.subtract(a); // a->q
+			bq = q.subtract(b); // b->q
+			cq = q.subtract(c); // c->q
+			if (isZero(normal.dotProduct(ab.crossProduct(aq))) || isZero(normal.dotProduct(bc.crossProduct(bq)))
+					|| isZero(normal.dotProduct(a.subtract(c).crossProduct(cq))))
 				return null;
 		} catch (IllegalArgumentException e) {
 			return null;
 		}
 		// Alpha, beta, and gamma are calculated by the ratio between the respective
 		// triangles and the entire one.
-		double area = a.subtract(b).crossProduct(a.subtract(c)).dotProduct(normal);
+		double area = ab.crossProduct(bc).dotProduct(normal);
+		double alpha = aq.crossProduct(bq).dotProduct(normal) / area;
+		double beta = bq.crossProduct(cq).dotProduct(normal) / area;
+		double gamma = cq.crossProduct(aq).dotProduct(normal) / area;
 
-		double alpha = c.subtract(b).crossProduct(q.subtract(b)).dotProduct(normal) / area;
-		double beta = a.subtract(c).crossProduct(q.subtract(c)).dotProduct(normal) / area;
-		double gamma = b.subtract(a).crossProduct(q.subtract(a)).dotProduct(normal) / area;
 		// Point is inside if all the coordinates are positive
 		if (alignZero(alpha) > 0 && alignZero(beta) > 0 && alignZero(gamma) > 0)
 			return List.of(q);
 
 		return null;
-
 	}
 }
