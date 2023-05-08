@@ -57,6 +57,13 @@ public class Ray {
 		return "Origin point: " + p0 + "\nDirectional vector: " + dir;
 	}
 
+	/**
+	 * Returns a point at a distance of t from the origin in the direction of the
+	 * vector
+	 * 
+	 * @param t scalar
+	 * @return the desired point
+	 */
 	public Point getPoint(double t) {
 		return isZero(t) ? p0 : p0.add(dir.scale(t));
 	}
