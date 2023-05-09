@@ -3,6 +3,9 @@ package renderer;
 import primitives.*;
 import static primitives.Util.isZero;
 
+import java.nio.channels.NonReadableChannelException;
+import java.util.MissingResourceException;
+
 /**
  * @author Yahel and Ashi
  *
@@ -19,6 +22,8 @@ public class Camera {
 	private double width;
 	private double height;
 	private double distance;
+	private ImageWriter imageWriter;
+	private RayTracerBase rayTracer;
 
 	/**
 	 * @return the p0
@@ -79,14 +84,14 @@ public class Camera {
 	public Camera(Point p0, Vector vTo, Vector vUp) {
 		if (!isZero(vUp.dotProduct(vTo)))
 			throw new IllegalArgumentException("ERROR: given vectors weren't perpendicular");
-		this.vRight = vUp.crossProduct(vTo).normalize();
 		this.vTo = vTo.normalize();
 		this.vUp = vUp.normalize();
+		this.vRight = vUp.crossProduct(vTo);
 		this.p0 = p0;
 	}
 
 	/**
-	 * Sets width and hight
+	 * Sets width and height in builder pattern
 	 * 
 	 * @param width
 	 * @param height
@@ -99,13 +104,35 @@ public class Camera {
 	}
 
 	/**
-	 * Sets distance
+	 * Sets distance in builder pattern
 	 * 
 	 * @param distance
 	 * @return Camera that results
 	 */
 	public Camera setVPDistance(double distance) {
 		this.distance = distance;
+		return this;
+	}
+
+	/**
+	 * Sets image writer in builder pattern
+	 * 
+	 * @param image writer
+	 * @return Camera that results
+	 */
+	public Camera setImageWriter(ImageWriter iw) {
+		this.imageWriter = iw;
+		return this;
+	}
+
+	/**
+	 * Sets ray tracer in builder pattern
+	 * 
+	 * @param ray tracer
+	 * @return Camera that results
+	 */
+	public Camera setRayTracer(RayTracerBase rt) {
+		this.rayTracer = rt;
 		return this;
 	}
 
@@ -131,4 +158,36 @@ public class Camera {
 			pIJ = pIJ.add(vUp.scale(yI));
 		return new Ray(p0, pIJ.subtract(p0));
 	}
+
+	/**
+	 * renders an image.
+	 * ###############################################################################################################################
+	 */
+	public void renderImage() {
+		if (imageWriter == null)
+			throw new MissingResourceException("Image writer was null", ImageWriter.class.getCanonicalName(), "");
+		if (rayTracer == null)
+			throw new MissingResourceException("Ray tracer was null", RayTracerBase.class.getCanonicalName(), "");
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * Prints a grid over the image at an interval of pixels and colors it
+	 * accordingly
+	 * 
+	 * @param interval the space in pixels
+	 * @param color    color to paint
+	 */
+	public void printGrid(int interval, Color color) {
+		if (imageWriter == null)
+			throw new MissingResourceException("Image writer was null", ImageWriter.class.getCanonicalName(), "");
+		int nY = imageWriter.getNy();
+		int nX = imageWriter.getNx();
+		for (int i = 0; i <= nY; i += interval) {
+			for (int j = 0; j <= nX; j += interval) {
+				imageWriter.writePixel(j, i, color);
+			}
+		}
+	}
+
 }
