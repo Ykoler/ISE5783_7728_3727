@@ -1,7 +1,5 @@
 package renderer;
 
-import java.awt.Color;
-
 import primitives.*;
 import scene.Scene;
 

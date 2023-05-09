@@ -136,6 +136,10 @@ public class Camera {
 		return this;
 	}
 
+	private Color castRay(int i, int j) {
+		return rayTracer.traceRay(constructRay(imageWriter.getNx(), imageWriter.getNy(), j, i));
+	}
+
 	/**
 	 * Constructs ray from camera's location to a the center of a given pixel in a
 	 * view plane.
@@ -168,7 +172,13 @@ public class Camera {
 			throw new MissingResourceException("Image writer was null", ImageWriter.class.getCanonicalName(), "");
 		if (rayTracer == null)
 			throw new MissingResourceException("Ray tracer was null", RayTracerBase.class.getCanonicalName(), "");
-		throw new UnsupportedOperationException();
+
+		int nY = imageWriter.getNy();
+		int nX = imageWriter.getNx();
+
+		for (int i = 0; i < nY; ++i)
+			for (int j = 0; j < nX; j++)
+				imageWriter.writePixel(j, i, castRay(i, j));
 	}
 
 	/**
@@ -183,11 +193,22 @@ public class Camera {
 			throw new MissingResourceException("Image writer was null", ImageWriter.class.getCanonicalName(), "");
 		int nY = imageWriter.getNy();
 		int nX = imageWriter.getNx();
-		for (int i = 0; i <= nY; i += interval) {
-			for (int j = 0; j <= nX; j += interval) {
-				imageWriter.writePixel(j, i, color);
-			}
-		}
+		for (int i = 0; i < nY; i += interval)
+			for (int j = 0; j < nX; j += 1)
+				imageWriter.writePixel(i, j, color);
+		for (int i = 0; i < nY; i += 1)
+			for (int j = 0; j < nX; j += interval)
+				imageWriter.writePixel(i, j, color);
+
+	}
+
+	/**
+	 * Writes pixels to final image by delegating to the ImageWriter
+	 */
+	public void writeToImage() {
+		if (imageWriter == null)
+			throw new MissingResourceException("Image writer was null", ImageWriter.class.getCanonicalName(), "");
+		imageWriter.writeToImage();
 	}
 
 }
