@@ -43,29 +43,27 @@ public class Triangle extends Polygon {
 		// Return no intersection points if the point is either of the edge, the vertex,
 		// or the edge's continuation.
 
-		Vector ab, bc, aq, bq, cq;
+		Vector ab, bc, aq, bq, cq, ac;
+		double area, alpha, beta, gamma;
 
 		try {
 			ab = b.subtract(a); // a->b
 			bc = c.subtract(b); // b->c
+			ac = c.subtract(a); // a->c
 			aq = q.subtract(a); // a->q
 			bq = q.subtract(b); // b->q
 			cq = q.subtract(c); // c->q
-			if (isZero(normal.dotProduct(ab.crossProduct(aq))) || isZero(normal.dotProduct(bc.crossProduct(bq)))
-					|| isZero(normal.dotProduct(a.subtract(c).crossProduct(cq))))
-				return null;
+			// Alpha, beta, and gamma are calculated by the ratio between the respective
+			// triangles and the entire one.
+			area = ab.crossProduct(ac).length();
+			alpha = ab.crossProduct(aq).length() / area;
+			beta = bc.crossProduct(bq).length() / area;
+			gamma = ac.crossProduct(cq).length() / area;
 		} catch (IllegalArgumentException e) {
 			return null;
 		}
-		// Alpha, beta, and gamma are calculated by the ratio between the respective
-		// triangles and the entire one.
-		double area = ab.crossProduct(bc).dotProduct(normal);
-		double alpha = aq.crossProduct(bq).dotProduct(normal) / area;
-		double beta = bq.crossProduct(cq).dotProduct(normal) / area;
-		double gamma = cq.crossProduct(aq).dotProduct(normal) / area;
-
 		// Point is inside if all the coordinates are positive
-		if (alignZero(alpha) > 0 && alignZero(beta) > 0 && alignZero(gamma) > 0)
+		if (alignZero(alpha) > 0 && alignZero(beta) > 0 && alignZero(gamma) > 0 && isZero(gamma + beta + alpha - 1))
 			return List.of(q);
 
 		return null;
