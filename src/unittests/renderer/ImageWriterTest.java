@@ -26,6 +26,7 @@ class ImageWriterTest {
 		Color background = new Color(41, 227, 128);
 		Color grid = new Color(130, 10, 245);
 
+		// Separately colors each pixel based on the ray tracer's findings
 		for (int i = 0; i <= 500; ++i) {
 			for (int j = 0; j <= 800; ++j) {
 				if (i % 50 == 0 || j % 50 == 0)

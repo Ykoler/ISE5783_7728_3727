@@ -136,6 +136,16 @@ public class Camera {
 		return this;
 	}
 
+	/**
+	 * Uses the constructRay function to build the ray from the camera to the pixel,
+	 * and then uses the traceRay function to send back the color of the nearest
+	 * intersection point along that ray.
+	 * 
+	 * @param i the pixel's number on the y axis
+	 * @param j the pixel's number on the x axis
+	 * @return the color of the closest intersection point on the ray through pixel
+	 *         i,j
+	 */
 	private Color castRay(int i, int j) {
 		return rayTracer.traceRay(constructRay(imageWriter.getNx(), imageWriter.getNy(), j, i));
 	}
@@ -164,8 +174,8 @@ public class Camera {
 	}
 
 	/**
-	 * renders an image.
-	 * ###############################################################################################################################
+	 * Casts a ray through every pixel in the image writer, writing to it the color
+	 * of each pixel (calculated using the castRay function).
 	 */
 	public void renderImage() {
 		if (imageWriter == null)
@@ -186,7 +196,7 @@ public class Camera {
 	 * accordingly
 	 * 
 	 * @param interval the space in pixels
-	 * @param color    color to paint
+	 * @param color    color of the grid
 	 */
 	public void printGrid(int interval, Color color) {
 		if (imageWriter == null)
