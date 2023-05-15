@@ -1,9 +1,5 @@
 package unittests.renderer;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.awt.image.ColorModel;
-
 import org.junit.jupiter.api.Test;
 
 import primitives.*;

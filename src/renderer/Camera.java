@@ -3,7 +3,6 @@ package renderer;
 import primitives.*;
 import static primitives.Util.isZero;
 
-import java.nio.channels.NonReadableChannelException;
 import java.util.MissingResourceException;
 
 /**

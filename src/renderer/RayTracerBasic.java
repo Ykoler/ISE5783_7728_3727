@@ -3,7 +3,6 @@ package renderer;
 
 import java.util.List;
 
-import lighting.AmbientLight;
 import primitives.*;
 import scene.Scene;
 

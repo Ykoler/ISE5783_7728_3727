@@ -39,10 +39,6 @@ public class Triangle extends Polygon {
 		Point b = vertices.get(1);
 		Point c = vertices.get(2);
 
-		Vector normal = plane.getNormal();
-		// Return no intersection points if the point is either of the edge, the vertex,
-		// or the edge's continuation.
-
 		Vector ab, bc, aq, bq, cq, ac;
 		double area, alpha, beta, gamma;
 
@@ -59,13 +55,12 @@ public class Triangle extends Polygon {
 			alpha = ab.crossProduct(aq).length() / area;
 			beta = bc.crossProduct(bq).length() / area;
 			gamma = ac.crossProduct(cq).length() / area;
+			// Point is inside if all the coordinates are positive
+			if (alignZero(alpha) > 0 && alignZero(beta) > 0 && alignZero(gamma) > 0 && isZero(gamma + beta + alpha - 1))
+				return List.of(q);
+			return null;
 		} catch (IllegalArgumentException e) {
 			return null;
 		}
-		// Point is inside if all the coordinates are positive
-		if (alignZero(alpha) > 0 && alignZero(beta) > 0 && alignZero(gamma) > 0 && isZero(gamma + beta + alpha - 1))
-			return List.of(q);
-
-		return null;
 	}
 }
