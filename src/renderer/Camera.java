@@ -179,9 +179,9 @@ public class Camera {
 	 */
 	public void renderImage() {
 		if (imageWriter == null)
-			throw new MissingResourceException("Image writer was null", ImageWriter.class.getCanonicalName(), "");
+			throw new MissingResourceException("Image writer was null", getClass().getName(), "");
 		if (rayTracer == null)
-			throw new MissingResourceException("Ray tracer was null", RayTracerBase.class.getCanonicalName(), "");
+			throw new MissingResourceException("Ray tracer was null", getClass().getName(), "");
 
 		int nY = imageWriter.getNy();
 		int nX = imageWriter.getNx();
@@ -200,7 +200,7 @@ public class Camera {
 	 */
 	public void printGrid(int interval, Color color) {
 		if (imageWriter == null)
-			throw new MissingResourceException("Image writer was null", ImageWriter.class.getCanonicalName(), "");
+			throw new MissingResourceException("Image writer was null", getClass().getName(), "");
 		int nY = imageWriter.getNy();
 		int nX = imageWriter.getNx();
 		for (int i = 0; i < nY; i += interval)
