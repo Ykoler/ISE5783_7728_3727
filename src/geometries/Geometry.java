@@ -8,7 +8,27 @@ import primitives.*;
  * 
  * @author Yahel and Ashi
  */
-public interface Geometry extends Intersectable {
+public abstract class Geometry extends Intersectable {
+
+	protected Color emission = Color.BLACK;
+
+	/**
+	 * returns emission for the body
+	 * 
+	 * @return the emission's color
+	 */
+	public Color getEmission() {
+		return emission;
+	}
+
+	/**
+	 * @param emission the emission to set
+	 */
+	public Geometry setEmission(Color emission) {
+		this.emission = emission;
+		return this;
+	}
+
 	/**
 	 * Returns the normal vector at a specified point on the surface of the
 	 * geometry.

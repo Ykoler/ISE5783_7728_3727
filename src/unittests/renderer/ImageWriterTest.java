@@ -23,14 +23,9 @@ class ImageWriterTest {
 		Color grid = new Color(130, 10, 245);
 
 		// Separately colors each pixel based on the ray tracer's findings
-		for (int i = 0; i <= 500; ++i) {
-			for (int j = 0; j <= 800; ++j) {
-				if (i % 50 == 0 || j % 50 == 0)
-					imageWriter.writePixel(j, i, grid);
-				else
-					imageWriter.writePixel(j, i, background);
-			}
-		}
+		for (int i = 0; i <= 500; ++i)
+			for (int j = 0; j <= 800; ++j)
+				imageWriter.writePixel(j, i, i % 50 == 0 || j % 50 == 0 ? grid : background);
 		imageWriter.writeToImage();
 
 	}

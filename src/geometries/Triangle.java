@@ -2,6 +2,7 @@ package geometries;
 
 import java.util.List;
 
+import geometries.Intersectable.GeoPoint;
 import primitives.*;
 import static primitives.Util.*;
 
@@ -25,13 +26,13 @@ public class Triangle extends Polygon {
 	}
 
 	@Override
-	public List<Point> findIntersections(Ray ray) {
-		List<Point> res = plane.findIntersections(ray);
+	public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+		var res = this.plane.findGeoIntersections(ray);
 		// Only check point if the ray intersects the plane of the triangle.
 		if (res == null) {
 			return null;
 		}
-		Point q = res.get(0);
+		Point q = res.get(0).point;
 		// Then, use barycentric coordinates technique to check if the intersection
 		// point is inside the triangle
 		// calculate the area of the respective triangle for each of the edges
@@ -57,7 +58,7 @@ public class Triangle extends Polygon {
 			gamma = ac.crossProduct(cq).length() / area;
 			// Point is inside if all the coordinates are positive
 			if (alignZero(alpha) > 0 && alignZero(beta) > 0 && alignZero(gamma) > 0 && isZero(gamma + beta + alpha - 1))
-				return List.of(q);
+				return List.of(new GeoPoint(this, q));
 			return null;
 		} catch (IllegalArgumentException e) {
 			return null;

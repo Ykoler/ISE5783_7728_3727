@@ -4,6 +4,7 @@ import java.util.List;
 
 import primitives.*;
 import static primitives.Util.*;
+import static geometries.Intersectable.GeoPoint;
 
 /**
  * Plane Class is the basic class representing a Plane of Euclidean geometry in
@@ -11,7 +12,7 @@ import static primitives.Util.*;
  * 
  * @author Yahel and Ashi
  */
-public class Plane implements Geometry {
+public class Plane extends Geometry {
 
 	/** The reference point of the plane. */
 	private final Point q0;
@@ -73,8 +74,11 @@ public class Plane implements Geometry {
 		return "Refrence point: " + q0 + ", Normal vector: " + normal;
 	}
 
-	@Override
-	public List<Point> findIntersections(Ray ray) {
+	/**
+	 * @param ray
+	 * @return
+	 */
+	public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
 		Point p0 = ray.getP0();
 		Vector v = ray.getDir();
 		// Ray begins at the plane's reference point (will cause a zero vector)
@@ -91,6 +95,6 @@ public class Plane implements Geometry {
 		if (alignZero(t) <= 0) {
 			return null;
 		}
-		return List.of(ray.getPoint(t));
+		return List.of(new GeoPoint(this, ray.getPoint(t)));
 	}
 }

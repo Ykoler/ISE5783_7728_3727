@@ -9,7 +9,7 @@ import scene.Scene;
  * @author Yahel and Ashi
  */
 public abstract class RayTracerBase {
-	protected Scene scene;
+	protected final Scene scene;
 
 	/**
 	 * Creates a ray tracer for a given scene.

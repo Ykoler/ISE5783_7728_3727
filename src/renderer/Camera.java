@@ -85,7 +85,7 @@ public class Camera {
 			throw new IllegalArgumentException("ERROR: given vectors weren't perpendicular");
 		this.vTo = vTo.normalize();
 		this.vUp = vUp.normalize();
-		this.vRight = vUp.crossProduct(vTo);
+		this.vRight = vTo.crossProduct(vUp);
 		this.p0 = p0;
 	}
 
@@ -163,7 +163,7 @@ public class Camera {
 		Point pIJ = p0.add(vTo.scale(distance));
 		// Calculate distance on x,y axes to the designated point
 		double yI = (((nY - 1) / 2.0) - i) * (height / nY);
-		double xJ = (((nX - 1) / 2.0) - j) * (width / nX);
+		double xJ = (j - ((nX - 1) / 2.0)) * (width / nX);
 		// Avoiding creation of zero vector (which is unnecessary anyway)
 		if (!isZero(xJ))
 			pIJ = pIJ.add(vRight.scale(xJ));

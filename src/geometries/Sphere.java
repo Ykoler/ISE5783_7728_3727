@@ -45,13 +45,13 @@ public class Sphere extends RadialGeometry {
 	}
 
 	@Override
-	public List<Point> findIntersections(Ray ray) {
+	public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
 		Point p0 = ray.getP0();
 		Vector dir = ray.getDir();
 
 		// Deals with case where ray starts from the center of the sphere
 		if (p0.equals(center))
-			return List.of(ray.getPoint(this.radius));
+			return List.of(new GeoPoint(this, ray.getPoint(this.radius)));
 
 		// Finding the hypotenuse, base and perpendicular of the triangle formed by
 		// ray's starting point, the center of the sphere and the intersection point of
@@ -75,8 +75,8 @@ public class Sphere extends RadialGeometry {
 
 		double t1 = base - inside;
 		if (alignZero(t1) > 0)
-			return List.of(ray.getPoint(t1), ray.getPoint(t2));
+			return List.of(new GeoPoint(this, ray.getPoint(t1)), new GeoPoint(this, ray.getPoint(t2)));
 
-		return List.of(ray.getPoint(t2));
+		return List.of(new GeoPoint(this, ray.getPoint(t2)));
 	}
 }

@@ -12,7 +12,7 @@ import primitives.*;
  * @author Yahel and Ashi
  *
  */
-public class Geometries implements Intersectable {
+public class Geometries extends Intersectable {
 	List<Intersectable> geometries;
 
 	/**
@@ -41,11 +41,11 @@ public class Geometries implements Intersectable {
 	}
 
 	@Override
-	public List<Point> findIntersections(Ray ray) {
-		List<Point> result = null;
-		List<Point> toAdd = null;
+	public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+		List<GeoPoint> result = null;
+		List<GeoPoint> toAdd = null;
 		for (Intersectable geo : geometries) {
-			toAdd = geo.findIntersections(ray);
+			toAdd = geo.findGeoIntersections(ray);
 			if (toAdd != null) {
 				if (result == null) {
 					result = new LinkedList<>();
