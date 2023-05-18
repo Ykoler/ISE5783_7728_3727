@@ -13,7 +13,7 @@ import primitives.Vector;
  */
 public class PointLight extends Light implements LightSource {
 	private final Point position;
-	private double kC = 1, kL = 0, kQ = 0;
+	private double Kc = 1, Kl = 0, Kq = 0;
 
 	/**
 	 * @param intensity
@@ -21,44 +21,54 @@ public class PointLight extends Light implements LightSource {
 	public PointLight(Color intensity, Point position, double kC, double kL, double kQ) {
 		super(intensity);
 		this.position = position;
-		this.kC = kC;
-		this.kL = kL;
-		this.kQ = kQ;
+		this.Kc = kC;
+		this.Kl = kL;
+		this.Kq = kQ;
+	}
+
+	public PointLight(Color intensity, Point position) {
+		super(intensity);
+		this.position = position;
 	}
 
 	@Override
 	public Color getIntensity(Point p) {
-		double dSquare = position.distanceSquared(p);
-		return getIntensity().reduce(kC + kL * Math.sqrt(dSquare) + kQ * dSquare);
+
+		return getIntensity().reduce(getReduction(p));
 	}
 
 	@Override
 	public Vector getL(Point p) {
-		return position.subtract(p).normalize();
+		return p.subtract(position).normalize();
 	}
 
 	/**
 	 * @param kC the constant attenuation factor.
 	 */
-	public PointLight setkC(double kC) {
-		this.kC = kC;
+	public PointLight setKc(double Kc) {
+		this.Kc = Kc;
 		return this;
 	}
 
 	/**
 	 * @param kL the linear attenuation factor.
 	 */
-	public PointLight setkL(double kL) {
-		this.kL = kL;
+	public PointLight setKl(double Kl) {
+		this.Kl = Kl;
 		return this;
 	}
 
 	/**
 	 * @param kQ the quadratic attenuation factor.
 	 */
-	public PointLight setkQ(double kQ) {
-		this.kQ = kQ;
+	public PointLight setKq(double Kq) {
+		this.Kq = Kq;
 		return this;
+	}
+
+	protected double getReduction(Point p) {
+		double dSquare = position.distanceSquared(p);
+		return (Kc + Kl * Math.sqrt(dSquare) + Kq * dSquare);
 	}
 
 }

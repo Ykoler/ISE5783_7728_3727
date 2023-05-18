@@ -176,7 +176,7 @@ public class Camera {
 	 * Casts a ray through every pixel in the image writer, writing to it the color
 	 * of each pixel (calculated using the castRay function).
 	 */
-	public void renderImage() {
+	public Camera renderImage() {
 		if (imageWriter == null)
 			throw new MissingResourceException("Image writer was null", getClass().getName(), "");
 		if (rayTracer == null)
@@ -188,6 +188,7 @@ public class Camera {
 		for (int i = 0; i < nY; ++i)
 			for (int j = 0; j < nX; j++)
 				imageWriter.writePixel(j, i, castRay(i, j));
+		return this;
 	}
 
 	/**

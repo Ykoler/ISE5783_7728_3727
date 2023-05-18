@@ -4,7 +4,6 @@ import java.util.List;
 
 import primitives.*;
 import static primitives.Util.*;
-import static geometries.Intersectable.GeoPoint;
 
 /**
  * Plane Class is the basic class representing a Plane of Euclidean geometry in
