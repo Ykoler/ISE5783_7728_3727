@@ -9,6 +9,7 @@ import primitives.*;
  */
 public class DirectionalLight extends Light implements LightSource {
 	private final Vector direction;
+
 	/**
 	 * @param intensity
 	 */

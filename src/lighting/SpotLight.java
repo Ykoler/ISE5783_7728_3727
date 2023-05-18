@@ -11,6 +11,7 @@ import primitives.*;
  */
 public class SpotLight extends PointLight implements LightSource {
 	private final Vector direction;
+	private double width = 1;
 
 	/**
 	 * @param intensity
@@ -27,6 +28,12 @@ public class SpotLight extends PointLight implements LightSource {
 
 	@Override
 	public Color getIntensity(Point p) {
-		return (super.getIntensity().scale(Math.max(0, direction.dotProduct(super.getL(p))))).reduce(getReduction(p));
+		return (super.getIntensity().scale(Math.pow(Math.max(0, direction.dotProduct(super.getL(p))), width)))
+				.reduce(getReduction(p));
+	}
+
+	public SpotLight setNarrowBeam(double narrowness) {
+		this.width = narrowness;
+		return this;
 	}
 }

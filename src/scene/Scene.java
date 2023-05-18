@@ -48,8 +48,10 @@ public class Scene {
 		this.geometries = geometries;
 		return this;
 	}
+
 	/**
 	 * sets the scene's lights
+	 * 
 	 * @param lights
 	 * @return the scene
 	 */
