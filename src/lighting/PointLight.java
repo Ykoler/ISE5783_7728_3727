@@ -1,6 +1,3 @@
-/**
- * 
- */
 package lighting;
 
 import primitives.Color;
@@ -33,8 +30,8 @@ public class PointLight extends Light implements LightSource {
 
 	@Override
 	public Color getIntensity(Point p) {
-
-		return getIntensity().reduce(getReduction(p));
+		double dSquare = position.distanceSquared(p);
+		return getIntensity().reduce(Kc + Kl * Math.sqrt(dSquare) + Kq * dSquare);
 	}
 
 	@Override

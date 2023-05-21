@@ -1,6 +1,3 @@
-/**
- * 
- */
 package lighting;
 
 import primitives.*;
@@ -28,8 +25,7 @@ public class SpotLight extends PointLight implements LightSource {
 
 	@Override
 	public Color getIntensity(Point p) {
-		return (super.getIntensity().scale(Math.pow(Math.max(0, direction.dotProduct(super.getL(p))), width)))
-				.reduce(getReduction(p));
+		return super.getIntensity().scale(Math.pow(Math.max(0, direction.dotProduct(super.getL(p))), width));
 	}
 
 	public SpotLight setNarrowBeam(double narrowness) {
