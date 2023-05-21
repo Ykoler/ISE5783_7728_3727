@@ -5,15 +5,22 @@ import primitives.Point;
 import primitives.Vector;
 
 /**
- * @author Yahel Koler
- *
+ * Implementation of a point light source.
+ * 
+ * @author Yahel and Ashi
  */
 public class PointLight extends Light implements LightSource {
 	private final Point position;
 	private double Kc = 1, Kl = 0, Kq = 0;
 
 	/**
-	 * @param intensity
+	 * Creates a point light.
+	 * 
+	 * @param intensity light's intensity
+	 * @param position  light source's location
+	 * @param kC        constant attenuation factor
+	 * @param kL        linear attenuation factor
+	 * @param kQ        quadratic attenuation factor
 	 */
 	public PointLight(Color intensity, Point position, double kC, double kL, double kQ) {
 		super(intensity);
@@ -23,6 +30,12 @@ public class PointLight extends Light implements LightSource {
 		this.Kq = kQ;
 	}
 
+	/**
+	 * Default constructor for a point light.
+	 * 
+	 * @param intensity light's intensity
+	 * @param position  point light's position
+	 */
 	public PointLight(Color intensity, Point position) {
 		super(intensity);
 		this.position = position;
@@ -30,6 +43,8 @@ public class PointLight extends Light implements LightSource {
 
 	@Override
 	public Color getIntensity(Point p) {
+		// Calculates lights intensity at a point given it's distance from the point
+		// light
 		double dSquare = position.distanceSquared(p);
 		return getIntensity().reduce(Kc + Kl * Math.sqrt(dSquare) + Kq * dSquare);
 	}
@@ -40,6 +55,8 @@ public class PointLight extends Light implements LightSource {
 	}
 
 	/**
+	 * Sets the constant attenuation factor.
+	 * 
 	 * @param kC the constant attenuation factor.
 	 */
 	public PointLight setKc(double Kc) {
@@ -48,6 +65,8 @@ public class PointLight extends Light implements LightSource {
 	}
 
 	/**
+	 * Sets the linear attenuation factor.
+	 * 
 	 * @param kL the linear attenuation factor.
 	 */
 	public PointLight setKl(double Kl) {
@@ -56,16 +75,12 @@ public class PointLight extends Light implements LightSource {
 	}
 
 	/**
+	 * Sets the quadratic attenuation factor.
+	 * 
 	 * @param kQ the quadratic attenuation factor.
 	 */
 	public PointLight setKq(double Kq) {
 		this.Kq = Kq;
 		return this;
 	}
-
-	protected double getReduction(Point p) {
-		double dSquare = position.distanceSquared(p);
-		return (Kc + Kl * Math.sqrt(dSquare) + Kq * dSquare);
-	}
-
 }

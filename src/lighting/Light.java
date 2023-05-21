@@ -13,7 +13,9 @@ abstract class Light {
 	private final Color intensity;
 
 	/**
-	 * Creates light source
+	 * Creates light source.
+	 * 
+	 * @param intensity the light's intensity
 	 */
 	protected Light(Color intensity) {
 		this.intensity = intensity;

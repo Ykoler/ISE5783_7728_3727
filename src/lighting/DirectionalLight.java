@@ -3,7 +3,7 @@ package lighting;
 import primitives.*;
 
 /**
- * 
+ * Implementation of directional light.
  * 
  * @author Yahel and Ashi
  */

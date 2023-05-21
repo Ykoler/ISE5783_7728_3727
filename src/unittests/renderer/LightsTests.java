@@ -155,7 +155,7 @@ public class LightsTests {
 				.writeToImage(); //
 	}
 
-	/** Produce a picture of two triangles lighted by a spotlight */
+	/** Produce a picture of two triangles lit by a spotlight */
 	@Test
 	public void trianglesLights() {
 		scene2.geometries.add(triangle1, triangle2);

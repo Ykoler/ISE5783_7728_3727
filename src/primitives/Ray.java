@@ -93,6 +93,8 @@ public class Ray {
 		double d = Integer.MAX_VALUE;
 		double calcD;
 
+		// For each point, checks if it's closer than the previous, and if so, replaces
+		// it
 		for (GeoPoint point : points) {
 			calcD = point.point.distanceSquared(p0);
 			if (calcD < d) {
