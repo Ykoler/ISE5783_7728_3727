@@ -26,7 +26,11 @@ public class SceneDescriptor {
 	public List<Map<String, String>> spheres;
 	public List<Map<String, String>> triangles;
 	public List<Map<String, String>> planes;
+	public List<Map<String, String>> polygons;
 	public List<Map<String, String>> geometries;
+	public List<Map<String, String>> directionalLights;
+	public List<Map<String, String>> pointLights;
+	public List<Map<String, String>> spotLights;
 
 	/**
 	 * Initializes the scene from the XML file content.
@@ -53,25 +57,14 @@ public class SceneDescriptor {
 			ambientLightAttributes = new HashMap<>();
 			NodeList ambientLightNodes = root.getElementsByTagName("ambient-light");
 			if (ambientLightNodes.getLength() > 0) {
-				Node ambientLightNode = ambientLightNodes.item(0);
-				NamedNodeMap ambientLightAttrs = ambientLightNode.getAttributes();
-				for (int i = 0; i < ambientLightAttrs.getLength(); i++) {
-					Node attr = ambientLightAttrs.item(i);
-					ambientLightAttributes.put(attr.getNodeName(), attr.getNodeValue());
-				}
+				ambientLightAttributes = parseElement(ambientLightNodes, 0);
 			}
 
 			// Parse sphere elements
 			spheres = new ArrayList<>();
 			NodeList sphereNodes = root.getElementsByTagName("sphere");
 			for (int i = 0; i < sphereNodes.getLength(); i++) {
-				Node sphereNode = sphereNodes.item(i);
-				NamedNodeMap sphereAttrs = sphereNode.getAttributes();
-				Map<String, String> sphereMap = new HashMap<>();
-				for (int j = 0; j < sphereAttrs.getLength(); j++) {
-					Node attr = sphereAttrs.item(j);
-					sphereMap.put(attr.getNodeName(), attr.getNodeValue());
-				}
+				Map<String, String> sphereMap = parseElement(sphereNodes, i);
 				spheres.add(sphereMap);
 			}
 
@@ -79,13 +72,7 @@ public class SceneDescriptor {
 			triangles = new ArrayList<>();
 			NodeList triangleNodes = root.getElementsByTagName("triangle");
 			for (int i = 0; i < triangleNodes.getLength(); i++) {
-				Node triangleNode = triangleNodes.item(i);
-				NamedNodeMap triangleAttrs = triangleNode.getAttributes();
-				Map<String, String> triangleMap = new HashMap<>();
-				for (int j = 0; j < triangleAttrs.getLength(); j++) {
-					Node attr = triangleAttrs.item(j);
-					triangleMap.put(attr.getNodeName(), attr.getNodeValue());
-				}
+				Map<String, String> triangleMap = parseElement(triangleNodes, i);
 				triangles.add(triangleMap);
 			}
 
@@ -93,14 +80,40 @@ public class SceneDescriptor {
 			planes = new ArrayList<>();
 			NodeList planeNodes = root.getElementsByTagName("plane");
 			for (int i = 0; i < planeNodes.getLength(); i++) {
-				Node planeNode = planeNodes.item(i);
-				NamedNodeMap planeAttrs = planeNode.getAttributes();
-				Map<String, String> planeMap = new HashMap<>();
-				for (int j = 0; j < planeAttrs.getLength(); j++) {
-					Node attr = planeAttrs.item(j);
-					planeMap.put(attr.getNodeName(), attr.getNodeValue());
-				}
+				Map<String, String> planeMap = parseElement(planeNodes, i);
 				planes.add(planeMap);
+			}
+
+			// Parse triangle elements
+			polygons = new ArrayList<>();
+			NodeList polygonNodes = root.getElementsByTagName("polygon");
+			for (int i = 0; i < polygonNodes.getLength(); i++) {
+				Map<String, String> polygonMap = parseElement(polygonNodes, i);
+				polygons.add(polygonMap);
+			}
+
+			// Parse directional lights
+			directionalLights = new ArrayList<>();
+			NodeList directionalLightsNodes = root.getElementsByTagName("directional-light");
+			for (int i = 0; i < directionalLightsNodes.getLength(); i++) {
+				Map<String, String> directionalMap = parseElement(directionalLightsNodes, i);
+				directionalLights.add(directionalMap);
+			}
+
+			// Parse directional lights
+			pointLights = new ArrayList<>();
+			NodeList pointLightsNodes = root.getElementsByTagName("point-light");
+			for (int i = 0; i < pointLightsNodes.getLength(); i++) {
+				Map<String, String> pointMap = parseElement(pointLightsNodes, i);
+				pointLights.add(pointMap);
+			}
+
+			// Parse directional lights
+			spotLights = new ArrayList<>();
+			NodeList spotLightsNodes = root.getElementsByTagName("spot-light");
+			for (int i = 0; i < spotLightsNodes.getLength(); i++) {
+				Map<String, String> spotMap = parseElement(spotLightsNodes, i);
+				spotLights.add(spotMap);
 			}
 
 			// Parse geometry elements
@@ -119,5 +132,21 @@ public class SceneDescriptor {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * @param polygonNodes
+	 * @param i
+	 * @return
+	 */
+	private Map<String, String> parseElement(NodeList elementNodes, int i) {
+		Node elementNode = elementNodes.item(i);
+		NamedNodeMap elementAttrs = elementNode.getAttributes();
+		Map<String, String> elementMap = new HashMap<>();
+		for (int j = 0; j < elementAttrs.getLength(); j++) {
+			Node attr = elementAttrs.item(j);
+			elementMap.put(attr.getNodeName(), attr.getNodeValue());
+		}
+		return elementMap;
 	}
 }

@@ -90,6 +90,11 @@ public class Polygon extends Geometry {
 	}
 
 	@Override
+	public String toString() {
+		return vertices.toString();
+	}
+
+	@Override
 	public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
 		var points = this.plane.findGeoIntersections(ray);
 		// Only check point if the ray intersects the plane of the polygon.

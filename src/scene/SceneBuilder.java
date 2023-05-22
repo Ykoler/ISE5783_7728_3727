@@ -10,11 +10,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import geometries.Sphere;
-import geometries.Triangle;
-import lighting.AmbientLight;
-import primitives.Color;
-import primitives.Point;
+import geometries.*;
+import lighting.*;
+import primitives.*;
 
 public class SceneBuilder {
 	SceneDescriptor sceneDesc;
@@ -52,22 +50,48 @@ public class SceneBuilder {
 			}
 			// adding triangles (list<map<String, String>>)
 			for (Map<String, String> triangleMap : sceneDesc.triangles) {
-				Map<String, List<Double>> triangle = parser(triangleMap);
-				List<Point> points = new LinkedList<>();
-				for (int i = 0; i < 3; ++i) {
-					var point = triangle.get("p" + String.valueOf(i));
-					points.add(new Point(point.get(0), point.get(1), point.get(1)));
-				}
-				System.out.println(points);
-				Triangle t = new Triangle(points.get(0), points.get(1), points.get(2));
-				System.out.println(t);
-				scene.geometries.add(t);
-
+				List<Point> points = polygonParser(triangleMap);
+				Triangle triangle = new Triangle(points.get(0), points.get(1), points.get(2));
+				if (parser(triangleMap).get("emmision") != null)
+					triangle.setEmission(new Color(parser(triangleMap).get("emmision").get(0),
+							parser(triangleMap).get("emmision").get(1), parser(triangleMap).get("emmision").get(2)));
+				scene.geometries.add(triangle);
 			}
+
+			// adding polygons (list<map<String, String>>)
+			for (Map<String, String> polygonMap : sceneDesc.polygons) {
+				Polygon polygon = new Polygon(polygonParser(polygonMap).toArray(new Point[0]));
+				scene.geometries.add(polygon);
+			}
+
+			// adding directional lights (list<map<String, String>>)
+
+			for (Map<String, String> directionalLightsMap : sceneDesc.directionalLights) {
+				Map<String, List<Double>> directional = parser(directionalLightsMap);
+				var color = directional.get("color");
+				var dir = directional.get("direction");
+				scene.lights.add(new DirectionalLight(new Color(color.get(0), color.get(1), color.get(2)),
+						new Vector(dir.get(0), dir.get(1), dir.get(2))));
+			}
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return scene;
+	}
+
+	/**
+	 * @param triangleMap
+	 */
+	private List<Point> polygonParser(Map<String, String> polygonMap) {
+		Map<String, List<Double>> polygon = parser(polygonMap);
+		List<Point> points = new LinkedList<>();
+		int length = polygon.get("emmision") != null ? polygon.size() - 1 : polygon.size();
+		for (int i = 0; i < length; ++i) {
+			var point = polygon.get("p" + String.valueOf(i));
+			points.add(new Point(point.get(0), point.get(1), point.get(2)));
+		}
+		return points;
 	}
 
 	private Map<String, List<Double>> parser(Map<String, String> map) {
@@ -80,4 +104,5 @@ public class SceneBuilder {
 		}
 		return attributes;
 	}
+
 }
