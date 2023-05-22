@@ -1,0 +1,28 @@
+<scene
+	background-color="75 127 90">
+	<ambient-light
+		color="255 191 191"
+		k="1.0"
+	 />
+	<geometries>
+		<sphere
+			center="0 0 -100"
+			radius="50"
+		 />
+		<triangle
+			p0="-100 0 -100"
+			p1="0 100 -100"
+			p2="-100 100 -100"
+		 />
+		<triangle
+			p0="100 0 -100"
+			p1="0 -100 -100"
+			p2="100 -100 -100"
+		 />
+		<triangle
+			p0="-100 0 -100"
+			p1="0 -100 -100"
+			p2="-100 -100 -100"
+		 />
+	</geometries>
+</scene>
