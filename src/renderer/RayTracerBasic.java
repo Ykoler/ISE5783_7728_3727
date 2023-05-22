@@ -103,24 +103,6 @@ public class RayTracerBasic extends RayTracerBase {
 	 */
 	private Double3 calcSpecular(Material mat, Vector n, Vector l, double nl, Vector v) {
 		double vr = v.dotProduct(l.subtract(n.scale(nl * 2)));
-		return (alignZero(vr) <= 0) ? Double3.ZERO : mat.Ks.scale(powr(-vr, mat.nShininess));
+		return (alignZero(vr) > 0) ? Double3.ZERO : mat.Ks.scale(Math.pow(-vr, mat.nShininess));
 	}
-
-	/**
-	 * A homemade function to calculate the power of a number (made only for
-	 * integers so as to save on runtime).
-	 * 
-	 * @param b the base
-	 * @param e the exponent
-	 * @return the result
-	 */
-	private double powr(double b, int e) {
-		double res = 1;
-		for (int i = 0; i < e; ++i)
-			res *= b;
-		for (int i = 0; i > e; --i)
-			res /= b;
-		return res;
-	}
-
 }

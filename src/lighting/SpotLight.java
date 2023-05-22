@@ -11,7 +11,7 @@ public class SpotLight extends PointLight implements LightSource {
 	private final Vector direction;
 
 	// Sets the level of width for the light's ray
-	private double width = 1;
+	private double narrowness = 1;
 
 	/**
 	 * Creates a spot light.
@@ -23,8 +23,8 @@ public class SpotLight extends PointLight implements LightSource {
 	 * @param kQ        quadratic attenuation factor
 	 * @param direction direction in which the light is pointing
 	 */
-	public SpotLight(Color intensity, Point position, double Kc, double Kl, double Kq, Vector direction) {
-		super(intensity, position, Kc, Kl, Kq);
+	public SpotLight(Color intensity, Point position, double kC, double kL, double kQ, Vector direction) {
+		super(intensity, position, kC, kL, kQ);
 		this.direction = direction.normalize();
 	}
 
@@ -42,7 +42,7 @@ public class SpotLight extends PointLight implements LightSource {
 
 	@Override
 	public Color getIntensity(Point p) {
-		return super.getIntensity(p).scale(Math.pow(Math.max(0, direction.dotProduct(super.getL(p))), width));
+		return super.getIntensity(p).scale(Math.pow(Math.max(0, direction.dotProduct(super.getL(p))), narrowness));
 	}
 
 	/**
@@ -53,7 +53,7 @@ public class SpotLight extends PointLight implements LightSource {
 	 * @return the light
 	 */
 	public SpotLight setNarrowBeam(double narrowness) {
-		this.width = narrowness;
+		this.narrowness = narrowness;
 		return this;
 	}
 }
