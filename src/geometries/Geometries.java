@@ -13,14 +13,13 @@ import primitives.*;
  *
  */
 public class Geometries extends Intersectable {
-	List<Intersectable> geometries;
+	List<Intersectable> geometries = new LinkedList<>();
 
 	/**
 	 * Constructs a new empty geometries object representing a composite of
 	 * intersectable objects.
 	 */
 	public Geometries() {
-		geometries = new LinkedList<>();
 	}
 
 	/**
@@ -28,7 +27,7 @@ public class Geometries extends Intersectable {
 	 * objects with the given objects.
 	 */
 	public Geometries(Intersectable... geometries) {
-		this.geometries = new LinkedList<>(List.of(geometries));
+		add(geometries);
 	}
 
 	/**
@@ -43,13 +42,11 @@ public class Geometries extends Intersectable {
 	@Override
 	public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
 		List<GeoPoint> result = null;
-		List<GeoPoint> toAdd = null;
 		for (Intersectable geo : geometries) {
-			toAdd = geo.findGeoIntersections(ray);
+			var toAdd = geo.findGeoIntersections(ray);
 			if (toAdd != null) {
-				if (result == null) {
+				if (result == null)
 					result = new LinkedList<>();
-				}
 				result.addAll(toAdd);
 			}
 		}

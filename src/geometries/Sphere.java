@@ -59,15 +59,16 @@ public class Sphere extends RadialGeometry {
 		Vector hypotenuse = this.center.subtract(p0);
 		double base = dir.dotProduct(hypotenuse);
 		double perpendicular = hypotenuse.lengthSquared() - base * base;
+		double insideSquared = this.radiusSquared - perpendicular;
 
 		// Dealing with a case in which the ray is perpendicular to the sphere at the
 		// intersection point, or passes outside the Sphere.
-		if (isZero(perpendicular - this.radiusSquared) || perpendicular > this.radiusSquared)
+		if (alignZero(insideSquared) <= 0)
 			return null;
 
 		// Returning intersection points, ensuring that only those intersected by the
 		// ray are returned.
-		double inside = Math.sqrt(this.radiusSquared - perpendicular);
+		double inside = Math.sqrt(insideSquared);
 		double t2 = base + inside;
 
 		if (alignZero(t2) <= 0)

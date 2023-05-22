@@ -115,6 +115,7 @@ public class Polygon extends Geometry {
 			if ((normal > 0) ^ sign || isZero(normal))
 				return null;
 		}
-		return List.of(new GeoPoint(this, points.get(0).point));
+		points.get(0).geometry = this;
+		return points;
 	}
 }

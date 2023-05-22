@@ -28,9 +28,9 @@ public class Triangle extends Polygon {
 	public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
 		var res = this.plane.findGeoIntersections(ray);
 		// Only check point if the ray intersects the plane of the triangle.
-		if (res == null) {
+		if (res == null)
 			return null;
-		}
+
 		Point q = res.get(0).point;
 		// Then, use barycentric coordinates technique to check if the intersection
 		// point is inside the triangle
@@ -56,9 +56,10 @@ public class Triangle extends Polygon {
 			beta = bc.crossProduct(bq).length() / area;
 			gamma = ac.crossProduct(cq).length() / area;
 			// Point is inside if all the coordinates are positive
-			if (alignZero(alpha) > 0 && alignZero(beta) > 0 && alignZero(gamma) > 0 && isZero(gamma + beta + alpha - 1))
-				return List.of(new GeoPoint(this, q));
-			return null;
+			
+			res.get(0).geometry = this;
+			return (alignZero(alpha) > 0 && alignZero(beta) > 0 && alignZero(gamma) > 0 && isZero(gamma + beta + alpha - 1))
+				? List.of(new GeoPoint(this, q)) : null;
 		} catch (IllegalArgumentException e) {
 			return null;
 		}

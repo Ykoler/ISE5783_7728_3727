@@ -81,19 +81,15 @@ public class Plane extends Geometry {
 		Point p0 = ray.getP0();
 		Vector v = ray.getDir();
 		// Ray begins at the plane's reference point (will cause a zero vector)
-		if (q0.equals(p0)) {
+		if (q0.equals(p0))
 			return null;
-		}
 		double nv = normal.dotProduct(v);
 		// Ray is parallel to the plane
-		if (isZero(nv)) {
+		if (isZero(nv))
 			return null;
-		}
+		
 		double t = (q0.subtract(p0)).dotProduct(normal) / nv;
 		// Checking if intersection is behind the start of the ray
-		if (alignZero(t) <= 0) {
-			return null;
-		}
-		return List.of(new GeoPoint(this, ray.getPoint(t)));
+		return (alignZero(t) <= 0) ? null : List.of(new GeoPoint(this, ray.getPoint(t)));
 	}
 }

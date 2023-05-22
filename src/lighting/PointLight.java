@@ -46,7 +46,7 @@ public class PointLight extends Light implements LightSource {
 		// Calculates lights intensity at a point given it's distance from the point
 		// light
 		double dSquare = position.distanceSquared(p);
-		return getIntensity().reduce(Kc + Kl * Math.sqrt(dSquare) + Kq * dSquare);
+		return intensity.reduce(Kc + Kl * Math.sqrt(dSquare) + Kq * dSquare);
 	}
 
 	@Override
