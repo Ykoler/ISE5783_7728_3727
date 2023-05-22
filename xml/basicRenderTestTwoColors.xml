@@ -7,7 +7,7 @@
 	<geometries>
 		<sphere
 			center="0 0 -100"
-			radius="50"
+			radius="30"
 		 />
 		<triangle
 			p0="-100 0 -100"

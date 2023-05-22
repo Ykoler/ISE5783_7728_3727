@@ -4,6 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import geometries.Sphere;
@@ -30,42 +34,50 @@ public class SceneBuilder {
 			sceneDesc.initializeFromXMLstring(xmlString);
 			// create the scene from the fields of the SceneDescriptor
 			// adding ambient light (map<String, String>)
-			double r = Double.parseDouble(sceneDesc.ambientLightAttributes.get("color").split(" ")[0]);
-			double g = Double.parseDouble(sceneDesc.ambientLightAttributes.get("color").split(" ")[1]);
-			double b = Double.parseDouble(sceneDesc.ambientLightAttributes.get("color").split(" ")[2]);
-			Color ambientLightColor = new Color(r, g, b);
 			// adding background color (map<String, String>)
-			r = Double.parseDouble(sceneDesc.sceneAttributes.get("background-color").split(" ")[0]);
-			g = Double.parseDouble(sceneDesc.sceneAttributes.get("background-color").split(" ")[1]);
-			b = Double.parseDouble(sceneDesc.sceneAttributes.get("background-color").split(" ")[2]);
+			var ambience = parser(sceneDesc.ambientLightAttributes);
+			var ambientC = ambience.get("color");
+			scene.setAmbientLight(new AmbientLight(new Color(ambientC.get(0), ambientC.get(1), ambientC.get(2)),
+					ambience.get("k").get(0)));
 
-			scene.setAmbientLight(
-					new AmbientLight(ambientLightColor, Double.parseDouble(sceneDesc.ambientLightAttributes.get("k"))));
-			Color backgroundColor = new Color(r, g, b);
-			scene.setBackground(backgroundColor);
+			var backColor = parser(sceneDesc.sceneAttributes).get("background-color");
+			scene.setBackground(new Color(backColor.get(0), backColor.get(1), backColor.get(2)));
+
 			// adding spheres (list<map<String, String>>)
-			for (Map<String, String> sphere : sceneDesc.spheres) {
-				scene.geometries.add(new Sphere(Double.parseDouble(sphere.get("radius")),
-						new Point(Double.parseDouble(sphere.get("center").split(" ")[0]),
-								Double.parseDouble(sphere.get("center").split(" ")[1]),
-								Double.parseDouble(sphere.get("center").split(" ")[2]))));
+			for (Map<String, String> sphereMap : sceneDesc.spheres) {
+				Map<String, List<Double>> sphere = parser(sphereMap);
+				var spherePoints = sphere.get("center");
+				scene.geometries.add(new Sphere(sphere.get("radius").get(0),
+						new Point(spherePoints.get(0), spherePoints.get(1), spherePoints.get(2))));
 			}
 			// adding triangles (list<map<String, String>>)
-			for (Map<String, String> triangle : sceneDesc.triangles) {
-				scene.geometries.add(new Triangle(
-						new Point(Double.parseDouble(triangle.get("p0").split(" ")[0]),
-								Double.parseDouble(triangle.get("p0").split(" ")[1]),
-								Double.parseDouble(triangle.get("p0").split(" ")[2])),
-						new Point(Double.parseDouble(triangle.get("p1").split(" ")[0]),
-								Double.parseDouble(triangle.get("p1").split(" ")[1]),
-								Double.parseDouble(triangle.get("p1").split(" ")[2])),
-						new Point(Double.parseDouble(triangle.get("p2").split(" ")[0]),
-								Double.parseDouble(triangle.get("p2").split(" ")[1]),
-								Double.parseDouble(triangle.get("p2").split(" ")[2]))));
+			for (Map<String, String> triangleMap : sceneDesc.triangles) {
+				Map<String, List<Double>> triangle = parser(triangleMap);
+				List<Point> points = new LinkedList<>();
+				for (int i = 0; i < 3; ++i) {
+					var point = triangle.get("p" + String.valueOf(i));
+					points.add(new Point(point.get(0), point.get(1), point.get(1)));
+				}
+				System.out.println(points);
+				Triangle t = new Triangle(points.get(0), points.get(1), points.get(2));
+				System.out.println(t);
+				scene.geometries.add(t);
+
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return scene;
+	}
+
+	private Map<String, List<Double>> parser(Map<String, String> map) {
+		Map<String, List<Double>> attributes = new HashMap<String, List<Double>>();
+		for (Map.Entry<String, String> entry : map.entrySet()) {
+			List<Double> values = new ArrayList<>();
+			for (String s : entry.getValue().split(" "))
+				values.add(Double.parseDouble(s));
+			attributes.put(entry.getKey(), values);
+		}
+		return attributes;
 	}
 }
