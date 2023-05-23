@@ -39,7 +39,8 @@ public class SceneBuilder {
 					ambience.get("k").get(0)));
 
 			var backColor = parser(sceneDesc.sceneAttributes).get("background-color");
-			scene.setBackground(new Color(backColor.get(0), backColor.get(1), backColor.get(2)));
+			if (backColor != null)
+				scene.setBackground(new Color(backColor.get(0), backColor.get(1), backColor.get(2)));
 
 			// adding spheres (list<map<String, String>>)
 			for (Map<String, String> sphereMap : sceneDesc.spheres) {
@@ -52,9 +53,9 @@ public class SceneBuilder {
 			for (Map<String, String> triangleMap : sceneDesc.triangles) {
 				List<Point> points = polygonParser(triangleMap);
 				Triangle triangle = new Triangle(points.get(0), points.get(1), points.get(2));
-				if (parser(triangleMap).get("emmision") != null)
-					triangle.setEmission(new Color(parser(triangleMap).get("emmision").get(0),
-							parser(triangleMap).get("emmision").get(1), parser(triangleMap).get("emmision").get(2)));
+				var color = parser(triangleMap).get("emission");
+				if (color != null)
+					triangle.setEmission(new Color(color.get(0), color.get(1), color.get(2)));
 				scene.geometries.add(triangle);
 			}
 
@@ -86,7 +87,7 @@ public class SceneBuilder {
 	private List<Point> polygonParser(Map<String, String> polygonMap) {
 		Map<String, List<Double>> polygon = parser(polygonMap);
 		List<Point> points = new LinkedList<>();
-		int length = polygon.get("emmision") != null ? polygon.size() - 1 : polygon.size();
+		int length = polygon.get("emission") != null ? polygon.size() - 1 : polygon.size();
 		for (int i = 0; i < length; ++i) {
 			var point = polygon.get("p" + String.valueOf(i));
 			points.add(new Point(point.get(0), point.get(1), point.get(2)));
