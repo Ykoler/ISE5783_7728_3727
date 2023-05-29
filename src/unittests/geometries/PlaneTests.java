@@ -105,4 +105,14 @@ class PlaneTests {
 		assertNull(p.findIntersections(new Ray(p.getQ0(), new Vector(-3, 5, 2))),
 				"ERROR: findIntersections() did not return null when the ray begins in the same point which appears as reference point in the plane");
 	}
+	/**
+	 * Test method for {@link geometries.Plane#findGeoIntersections(primitives.Ray, )}.
+	 */
+	@Test
+	void testFindGeoIntersections() {
+		Plane p = new Plane(new Point(0, 0, 1), new Point(0, 1, 0), new Point(1, 0, 0));
+
+		// ============ Equivalence Partitions Tests ==============
+		// TC01: Ray intersects the plane (the ray is not orthogonal or parallel to the
+	}
 }

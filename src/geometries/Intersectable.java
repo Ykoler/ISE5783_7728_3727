@@ -32,7 +32,8 @@ public abstract class Intersectable {
 		public boolean equals(Object obj) {
 			if (this == obj)
 				return true;
-			return obj instanceof GeoPoint other && (this.geometry == other.geometry) && (this.point.equals(other.point));
+			return obj instanceof GeoPoint other && (this.geometry == other.geometry)
+					&& (this.point.equals(other.point));
 		}
 
 		@Override
@@ -60,15 +61,28 @@ public abstract class Intersectable {
 	 * @return list of intersections (in the form of GeoPoints)
 	 */
 	public final List<GeoPoint> findGeoIntersections(Ray ray) {
-		return findGeoIntersectionsHelper(ray);
+		return findGeoIntersections(ray, Double.POSITIVE_INFINITY);
+	}
+
+	/**
+	 * Find intersections between a ray and a group of geometric objects, returning
+	 * GeoPoints closer than the max distance instead of points.
+	 * 
+	 * @param ray         ray with which to find intersections
+	 * @param maxDistance max distance of intersection points
+	 * @return list of intersections (in the form of GeoPoints)
+	 */
+	public final List<GeoPoint> findGeoIntersections(Ray ray, double maxDistance) {
+		return findGeoIntersectionsHelper(ray, maxDistance);
 	}
 
 	/**
 	 * Find intersections between a ray and any Intersectable, returning GeoPoints
-	 * instead of points.
+	 * closer than the max distance instead of points.
 	 * 
-	 * @param ray ray with which to find intersections
+	 * @param ray         ray with which to find intersections
+	 * @param maxDistance max distance of intersection points
 	 * @return list of intersections (in the form of GeoPoints)
 	 */
-	protected abstract List<GeoPoint> findGeoIntersectionsHelper(Ray ray);
+	protected abstract List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDistance);
 }

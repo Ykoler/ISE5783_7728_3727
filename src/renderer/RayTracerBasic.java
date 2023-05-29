@@ -16,6 +16,8 @@ import lighting.LightSource;
 
 public class RayTracerBasic extends RayTracerBase {
 
+	public static final double DELTA = 0.00001;
+
 	/**
 	 * Creates basic ray tracer
 	 * 
@@ -69,7 +71,7 @@ public class RayTracerBasic extends RayTracerBase {
 		for (LightSource lightSource : scene.lights) {
 			Vector l = lightSource.getL(gp.point);
 			double nl = alignZero(n.dotProduct(l));
-			if (nl * nv > 0) {
+			if (nl * nv > 0 && unshaded(gp, l, n, nl, lightSource)) {
 				Color iL = lightSource.getIntensity(gp.point);
 				color = color.add(iL.scale(calcDiffusive(mat, nl < 0 ? -nl : nl)),
 						iL.scale(calcSpecular(mat, n, l, nl, v)));
@@ -104,5 +106,19 @@ public class RayTracerBasic extends RayTracerBase {
 	private Double3 calcSpecular(Material mat, Vector n, Vector l, double nl, Vector v) {
 		double vr = v.dotProduct(l.subtract(n.scale(nl * 2)));
 		return (alignZero(vr) > 0) ? Double3.ZERO : mat.Ks.scale(Math.pow(-vr, mat.nShininess));
+	}
+
+	/**
+	 * ###########################################################################
+	 * 
+	 * @param gp
+	 * @param l
+	 * @param n
+	 * @return
+	 */
+	private boolean unshaded(GeoPoint gp, Vector l, Vector n, double nl, LightSource light) {
+		Vector lightDir = l.scale(-1);
+		Ray lightRay = new Ray(gp.point.add(n.scale(nl < 0 ? DELTA : -DELTA)), lightDir);
+		return scene.geometries.findGeoIntersections(lightRay, light.getDistance(gp.point)) == null;
 	}
 }

@@ -45,7 +45,7 @@ public class Sphere extends RadialGeometry {
 	}
 
 	@Override
-	public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+	public List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDistance) {
 		Point p0 = ray.getP0();
 		Vector dir = ray.getDir();
 
@@ -71,11 +71,11 @@ public class Sphere extends RadialGeometry {
 		double inside = Math.sqrt(insideSquared);
 		double t2 = base + inside;
 
-		if (alignZero(t2) <= 0)
+		if (alignZero(t2) <= 0 || alignZero(maxDistance - t2) <= 0)
 			return null;
 
 		double t1 = base - inside;
-		if (alignZero(t1) > 0)
+		if (alignZero(t1) > 0 || alignZero(maxDistance - t1) > 0)
 			return List.of(new GeoPoint(this, ray.getPoint(t1)), new GeoPoint(this, ray.getPoint(t2)));
 
 		return List.of(new GeoPoint(this, ray.getPoint(t2)));

@@ -77,7 +77,7 @@ public class Plane extends Geometry {
 	 * @param ray
 	 * @return
 	 */
-	public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+	public List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDistance) {
 		Point p0 = ray.getP0();
 		Vector v = ray.getDir();
 		// Ray begins at the plane's reference point (will cause a zero vector)
@@ -87,9 +87,10 @@ public class Plane extends Geometry {
 		// Ray is parallel to the plane
 		if (isZero(nv))
 			return null;
-		
+
 		double t = (q0.subtract(p0)).dotProduct(normal) / nv;
 		// Checking if intersection is behind the start of the ray
-		return (alignZero(t) <= 0) ? null : List.of(new GeoPoint(this, ray.getPoint(t)));
+		return (alignZero(t) <= 0 || alignZero(maxDistance - t) <= 0) ? null
+				: List.of(new GeoPoint(this, ray.getPoint(t)));
 	}
 }
