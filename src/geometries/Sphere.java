@@ -75,9 +75,10 @@ public class Sphere extends RadialGeometry {
 			return null;
 
 		double t1 = base - inside;
-		if (alignZero(t1) > 0 || alignZero(maxDistance - t1) > 0)
-			return List.of(new GeoPoint(this, ray.getPoint(t1)), new GeoPoint(this, ray.getPoint(t2)));
+		if (alignZero(t1) <= 0 || alignZero(maxDistance - t1) <= 0)
+			return List.of(new GeoPoint(this, ray.getPoint(t2)));
 
-		return List.of(new GeoPoint(this, ray.getPoint(t2)));
+		return List.of(new GeoPoint(this, ray.getPoint(t1)), new GeoPoint(this, ray.getPoint(t2)));
+
 	}
 }
