@@ -7,7 +7,8 @@ package primitives;
  * @author Yahel and Ashi
  */
 public class Material {
-	public Double3 Kd = Double3.ZERO, Ks = Double3.ZERO;
+	public Double3 kD = Double3.ZERO, kS = Double3.ZERO, kT = Double3.ZERO, kR = Double3.ZERO;
+
 	public int nShininess = 0;
 
 	/**
@@ -16,19 +17,19 @@ public class Material {
 	 * @param Kd the diffusive attenuation factor.
 	 * @return the scene
 	 */
-	public Material setKd(double Kd) {
-		this.Kd = new Double3(Kd);
+	public Material setKd(double kD) {
+		this.kD = new Double3(kD);
 		return this;
 	}
 
 	/**
 	 * Sets diffusive attenuation factor.
 	 * 
-	 * @param Kd the diffusive attenuation factor.
+	 * @param kD the diffusive attenuation factor.
 	 * @return the scene
 	 */
-	public Material setKd(Double3 Kd) {
-		this.Kd = Kd;
+	public Material setKd(Double3 kD) {
+		this.kD = kD;
 		return this;
 	}
 
@@ -39,7 +40,7 @@ public class Material {
 	 * @return the scene
 	 */
 	public Material setKs(double Ks) {
-		this.Ks = new Double3(Ks);
+		this.kS = new Double3(Ks);
 		return this;
 	}
 
@@ -50,7 +51,51 @@ public class Material {
 	 * @return the scene
 	 */
 	public Material setKs(Double3 Ks) {
-		this.Ks = Ks;
+		this.kS = Ks;
+		return this;
+	}
+
+	/**
+	 * Sets transparency attenuation factor.
+	 * 
+	 * @param kT the transparency attenuation factor.
+	 * @return the scene
+	 */
+	public Material setKt(double kT) {
+		this.kT = new Double3(kT);
+		return this;
+	}
+
+	/**
+	 * Sets transparency attenuation factor.
+	 * 
+	 * @param kT the transparency attenuation factor.
+	 * @return the scene
+	 */
+	public Material setKt(Double3 kT) {
+		this.kT = kT;
+		return this;
+	}
+
+	/**
+	 * Sets reflective attenuation factor.
+	 * 
+	 * @param kR the reflective attenuation factor.
+	 * @return the scene
+	 */
+	public Material setKr(double kR) {
+		this.kR = new Double3(kR);
+		return this;
+	}
+
+	/**
+	 * Sets reflective attenuation factor.
+	 * 
+	 * @param kR the reflective attenuation factor.
+	 * @return the scene
+	 */
+	public Material setKr(Double3 kR) {
+		this.kR = kR;
 		return this;
 	}
 

@@ -18,6 +18,8 @@ public class Ray {
 	/** The directional vector of the ray. */
 	final Vector dir;
 
+	public static final double DELTA = 0.00001;
+
 	/**
 	 * Creates a new Ray object with the specified starting point and directional
 	 * vector. The directional vector will be normalized.
@@ -27,6 +29,19 @@ public class Ray {
 	 */
 	public Ray(Point p0, Vector dir) {
 		this.p0 = p0;
+		this.dir = dir.normalize();
+	}
+
+	/**
+	 * ##################################################################################################################################
+	 * 
+	 * @param p0
+	 * @param dir
+	 * @param normal
+	 */
+	public Ray(Point p0, Vector dir, Vector normal) {
+		double res = dir.dotProduct(normal);
+		this.p0 = isZero(res) ? p0 : res > 0 ? p0.add(normal.scale(DELTA)) : p0.add(normal.scale(-DELTA));
 		this.dir = dir.normalize();
 	}
 
@@ -68,7 +83,6 @@ public class Ray {
 	 * @return the desired point
 	 */
 	public Point getPoint(double t) {
-		// return isZero(t) ? p0 : p0.add(dir.scale(t));
 		try {
 			return p0.add(dir.scale(t));
 		} catch (Exception e) {

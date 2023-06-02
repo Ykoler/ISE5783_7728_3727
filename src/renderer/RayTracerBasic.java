@@ -1,12 +1,12 @@
 
 package renderer;
 
-import java.util.List;
 import static primitives.Util.*;
 import primitives.*;
 import scene.Scene;
 import geometries.Intersectable.GeoPoint;
 import lighting.LightSource;
+import static primitives.Ray.DELTA;
 
 /**
  * Basic ray tracer.
@@ -15,8 +15,8 @@ import lighting.LightSource;
  */
 
 public class RayTracerBasic extends RayTracerBase {
-
-	public static final double DELTA = 0.00001;
+	private static final int MAX_CALC_COLR_LEVEL = 10;
+	private static final double MIN_CALC_COLOR_K = 0.001;
 
 	/**
 	 * Creates basic ray tracer
@@ -29,10 +29,12 @@ public class RayTracerBasic extends RayTracerBase {
 
 	@Override
 	public Color traceRay(Ray ray) {
-		List<GeoPoint> intersectionPoints = scene.geometries.findGeoIntersections(ray);
-		if (intersectionPoints == null)
-			return scene.background;
-		return calcColor(ray.findClosestGeoPoint(intersectionPoints), ray);
+		GeoPoint closestPoint = findClosestIntersection(ray);
+		return closestPoint == null ? scene.background : calcColor(closestPoint, ray);
+	}
+
+	private GeoPoint findClosestIntersection(Ray ray) {
+		return ray.findClosestGeoPoint(scene.geometries.findGeoIntersections(ray));
 	}
 
 	/**
@@ -89,7 +91,7 @@ public class RayTracerBasic extends RayTracerBase {
 	 * @return the diffusive color return at the point
 	 */
 	private Double3 calcDiffusive(Material mat, double nl) {
-		return mat.Kd.scale(nl);
+		return mat.kD.scale(nl);
 	}
 
 	/**
@@ -105,7 +107,7 @@ public class RayTracerBasic extends RayTracerBase {
 	 */
 	private Double3 calcSpecular(Material mat, Vector n, Vector l, double nl, Vector v) {
 		double vr = v.dotProduct(l.subtract(n.scale(nl * 2)));
-		return (alignZero(vr) > 0) ? Double3.ZERO : mat.Ks.scale(Math.pow(-vr, mat.nShininess));
+		return (alignZero(vr) > 0) ? Double3.ZERO : mat.kS.scale(Math.pow(-vr, mat.nShininess));
 	}
 
 	/**
