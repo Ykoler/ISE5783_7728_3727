@@ -130,4 +130,7 @@ public class Vector extends Point {
 		return new Vector(xyz.reduce(this.length()));
 	}
 
+	public Vector mirror(Vector n, double nl) {
+		return this.subtract(n.scale(nl * 2));
+	}
 }

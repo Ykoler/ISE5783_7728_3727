@@ -112,6 +112,9 @@ public class Ray {
 		double d = Integer.MAX_VALUE;
 		double calcD;
 
+		if (points == null)
+			return null;
+
 		// For each point, checks if it's closer than the previous, and if so, replaces
 		// it
 		for (GeoPoint point : points) {
@@ -123,5 +126,4 @@ public class Ray {
 		}
 		return closest;
 	}
-
 }
