@@ -107,7 +107,7 @@ public class RayTracerBasic extends RayTracerBase {
 		if (gp == null)
 			return scene.background.scale(kx);
 		return isZero(gp.geometry.getNormal(gp.point).dotProduct(ray.getDir())) ? Color.BLACK
-				: calcColor(gp, ray, level - 1, kkx);
+				: calcColor(gp, ray, level - 1, kkx).scale(kx);
 	}
 
 	/**
