@@ -107,9 +107,7 @@ public class ReflectionRefractionTests {
 				.writeToImage();
 	}
 
-	/**
-	 * Geometry combination including refraction and reflection
-	 */
+	/** Geometry combination including refraction and reflection */
 	@Test
 	public void geometryCombinationTest() {
 		Camera camera = new Camera(new Point(0, 0, 1000), new Vector(0, 0, -1), new Vector(0, 1, 0)) //

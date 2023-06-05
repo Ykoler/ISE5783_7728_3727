@@ -33,11 +33,12 @@ public class Ray {
 	}
 
 	/**
-	 * ##################################################################################################################################
+	 * New constructor for ray that also receives a normal vector. It then moves the
+	 * ray's origin a short distance in the normal's direction.
 	 * 
-	 * @param p0
-	 * @param dir
-	 * @param normal
+	 * @param p0     the original point
+	 * @param dir    the direction vector
+	 * @param normal the normal along which to move the origin point
 	 */
 	public Ray(Point p0, Vector dir, Vector normal) {
 		double res = dir.dotProduct(normal);
