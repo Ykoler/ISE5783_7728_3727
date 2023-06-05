@@ -1,4 +1,3 @@
-
 package renderer;
 
 import static primitives.Util.*;
@@ -20,9 +19,9 @@ public class RayTracerBasic extends RayTracerBase {
 	private static final double INITIAL_K = 1.0;
 
 	/**
-	 * Creates basic ray tracer
+	 * Creates basic ray tracer.
 	 * 
-	 * @param scene
+	 * @param scene the scene with which to intersect rays
 	 */
 	public RayTracerBasic(Scene scene) {
 		super(scene);
@@ -160,7 +159,7 @@ public class RayTracerBasic extends RayTracerBase {
 	}
 
 	/**
-	 * Calculates the effect of diffusive light return at the point
+	 * Calculates the effect of diffusive light return at the point.
 	 * 
 	 * @param mat the material of the geometry the point belongs to
 	 * @param nl  dot product of the normal at the point and the ray from the light
@@ -172,7 +171,7 @@ public class RayTracerBasic extends RayTracerBase {
 	}
 
 	/**
-	 * Calculates the effect of specular light return at the point
+	 * Calculates the effect of specular light return at the point.
 	 * 
 	 * @param mat the material of the geometry the point belongs to
 	 * @param n   normal at the point
@@ -188,7 +187,7 @@ public class RayTracerBasic extends RayTracerBase {
 	}
 
 	/**
-	 * ###########################################################################
+	 * For a point, light source and the ray between them, I
 	 * 
 	 * @param gp
 	 * @param l
@@ -213,14 +212,18 @@ public class RayTracerBasic extends RayTracerBase {
 	 * of creating shade have their affects added by scaling in accordance with
 	 * their level of transparency.
 	 * 
-	 * @param gp
-	 * @param l
-	 * @param n
-	 * @return
+	 * @param gp    the point at which the light is being calculated
+	 * @param l     ray from the point to the light source for which the shading is
+	 *              being calculated
+	 * @param n     normal at the point
+	 * @param nl    dot product of the normal and the ray to the light source
+	 * @param light the light source
+	 * @return the factor by which to scale the intensity of light from a light
+	 *         source at the given point
 	 */
 	private Double3 transparency(GeoPoint gp, Vector l, Vector n, double nl, LightSource light) {
 		Vector lightDir = l.scale(-1);
-		Ray lightRay = new Ray(gp.point, lightDir, n);
+		Ray lightRay = new Ray(gp.point.add(n.scale(nl < 0 ? DELTA : -DELTA)), lightDir);
 
 		var intersections = scene.geometries.findGeoIntersections(lightRay, light.getDistance(gp.point));
 		Double3 ktr = Double3.ONE;
