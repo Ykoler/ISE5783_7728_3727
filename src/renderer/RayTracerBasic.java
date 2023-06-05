@@ -187,16 +187,21 @@ public class RayTracerBasic extends RayTracerBase {
 	}
 
 	/**
-	 * For a point, light source and the ray between them, I
+	 * For a point, light source and the ray between them, the function checks if
+	 * there is a geometry blocking the light. If so , the poit is considered shaded
+	 * and light from the light source isn't added to the calculation.
 	 * 
-	 * @param gp
-	 * @param l
-	 * @param n
-	 * @return
+	 * @param gp    the point at which the light is being calculated
+	 * @param l     ray from the point to the light source for which the shading is
+	 *              being calculated
+	 * @param n     normal at the point
+	 * @param nl    dot product of the normal and the ray to the light source
+	 * @param light the light source
+	 * @return is the point unshaded relative to this certain light source?
 	 */
 	private boolean unshaded(GeoPoint gp, Vector l, Vector n, double nl, LightSource light) {
 		Vector lightDir = l.scale(-1);
-		Ray lightRay = new Ray(gp.point.add(n.scale(nl < 0 ? DELTA : -DELTA)), lightDir);
+		Ray lightRay = new Ray(gp.point, lightDir, n);
 
 		var intersections = scene.geometries.findGeoIntersections(lightRay, light.getDistance(gp.point));
 		if (intersections == null)
@@ -223,7 +228,7 @@ public class RayTracerBasic extends RayTracerBase {
 	 */
 	private Double3 transparency(GeoPoint gp, Vector l, Vector n, double nl, LightSource light) {
 		Vector lightDir = l.scale(-1);
-		Ray lightRay = new Ray(gp.point.add(n.scale(nl < 0 ? DELTA : -DELTA)), lightDir);
+		Ray lightRay = new Ray(gp.point, lightDir, n);
 
 		var intersections = scene.geometries.findGeoIntersections(lightRay, light.getDistance(gp.point));
 		Double3 ktr = Double3.ONE;
@@ -236,24 +241,24 @@ public class RayTracerBasic extends RayTracerBase {
 	}
 
 	/**
-	 * ###########################################################################
+	 * Constructs a reflection ray given an original.
 	 * 
-	 * @param ray
-	 * @param p
-	 * @param n
-	 * @return
+	 * @param ray the ray for which to calculate the reflecting ray
+	 * @param p   the point from which to calculate the ray
+	 * @param n   the normal at the point
+	 * @return the resulting ray
 	 */
 	private Ray constructReflectedRay(GeoPoint gp, Vector dir, Vector n) {
 		return new Ray(gp.point, dir.mirror(n, dir.dotProduct(n)), n);
 	}
 
 	/**
-	 * ###########################################################################
+	 * Constructs a refraction ray given an original.
 	 * 
-	 * @param ray
-	 * @param p
-	 * @param n
-	 * @return
+	 * @param ray the ray for which to calculate the refracting ray
+	 * @param p   the point from which to calculate the ray
+	 * @param n   the normal at the point
+	 * @return the resulting ray
 	 */
 	private Ray constructRefractedRay(GeoPoint gp, Vector dir, Vector n) {
 		return new Ray(gp.point, dir, n);
