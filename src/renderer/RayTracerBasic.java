@@ -5,7 +5,6 @@ import primitives.*;
 import scene.Scene;
 import geometries.Intersectable.GeoPoint;
 import lighting.LightSource;
-import static primitives.Ray.DELTA;
 
 /**
  * Basic ray tracer.
