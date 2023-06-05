@@ -23,8 +23,11 @@ public class SceneDescriptor {
 	 * Ambient light attributes for example: <ambientLight r="0.1" g="0.1" b="0.1"/>
 	 */
 	public Map<String, String> ambientLightAttributes;
+	/** Sphere attributes for example: <sphere center="0,0,0" radius="1"/> */
 	public List<Map<String, String>> spheres;
+	/** Plane attributes for example: <plane p="0,0,0" normal="0,0,1"/> */
 	public List<Map<String, String>> triangles;
+	/** Plane attributes for example: <plane p="0,0,0" normal="0,0,1"/> */
 	public List<Map<String, String>> planes;
 	public List<Map<String, String>> polygons;
 	public List<Map<String, String>> geometries;
@@ -135,9 +138,14 @@ public class SceneDescriptor {
 	}
 
 	/**
-	 * @param polygonNodes
-	 * @param i
-	 * @return
+	 * Parses an element into a map for example:
+	 * <sphere center="0,0,3" radius="1" color="0,0,1" ka="0.1" kd="0.5" ks="0.5" n=
+	 * "20"/> into a map that contains the following key-value pairs: "center" ->
+	 * "0,0,3" "radius" -> "1" "color" -> "0,0,1"
+	 * 
+	 * @param elementNodes the element nodes
+	 * @param i            the index
+	 * @return the map
 	 */
 	private Map<String, String> parseElement(NodeList elementNodes, int i) {
 		Node elementNode = elementNodes.item(i);

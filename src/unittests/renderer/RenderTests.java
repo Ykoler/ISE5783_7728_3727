@@ -22,14 +22,14 @@ import scene.SceneBuilder;
 public class RenderTests {
 
 	String FOLDER_PATH = System.getProperty("user.dir") + "/xml";
-	
+
 	/**
 	 * Produce a scene with basic 3D model and render it into a png image with a
 	 * grid
 	 */
 	@Test
 	public void basicRenderTwoColorTest() {
-		
+
 		Scene scene = new Scene("Test scene")//
 				.setAmbientLight(new AmbientLight(new Color(255, 191, 191), //
 						new Double3(1, 1, 1))) //
@@ -95,15 +95,36 @@ public class RenderTests {
 		// ...
 		// NB: unit tests is not the correct place to put XML parsing code
 		File xmlFile = new File(FOLDER_PATH + "\\basicRenderTestTwoColors.xml");
-		
-		SceneBuilder sceneBuilder = new SceneBuilder("XML test 1");
+
+		SceneBuilder sceneBuilder = new SceneBuilder("XML Test scene");
 		scene = sceneBuilder.loadSceneFromFile(xmlFile);
 		Camera camera = new Camera(Point.ZERO, new Vector(0, 0, -1), new Vector(0, 1, 0)) //
 				.setVPDistance(100) //
-				.setVPSize(500, 500).setImageWriter(new ImageWriter("xml render test 1", 1000, 1000))
+				.setVPSize(500, 500).setImageWriter(new ImageWriter("XML Test scene", 1000, 1000))
 				.setRayTracer(new RayTracerBasic(scene));
 		camera.renderImage();
 		camera.printGrid(100, new Color(YELLOW));
 		camera.writeToImage();
+	}
+
+	/**
+	 * complete test using reflection and transparency, emission and diffuse
+	 */
+	@Test
+	public void advancedXMLRendering() {
+		Scene scene = new Scene("XML Mega Test scene");
+		// enter XML file name and parse from XML file into scene object
+		// using the code you added in appropriate packages
+		// ...
+		// NB: unit tests is not the correct place to put XML parsing code
+		File xmlFile = new File(FOLDER_PATH + "\\fullImplementationRenderingXML.xml");
+
+		SceneBuilder sceneBuilder = new SceneBuilder("XML Mega Test scene");
+		scene = sceneBuilder.loadSceneFromFile(xmlFile);
+		Camera camera = new Camera(new Point(0, 0, 1000), new Vector(0, 0, -1), new Vector(0, 1, 0)) //
+				.setVPDistance(1000) //
+				.setVPSize(150, 150).setImageWriter(new ImageWriter("XML Mega Test scene", 500, 500))
+				.setRayTracer(new RayTracerBasic(scene));
+		camera.renderImage().writeToImage();
 	}
 }

@@ -1,34 +1,29 @@
-<scene>
+<scene
+	background-color="75 127 190"
+>
 	<ambient-light
-		color="255 255 255"
-		k="0.2"
-	 />
+		color="255 191 191"
+		k="1.0"
+	/>
 	<geometries>
 		<sphere
 			center="0 0 -100"
 			radius="50"
-		 />
+		/>
 		<triangle
 			p0="-100 0 -100"
 			p1="0 100 -100"
 			p2="-100 100 -100"
-			emission="0 255 0"
-		 />
+		/>
 		<triangle
 			p0="100 0 -100"
 			p1="0 -100 -100"
 			p2="100 -100 -100"
-			emission="0 0 0"
-		 />
+		/>
 		<triangle
 			p0="-100 0 -100"
 			p1="0 -100 -100"
 			p2="-100 -100 -100"
-			emission="0 0 255"
-		 />
-		<directional-light
-			color="255 0 0"
-			direction="0 0 -1"
-		 />
+		/>
 	</geometries>
 </scene>
