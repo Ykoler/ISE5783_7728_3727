@@ -59,7 +59,7 @@ public class PointLight extends Light implements LightSource {
 	 * 
 	 * @param kC the constant attenuation factor.
 	 */
-	public PointLight setkKc(double kC) {
+	public PointLight setKc(double kC) {
 		this.kC = kC;
 		return this;
 	}

@@ -220,7 +220,7 @@ public class RayTracerBasic extends RayTracerBase {
 	 */
 	private Double3 transparency(GeoPoint gp, Vector l, Vector n, double nl, LightSource light) {
 		Vector lightDir = l.scale(-1);
-		Ray lightRay = new Ray(gp.point.add(n.scale(nl < 0 ? DELTA : -DELTA)), lightDir);
+		Ray lightRay = new Ray(gp.point, lightDir, n);
 
 		var intersections = scene.geometries.findGeoIntersections(lightRay, light.getDistance(gp.point));
 		Double3 ktr = Double3.ONE;
