@@ -70,15 +70,19 @@ public class Sphere extends RadialGeometry {
 		// ray are returned.
 		double inside = Math.sqrt(insideSquared);
 		double t2 = base + inside;
-
-		if (alignZero(t2) <= 0 || alignZero(maxDistance - t2) <= 0)
+		double t1 = base - inside;
+		if (alignZero(t2) <= 0 || alignZero(maxDistance - t1) <= 0)
 			return null;
 
-		double t1 = base - inside;
-		if (alignZero(t1) <= 0 || alignZero(maxDistance - t1) <= 0)
-			return List.of(new GeoPoint(this, ray.getPoint(t2)));
+		boolean t2NotInRange = alignZero(maxDistance - t2) <= 0;
 
-		return List.of(new GeoPoint(this, ray.getPoint(t1)), new GeoPoint(this, ray.getPoint(t2)));
+		if (alignZero(t1) <= 0) //
+			return t2NotInRange //
+					? null //
+					: List.of(new GeoPoint(this, ray.getPoint(t2)));
 
+		return t2NotInRange //
+				? List.of(new GeoPoint(this, ray.getPoint(t1))) //
+				: List.of(new GeoPoint(this, ray.getPoint(t1)), new GeoPoint(this, ray.getPoint(t2)));
 	}
 }

@@ -14,7 +14,7 @@ import lighting.LightSource;
 
 public class RayTracerBasic extends RayTracerBase {
 	private static final int MAX_CALC_COLOR_LEVEL = 10;
-	private static final double MIN_CALC_COLOR_K = 0.01;
+	private static final double MIN_CALC_COLOR_K = 0.001;
 	private static final double INITIAL_K = 1.0;
 
 	/**
@@ -98,13 +98,13 @@ public class RayTracerBasic extends RayTracerBase {
 		for (LightSource lightSource : scene.lights) {
 			Vector l = lightSource.getL(gp.point);
 			double nl = alignZero(n.dotProduct(l));
-			if (nl * nv > 0) {
+			if (alignZero(nl * nv) > 0) {
 				// Checks shade percentage between the light source and the point and only
 				// calculates the intensity from a given light as a factor of the transparency.
 				Double3 ktr = transparency(gp, l, n, nl, lightSource);
 				if (!ktr.product(k).lowerThan(MIN_CALC_COLOR_K)) {
 					Color iL = lightSource.getIntensity(gp.point).scale(ktr);
-					color = color.add(iL.scale(calcDiffusive(mat, nl < 0 ? -nl : nl)),
+					color = color.add(iL.scale(calcDiffusive(mat, nl)),
 							iL.scale(calcSpecular(mat, n, l, nl, v)));
 				}
 			}
@@ -126,8 +126,8 @@ public class RayTracerBasic extends RayTracerBase {
 		Vector v = ray.getDir();
 		Vector n = gp.geometry.getNormal(gp.point);
 		Material material = gp.geometry.getMaterial();
-		return calcGlobalEffects(constructReflectedRay(gp, v, n), level, k, material.kR)
-				.add(calcGlobalEffects(constructRefractedRay(gp, v, n), level, k, material.kT));
+		return calcGlobalEffect(constructReflectedRay(gp, v, n), level, k, material.kR)
+				.add(calcGlobalEffect(constructRefractedRay(gp, v, n), level, k, material.kT));
 	}
 
 	/**
@@ -143,7 +143,7 @@ public class RayTracerBasic extends RayTracerBase {
 	 * @param kx    weight to be added given the increasing level of recursion
 	 * @return the color to be returned along the given secondary ray.
 	 */
-	private Color calcGlobalEffects(Ray ray, int level, Double3 k, Double3 kx) {
+	private Color calcGlobalEffect(Ray ray, int level, Double3 k, Double3 kx) {
 		Double3 kkx = k.product(kx);
 		// Checks if weight for light intensity is below minimum
 		if (kkx.lowerThan(MIN_CALC_COLOR_K))
@@ -166,7 +166,7 @@ public class RayTracerBasic extends RayTracerBase {
 	 * @return the diffusive color return at the point
 	 */
 	private Double3 calcDiffusive(Material mat, double nl) {
-		return mat.kD.scale(nl);
+		return mat.kD.scale(nl < 0 ? -nl : nl);
 	}
 
 	/**
@@ -198,6 +198,7 @@ public class RayTracerBasic extends RayTracerBase {
 	 * @param light the light source
 	 * @return is the point unshaded relative to this certain light source?
 	 */
+	@SuppressWarnings("unused")
 	private boolean unshaded(GeoPoint gp, Vector l, Vector n, double nl, LightSource light) {
 		Vector lightDir = l.scale(-1);
 		Ray lightRay = new Ray(gp.point, lightDir, n);
@@ -233,9 +234,10 @@ public class RayTracerBasic extends RayTracerBase {
 		Double3 ktr = Double3.ONE;
 		if (intersections == null)
 			return ktr;
-		for (GeoPoint p : intersections)
+		for (GeoPoint p : intersections) {
 			ktr = ktr.product(p.geometry.getMaterial().kT);
-
+			if (ktr.lowerThan(MIN_CALC_COLOR_K)) return Double3.ZERO;
+		}
 		return ktr;
 	}
 
