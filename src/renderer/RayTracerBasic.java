@@ -1,6 +1,10 @@
 package renderer;
 
 import static primitives.Util.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 import primitives.*;
 import scene.Scene;
 import geometries.Intersectable.GeoPoint;
@@ -104,8 +108,7 @@ public class RayTracerBasic extends RayTracerBase {
 				Double3 ktr = transparency(gp, l, n, nl, lightSource);
 				if (!ktr.product(k).lowerThan(MIN_CALC_COLOR_K)) {
 					Color iL = lightSource.getIntensity(gp.point).scale(ktr);
-					color = color.add(iL.scale(calcDiffusive(mat, nl)),
-							iL.scale(calcSpecular(mat, n, l, nl, v)));
+					color = color.add(iL.scale(calcDiffusive(mat, nl)), iL.scale(calcSpecular(mat, n, l, nl, v)));
 				}
 			}
 		}
@@ -126,8 +129,25 @@ public class RayTracerBasic extends RayTracerBase {
 		Vector v = ray.getDir();
 		Vector n = gp.geometry.getNormal(gp.point);
 		Material material = gp.geometry.getMaterial();
-		return calcGlobalEffect(constructReflectedRay(gp, v, n), level, k, material.kR)
-				.add(calcGlobalEffect(constructRefractedRay(gp, v, n), level, k, material.kT));
+
+		Double3 kR = material.kR;
+		Double3 kT = material.kT;
+
+		if (glossAndDiffuse == 0)
+			return calcGlobalEffect(constructReflectedRay(gp, v, n), level, k, kR)
+					.add(calcGlobalEffect(constructRefractedRay(gp, v, n), level, k, kT));
+
+		Color rColors = Color.BLACK;
+		for (Ray rR : constructReflectedRays(gp, v, n)) {
+			rColors.add(calcGlobalEffect(rR, level, k, kR));
+			// System.out.print("R ");
+		}
+		for (Ray rT : constructRefractedRays(gp, v, n)) {
+			rColors.add(calcGlobalEffect(rT, level, k, kT));
+			// System.out.print("T ");
+		}
+		// System.out.println(rColors);
+		return rColors;
 	}
 
 	/**
@@ -236,7 +256,8 @@ public class RayTracerBasic extends RayTracerBase {
 			return ktr;
 		for (GeoPoint p : intersections) {
 			ktr = ktr.product(p.geometry.getMaterial().kT);
-			if (ktr.lowerThan(MIN_CALC_COLOR_K)) return Double3.ZERO;
+			if (ktr.lowerThan(MIN_CALC_COLOR_K))
+				return Double3.ZERO;
 		}
 		return ktr;
 	}
@@ -263,5 +284,21 @@ public class RayTracerBasic extends RayTracerBase {
 	 */
 	private Ray constructRefractedRay(GeoPoint gp, Vector dir, Vector n) {
 		return new Ray(gp.point, dir, n);
+	}
+
+	private List<Ray> constructRefractedRays(GeoPoint gp, Vector v, Vector n) {
+		Ray ray = constructReflectedRay(gp, v, n);
+		TargetArea targetArea = new TargetArea(ray, glossAndDiffuse);
+		var res = targetArea.contsructRayBeamGrid();
+		res = res.stream().filter(r -> r.getDir().dotProduct(n) > 0).collect(Collectors.toList());
+		res.add(ray);
+		return res;
+	}
+
+	private List<Ray> constructReflectedRays(GeoPoint gp, Vector v, Vector n) {
+		Ray ray = constructRefractedRay(gp, v, n);
+		TargetArea targetArea = new TargetArea(ray, glossAndDiffuse);
+		return targetArea.contsructRayBeamGrid().stream().filter(r -> r.getDir().dotProduct(n) < 0)
+				.collect(Collectors.toList());
 	}
 }

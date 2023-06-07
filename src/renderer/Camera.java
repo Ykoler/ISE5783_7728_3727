@@ -14,64 +14,9 @@ import java.util.MissingResourceException;
  *
  */
 public class Camera {
-	private Point p0;
-	private Vector vUp;
-	private Vector vTo;
-	private Vector vRight;
-	private double width;
-	private double height;
-	private double distance;
 	private ImageWriter imageWriter;
 	private RayTracerBase rayTracer;
-
-	/**
-	 * @return the p0
-	 */
-	public Point getP0() {
-		return p0;
-	}
-
-	/**
-	 * @return the vUp
-	 */
-	public Vector getvUp() {
-		return vUp;
-	}
-
-	/**
-	 * @return the vTo
-	 */
-	public Vector getvTo() {
-		return vTo;
-	}
-
-	/**
-	 * @return the vRight
-	 */
-	public Vector getvRight() {
-		return vRight;
-	}
-
-	/**
-	 * @return the width
-	 */
-	public double getWidth() {
-		return width;
-	}
-
-	/**
-	 * @return the height
-	 */
-	public double getHeight() {
-		return height;
-	}
-
-	/**
-	 * @return the distance
-	 */
-	public double getDistance() {
-		return distance;
-	}
+	private TargetArea targetArea;
 
 	/**
 	 * Constructs new Camera object given a starting point and direction vectors.
@@ -83,10 +28,7 @@ public class Camera {
 	public Camera(Point p0, Vector vTo, Vector vUp) {
 		if (!isZero(vUp.dotProduct(vTo)))
 			throw new IllegalArgumentException("ERROR: given vectors weren't perpendicular");
-		this.vTo = vTo.normalize();
-		this.vUp = vUp.normalize();
-		this.vRight = vTo.crossProduct(vUp);
-		this.p0 = p0;
+		this.targetArea = new TargetArea(p0, vTo, vUp);
 	}
 
 	/**
@@ -97,8 +39,7 @@ public class Camera {
 	 * @return Camera that results
 	 */
 	public Camera setVPSize(double width, double height) {
-		this.width = width;
-		this.height = height;
+		this.targetArea.setSize(width, height);
 		return this;
 	}
 
@@ -109,7 +50,7 @@ public class Camera {
 	 * @return Camera that results
 	 */
 	public Camera setVPDistance(double distance) {
-		this.distance = distance;
+		this.targetArea.setDistance(distance);
 		return this;
 	}
 
@@ -132,6 +73,16 @@ public class Camera {
 	 */
 	public Camera setRayTracer(RayTracerBase rt) {
 		this.rayTracer = rt;
+		return this;
+	}
+
+	/**
+	 * ###############################################################
+	 * 
+	 * @param glossAndDiffuse
+	 */
+	public Camera setGlossAndDiffuse(double glossAndDiffuse) {
+		this.rayTracer.setGlossAndDiffuse(glossAndDiffuse);
 		return this;
 	}
 
@@ -160,16 +111,7 @@ public class Camera {
 	 * @return resulting Ray
 	 */
 	public Ray constructRay(int nX, int nY, int j, int i) {
-		Point pIJ = p0.add(vTo.scale(distance));
-		// Calculate distance on x,y axes to the designated point
-		double yI = (((nY - 1) / 2.0) - i) * (height / nY);
-		double xJ = (j - ((nX - 1) / 2.0)) * (width / nX);
-		// Avoiding creation of zero vector (which is unnecessary anyway)
-		if (!isZero(xJ))
-			pIJ = pIJ.add(vRight.scale(xJ));
-		if (!isZero(yI))
-			pIJ = pIJ.add(vUp.scale(yI));
-		return new Ray(p0, pIJ.subtract(p0));
+		return targetArea.constructRay(nX, nY, j, i);
 	}
 
 	/**
@@ -185,9 +127,14 @@ public class Camera {
 		int nY = imageWriter.getNy();
 		int nX = imageWriter.getNx();
 
-		for (int i = 0; i < nY; ++i)
-			for (int j = 0; j < nX; j++)
+		int pixelNum = nY;
+
+		for (int i = 0; i < nY; ++i) {
+			for (int j = 0; j < nX; j++) {
 				imageWriter.writePixel(j, i, castRay(i, j));
+			}
+			System.out.println("Reached " + (double) i / (double) nY * 100.0d + "% of tracing.");
+		}
 		return this;
 	}
 
