@@ -149,9 +149,8 @@ public class RayTracerBasic extends RayTracerBase {
 			size++;
 			// System.out.print("T ");
 		}
-		//System.out.println(rColors);
-		System.out.println(size);
-		return rColors.reduce(size);
+		//System.out.println(size);
+		return rColors.reduce((double)size);
 	}
 
 	/**
