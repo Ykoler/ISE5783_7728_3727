@@ -14,7 +14,7 @@ import primitives.*;
 
 public class TargetArea {
 	private final static double DISTANCE = 100;
-	private final static int DENSITY = 2;
+	private final static int DENSITY = 3;
 	private final Point p0;
 	private final Vector vRight, vUp, vTo;
 	private double width, height, distance;
@@ -84,7 +84,7 @@ public class TargetArea {
 	 * 
 	 * @return
 	 */
-	public List<Ray> contsructRayBeamGrid() {
+	public List<Ray> constructRayBeamGrid() {
 		List<Ray> rays = new LinkedList<>();
 		for (int i = 0; i < DENSITY; ++i)
 			for (int j = 0; j < DENSITY; j++)

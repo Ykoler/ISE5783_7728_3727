@@ -138,16 +138,20 @@ public class RayTracerBasic extends RayTracerBase {
 					.add(calcGlobalEffect(constructRefractedRay(gp, v, n), level, k, kT));
 
 		Color rColors = Color.BLACK;
+		int size = 0;
 		for (Ray rR : constructReflectedRays(gp, v, n)) {
 			rColors.add(calcGlobalEffect(rR, level, k, kR));
+			size++;
 			// System.out.print("R ");
 		}
 		for (Ray rT : constructRefractedRays(gp, v, n)) {
 			rColors.add(calcGlobalEffect(rT, level, k, kT));
+			size++;
 			// System.out.print("T ");
 		}
-		// System.out.println(rColors);
-		return rColors;
+		//System.out.println(rColors);
+		System.out.println(size);
+		return rColors.reduce(size);
 	}
 
 	/**
@@ -289,7 +293,7 @@ public class RayTracerBasic extends RayTracerBase {
 	private List<Ray> constructRefractedRays(GeoPoint gp, Vector v, Vector n) {
 		Ray ray = constructReflectedRay(gp, v, n);
 		TargetArea targetArea = new TargetArea(ray, glossAndDiffuse);
-		var res = targetArea.contsructRayBeamGrid();
+		var res = targetArea.constructRayBeamGrid();
 		res = res.stream().filter(r -> r.getDir().dotProduct(n) > 0).collect(Collectors.toList());
 		res.add(ray);
 		return res;
@@ -298,7 +302,7 @@ public class RayTracerBasic extends RayTracerBase {
 	private List<Ray> constructReflectedRays(GeoPoint gp, Vector v, Vector n) {
 		Ray ray = constructRefractedRay(gp, v, n);
 		TargetArea targetArea = new TargetArea(ray, glossAndDiffuse);
-		return targetArea.contsructRayBeamGrid().stream().filter(r -> r.getDir().dotProduct(n) < 0)
+		return targetArea.constructRayBeamGrid().stream().filter(r -> r.getDir().dotProduct(n) < 0)
 				.collect(Collectors.toList());
 	}
 }
