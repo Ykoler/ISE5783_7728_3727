@@ -27,7 +27,7 @@ class GlossAndBlurTests {
 
 		scene.geometries.add(
 				new Sphere(50d, new Point(0, 0, 0))
-						.setMaterial(new Material().setKd(0.3).setKs(0.5).setShininess(10).setKt(0.7))// .setKr(0.2))
+						.setMaterial(new Material().setKd(0.3).setKs(0.5).setShininess(10).setKt(0.7).setKb(10))// .setKr(0.2))
 						.setEmission(new Color(BLACK)),
 				new Plane(new Point(100, 0, -100), new Vector(-1, 0, 1))
 						.setMaterial(new Material().setKd(0.3).setKr(0.8)).setEmission(new Color(GREEN)));

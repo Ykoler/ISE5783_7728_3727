@@ -10,7 +10,9 @@ public class Material {
 	public Double3 kD = Double3.ZERO, /** diffusive attenuation factor */
 			kS = Double3.ZERO, /** specular attenuation factor */
 			kT = Double3.ZERO, /** transparency attenuation factor */
-			kR = Double3.ZERO; /** reflective attenuation factor */
+			kR = Double3.ZERO;
+	public double kG = 0, kB = 0;
+	/** reflective attenuation factor */
 
 	public int nShininess = 0;
 
@@ -99,6 +101,28 @@ public class Material {
 	 */
 	public Material setKr(Double3 kR) {
 		this.kR = kR;
+		return this;
+	}
+
+	/**
+	 * Sets Glossy attenuation factor.
+	 * 
+	 * @param kR the Glossy attenuation factor.
+	 * @return the material
+	 */
+	public Material setKg(double kG) {
+		this.kG = kG;
+		return this;
+	}
+
+	/**
+	 * Sets Blur attenuation factor.
+	 * 
+	 * @param kR the Blur attenuation factor.
+	 * @return the material
+	 */
+	public Material setKb(double kB) {
+		this.kB = kB;
 		return this;
 	}
 

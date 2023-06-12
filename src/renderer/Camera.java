@@ -119,6 +119,7 @@ public class Camera {
 	 * of each pixel (calculated using the castRay function).
 	 */
 	public Camera renderImage() {
+		var startTime = System.currentTimeMillis();
 		if (imageWriter == null)
 			throw new MissingResourceException("Image writer was null", getClass().getName(), "");
 		if (rayTracer == null)
@@ -127,13 +128,18 @@ public class Camera {
 		int nY = imageWriter.getNy();
 		int nX = imageWriter.getNx();
 
-		int pixelNum = nY;
-
 		for (int i = 0; i < nY; ++i) {
 			for (int j = 0; j < nX; j++) {
 				imageWriter.writePixel(j, i, castRay(i, j));
 			}
-			System.out.println("Reached " + (double) i / (double) nY * 100.0d + "% of tracing.");
+			if (i % 1 == 0) {
+				System.out.println("Reached " + (double) i / (double) nY * 100.0d + "% of tracing.");
+				System.out.println(
+						"Time elapsed: " + (double) (System.currentTimeMillis() - startTime) / 1000.0d + " seconds.");
+				System.out.println("Estimated time remaining: "
+						+ (double) (System.currentTimeMillis() - startTime) / (double) i * (double) (nY - i) / 1000.0d
+						+ " seconds.\n");
+			}
 		}
 		return this;
 	}
