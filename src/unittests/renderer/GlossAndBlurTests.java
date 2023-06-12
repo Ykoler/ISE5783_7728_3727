@@ -27,23 +27,49 @@ class GlossAndBlurTests {
 
 		scene.geometries.add(
 				new Sphere(50d, new Point(0, 0, 0))
-						.setMaterial(new Material().setKd(0.3).setKs(0.5).setShininess(10).setKt(0.7).setKb(10))// .setKr(0.2))
-						.setEmission(new Color(BLACK)),
-				new Plane(new Point(100, 0, -100), new Vector(-1, 0, 1))
-						.setMaterial(new Material().setKd(0.3).setKr(0.8)).setEmission(new Color(GREEN)));
+						.setMaterial(new Material().setKd(0.3).setKs(0.5).setShininess(10).setKt(0.8))// .setKr(0.2))
+						.setEmission(new Color(RED)),
+				new Triangle(new Point(0, 0, 50), new Point(0, 60, 50), new Point(80, 0, 50)).setMaterial(new Material().setKd(0.1).setKt(0.3).setKb(10)));
+////					.setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(60))
+//				new Plane(new Point(0, 0, 100), new Vector(0, 0, 1))
+//						.setMaterial(new Material().setKd(0.1).setKt(0.9).setKb(40)));//.setEmission(new Color(0, 0, 50)));
 
 		scene.lights.add(new SpotLight(new Color(700, 400, 400), new Point(60, 50, 0), new Vector(0, 0, -1)) //
 				.setKl(4E-5).setKq(2E-7));
 
-		scene.setBackground(new Color(0, 150, 120));
+		scene.setBackground(new Color(0, 100, 160));
 
 		ImageWriter imageWriter = new ImageWriter("TestComboWithBlur", 200, 200);
 		camera.setImageWriter(imageWriter) //
 				.setRayTracer(new RayTracerBasic(scene)) //
-				.setGlossAndDiffuse(70)//
 				.renderImage() //
 				.writeToImage();
 	}
+//	@Test
+//	public void TestCombo() {
+//		Camera camera = new Camera(new Point(0, 0, 1000), new Vector(0, 0, -1), new Vector(0, 1, 0)) //
+//				.setVPSize(200, 200).setVPDistance(1000);
+//
+//		scene.setAmbientLight(new AmbientLight(new Color(WHITE), 0.15));
+//
+//		scene.geometries.add(
+//				new Sphere(50d, new Point(0, 0, 0))
+//						.setMaterial(new Material().setKd(0.3).setKs(0.5).setShininess(10).setKt(0.7).setKb(50))// .setKr(0.2))
+//						.setEmission(new Color(BLACK)),
+//				new Plane(new Point(100, 0, -100), new Vector(-1, 0, 1))
+//						.setMaterial(new Material().setKd(0.3).setKr(0.8)).setEmission(new Color(GREEN)));
+//
+//		scene.lights.add(new SpotLight(new Color(700, 400, 400), new Point(60, 50, 0), new Vector(0, 0, -1)) //
+//				.setKl(4E-5).setKq(2E-7));
+//
+//		scene.setBackground(new Color(0, 150, 120));
+//
+//		ImageWriter imageWriter = new ImageWriter("TestComboWithBlur", 200, 200);
+//		camera.setImageWriter(imageWriter) //
+//				.setRayTracer(new RayTracerBasic(scene)) //
+//				.renderImage() //
+//				.writeToImage();
+//	}
 
 //	@Test
 //	public void geometryCombinationTest() {
