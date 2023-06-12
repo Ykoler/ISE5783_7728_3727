@@ -14,17 +14,20 @@ import primitives.*;
 
 public class TargetArea {
 	private final static double DISTANCE = 100;
-	private final static int DENSITY = 3;
+	private final static int DENSITY = 1;
 	private final Point p0;
 	private final Vector vRight, vUp, vTo;
 	private double width, height, distance;
 
 	public TargetArea(Ray ray, double size) {
 		p0 = ray.getP0();
-		vTo = ray.getDir().scale(-1);
+		vTo = ray.getDir();
 		double a = vTo.getX(), b = vTo.getY(), c = vTo.getZ();
 		vRight = (a == b && b == c) ? new Vector(0, -a, a).normalize() : new Vector(b - c, c - a, a - b).normalize();
 		vUp = vRight.crossProduct(vTo);
+//		System.out.println(vTo);
+//		System.out.println(vUp);
+//		System.out.println(vRight);
 		this.height = this.width = size;
 		this.distance = DISTANCE;
 	}

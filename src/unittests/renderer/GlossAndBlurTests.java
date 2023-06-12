@@ -27,9 +27,12 @@ class GlossAndBlurTests {
 
 		scene.geometries.add(
 				new Sphere(50d, new Point(0, 0, 0))
-						.setMaterial(new Material().setKd(0.3).setKs(0.5).setShininess(10).setKt(0.8))// .setKr(0.2))
+						.setMaterial(new Material().setKd(0.3).setKs(0.7).setShininess(10).setKt(0.85))// .setKr(0.2))
 						.setEmission(new Color(RED)),
-				new Triangle(new Point(0, 0, 50), new Point(0, 60, 50), new Point(80, 0, 50)).setMaterial(new Material().setKd(0.1).setKt(0.3).setKb(10)));
+				new Triangle(new Point(-80, 10, 0), new Point(0, -80, -50), new Point(0, 80, -50))
+						.setMaterial(new Material().setKd(0.1).setKt(0.3).setKb(10)),
+				new Triangle(new Point(0, 0, 50), new Point(0, 60, 50), new Point(80, 0, 50))
+						.setMaterial(new Material().setKd(0.1).setKt(0.3).setKg(10)));
 ////					.setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(60))
 //				new Plane(new Point(0, 0, 100), new Vector(0, 0, 1))
 //						.setMaterial(new Material().setKd(0.1).setKt(0.9).setKb(40)));//.setEmission(new Color(0, 0, 50)));
