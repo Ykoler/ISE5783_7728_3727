@@ -73,6 +73,8 @@ public class RayTracerBasic extends RayTracerBase {
 	 */
 	private Color calcColor(GeoPoint gp, Ray ray, int level, Double3 k) {
 		Color color = calcLocalEffects(gp, ray, k);
+		if(level == 1)
+			System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 		return 1 == level ? color : color.add(calcGlobalEffects(gp, ray, level, k));
 	}
 
