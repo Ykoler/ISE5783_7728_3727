@@ -14,7 +14,7 @@ import primitives.*;
 
 public class TargetArea {
 	private final static double DISTANCE = 100;
-	private final static int DENSITY = 1;
+	private final static int DENSITY = 5;
 	private final Point p0;
 	private final Vector vRight, vUp, vTo;
 	private double width, height, distance;

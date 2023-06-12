@@ -17,8 +17,8 @@ import lighting.LightSource;
  */
 
 public class RayTracerBasic extends RayTracerBase {
-	private static final int MAX_CALC_COLOR_LEVEL = 4;
-	private static final double MIN_CALC_COLOR_K = 0.01;
+	private static final int MAX_CALC_COLOR_LEVEL = 10;
+	private static final double MIN_CALC_COLOR_K = 0.001;
 	private static final double INITIAL_K = 1.0;
 
 	/**
@@ -143,23 +143,14 @@ public class RayTracerBasic extends RayTracerBase {
 			return calcGlobalEffect(rays.get(0), level, k, kB);
 		}
 		Color color = Color.BLACK;
-		// color = color.add(new Color(0,0,3));
 		int size = 0;
-		// rays.add(new Ray(new Point(0,0,0), new Vector(0,0,-1)));
 		for (Ray rT : rays) {
-			//System.out.println(rT);
 			color = color.add(calcGlobalEffect(rT, level, k, kB));
-			//System.out.println(color);
 			size++;
 		}
-//		color = color.add(calcGlobalEffect(rays.get(0), level, k, kB));
-//		size++;
-		// color = color.add(calcGlobalEffect(rays.get(1), level, k, kB));
-		// size++;
-		// System.out.println(color.reduce((double) size));
 
-		//System.out.println(size);
-//		System.out.println(color);
+		if (size == 0)
+			return color;
 		return color.reduce((double) size);
 	}
 
@@ -299,26 +290,16 @@ public class RayTracerBasic extends RayTracerBase {
 		return new Ray(gp.point, dir, n);
 	}
 
-//	private List<Ray> constructRefractedRays(GeoPoint gp, Vector v, Vector n, double kB) {
-//		return kB == 0 ? List.of(constructRefractedRay(gp, v, n))
-//				: new TargetArea(constructReflectedRay(gp, v, n), kB).constructRayBeamGrid();//.stream())
-//						//.filter(r -> r.getDir().dotProduct(n) < 0).collect(Collectors.toList());
-//	}
-//
-//	private List<Ray> constructReflectedRays(GeoPoint gp, Vector v, Vector n, double kG) {
-//		return kG == 0 ? List.of(constructReflectedRay(gp, v, n))
-//				: new TargetArea(constructReflectedRay(gp, v, n), kG).constructRayBeamGrid();//.stream()
-//						//filter(r -> r.getDir().dotProduct(n) > 0).collect(Collectors.toList());
-//	}
+
 	private List<Ray> constructRefractedRays(GeoPoint gp, Vector v, Vector n, double kB) {
 		return kB == 0 ? List.of(constructRefractedRay(gp, v, n))
-				: new TargetArea(constructReflectedRay(gp, v, n), kB).constructRayBeamGrid();//.stream()
-						//.filter(r -> r.getDir().dotProduct(n) < 0).collect(Collectors.toList());
+				: new TargetArea(constructRefractedRay(gp, v, n), kB).constructRayBeamGrid().stream()
+						.filter(r -> r.getDir().dotProduct(n) > 0).collect(Collectors.toList());
 	}
 
 	private List<Ray> constructReflectedRays(GeoPoint gp, Vector v, Vector n, double kG) {
 		return kG == 0 ? List.of(constructReflectedRay(gp, v, n))
-				: new TargetArea(constructRefractedRay(gp, v, n), kG).constructRayBeamGrid().stream()
+				: new TargetArea(constructReflectedRay(gp, v, n), kG).constructRayBeamGrid().stream()
 						.filter(r -> r.getDir().dotProduct(n) > 0).collect(Collectors.toList());
 	}
 }
