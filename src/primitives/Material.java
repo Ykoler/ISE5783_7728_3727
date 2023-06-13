@@ -19,6 +19,7 @@ public class Material {
 	public double kG = 0;
 	/** Blurriness factor */
 	public double kB = 0;
+	/** Shininess factor */
 	public int nShininess = 0;
 
 	/**

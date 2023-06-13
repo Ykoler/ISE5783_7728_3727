@@ -19,6 +19,12 @@ public class TargetArea {
 	private final Vector vRight, vUp, vTo;
 	private double width, height, distance;
 
+	/**
+	 * Constructor for TargetArea class
+	 * 
+	 * @param ray  the main ray to the target area
+	 * @param size the size of the target area
+	 */
 	public TargetArea(Ray ray, double size) {
 		p0 = ray.getP0();
 		vTo = ray.getDir();
@@ -29,6 +35,13 @@ public class TargetArea {
 		this.distance = DISTANCE;
 	}
 
+	/**
+	 * Constructor for TargetArea class
+	 * 
+	 * @param p0  the origin point of the target area
+	 * @param vTo the direction vector of the target area
+	 * @param vUp the up vector of the target area
+	 */
 	public TargetArea(Point p0, Vector vTo, Vector vUp) {
 		this.vTo = vTo.normalize();
 		this.vUp = vUp.normalize();
