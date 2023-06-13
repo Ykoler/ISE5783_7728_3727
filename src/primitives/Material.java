@@ -7,13 +7,18 @@ package primitives;
  * @author Yahel and Ashi
  */
 public class Material {
-	public Double3 kD = Double3.ZERO, /** diffusive attenuation factor */
-			kS = Double3.ZERO, /** specular attenuation factor */
-			kT = Double3.ZERO, /** transparency attenuation factor */
-			kR = Double3.ZERO;
-	public double kG = 0, kB = 0;
+	/** diffusive attenuation factor */
+	public Double3 kD = Double3.ZERO;
+	/** specular attenuation factor */
+	public Double3 kS = Double3.ZERO;
+	/** transparency attenuation factor */
+	public Double3 kT = Double3.ZERO;
 	/** reflective attenuation factor */
-
+	public Double3 kR = Double3.ZERO;
+	/** Glossiness factor */
+	public double kG = 0;
+	/** Blurriness factor */
+	public double kB = 0;
 	public int nShininess = 0;
 
 	/**

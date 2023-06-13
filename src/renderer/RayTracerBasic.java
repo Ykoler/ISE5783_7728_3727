@@ -138,6 +138,16 @@ public class RayTracerBasic extends RayTracerBase {
 
 	}
 
+	/**
+	 * Calculates the global effect of a ray beam (list of rays) and avaraages the
+	 * result.
+	 * 
+	 * @param level the depth of recursion
+	 * @param k     the weight of light at the current point in the recursion
+	 * @param kB    the attenuation factor of the geometry of the ray beam origin
+	 * @param rays  the list of rays
+	 * @return the averaged color of the ray beam
+	 */
 	private Color calcRayBeamColor(int level, Double3 k, Double3 kB, List<Ray> rays) {
 		if (rays.size() == 1) {
 			return calcGlobalEffect(rays.get(0), level, k, kB);
@@ -290,18 +300,39 @@ public class RayTracerBasic extends RayTracerBase {
 		return new Ray(gp.point, dir, n);
 	}
 
-
+	/**
+	 * Constructs a list of rays that are refracted from the given ray. filtering
+	 * out those that are not in the same direction as the main ray. (spead is
+	 * determined by kB)
+	 * 
+	 * @param gp the point from which the rays are refracted
+	 * @param v  the direction of the main ray
+	 * @param n  the normal at the point
+	 * @param kB the Blur factor
+	 * @return the list of rays
+	 */
 	private List<Ray> constructRefractedRays(GeoPoint gp, Vector v, Vector n, double kB) {
 		Ray rfRay = constructRefractedRay(gp, v, n);
-		double res  = rfRay.getDir().dotProduct(n);
+		double res = rfRay.getDir().dotProduct(n);
 		return kB == 0 ? List.of(rfRay)
 				: new TargetArea(rfRay, kB).constructRayBeamGrid().stream()
 						.filter(r -> r.getDir().dotProduct(n) * res > 0).collect(Collectors.toList());
 	}
 
+	/**
+	 * Constructs a list of rays that are reflected from the given ray. filtering
+	 * out those that are not in the same direction as the main ray. (spead is
+	 * determined by kG)
+	 * 
+	 * @param gp the point from which the rays are reflected
+	 * @param v  the direction of the main ray
+	 * @param n  the normal at the point
+	 * @param kG the Blur factor
+	 * @return the list of rays
+	 */
 	private List<Ray> constructReflectedRays(GeoPoint gp, Vector v, Vector n, double kG) {
 		Ray rfRay = constructReflectedRay(gp, v, n);
-		double res  = rfRay.getDir().dotProduct(n);
+		double res = rfRay.getDir().dotProduct(n);
 		return kG == 0 ? List.of(rfRay)
 				: new TargetArea(rfRay, kG).constructRayBeamGrid().stream()
 						.filter(r -> r.getDir().dotProduct(n) * res > 0).collect(Collectors.toList());

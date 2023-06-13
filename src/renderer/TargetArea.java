@@ -80,9 +80,9 @@ public class TargetArea {
 	}
 
 	/**
-	 * ##############################################################################################################
+	 * Constructs a grid of rays in the target area
 	 * 
-	 * @return
+	 * @return list of rays
 	 */
 	public List<Ray> constructRayBeamGrid() {
 		List<Ray> rays = new LinkedList<>();

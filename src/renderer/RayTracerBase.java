@@ -10,11 +10,6 @@ import scene.Scene;
  */
 public abstract class RayTracerBase {
 	protected final Scene scene;
-	protected double glossAndDiffuse = 0.0;
-
-	public final void setGlossAndDiffuse(double glossAndDiffuse) {
-		this.glossAndDiffuse = glossAndDiffuse;
-	}
 
 	/**
 	 * Creates a ray tracer for a given scene.

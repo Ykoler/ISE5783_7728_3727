@@ -10,10 +10,6 @@ import java.util.concurrent.TimeUnit;
  * @author Yahel and Ashi
  *
  */
-/**
- * @author ashih
- *
- */
 public class Camera {
 	private ImageWriter imageWriter;
 	private RayTracerBase rayTracer;
@@ -78,16 +74,6 @@ public class Camera {
 	}
 
 	/**
-	 * ###############################################################
-	 * 
-	 * @param glossAndDiffuse
-	 */
-	public Camera setGlossAndDiffuse(double glossAndDiffuse) {
-		this.rayTracer.setGlossAndDiffuse(glossAndDiffuse);
-		return this;
-	}
-
-	/**
 	 * Uses the constructRay function to build the ray from the camera to the pixel,
 	 * and then uses the traceRay function to send back the color of the nearest
 	 * intersection point along that ray.
@@ -118,6 +104,8 @@ public class Camera {
 	/**
 	 * Casts a ray through every pixel in the image writer, writing to it the color
 	 * of each pixel (calculated using the castRay function).
+	 * 
+	 * @return the Camera itself
 	 */
 	public Camera renderImage() {
 		var startTime = System.currentTimeMillis();
