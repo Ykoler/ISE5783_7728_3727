@@ -1,7 +1,6 @@
 package unittests.renderer;
 
 import static java.awt.Color.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
@@ -12,13 +11,14 @@ import renderer.*;
 import scene.Scene;
 
 /**
- * @author ashih
- *
+ * Testing the gloss and diffuse features added in MP1.
+ * 
+ * @author Yahel and Ashi
  */
 class GlossAndBlurTests {
 	private Scene scene = new Scene("Test scene");
 
-	@Test
+	// @Test
 	public void TestCombo() {
 		Camera camera = new Camera(new Point(0, 0, 1000), new Vector(0, 0, -1), new Vector(0, 1, 0)) //
 				.setVPSize(200, 200).setVPDistance(1000);
@@ -27,32 +27,31 @@ class GlossAndBlurTests {
 
 		scene.geometries.add(
 				new Sphere(50d, new Point(0, 0, 0))
-						.setMaterial(new Material().setKd(0.3).setKs(0.7).setShininess(10).setKt(0.85))// .setKr(0.2))
+						.setMaterial(new Material().setKd(0.3).setKs(0.7).setShininess(10).setKt(0.8))
 						.setEmission(new Color(RED)),
-				new Triangle(new Point(-80, 10, 0), new Point(0, -80, -50), new Point(0, 80, -50))
+				new Sphere(25d, new Point(0, 0, 0)).setMaterial(new Material().setKd(0.2).setKs(0.8).setShininess(50))
+						.setEmission(new Color(GRAY)),
+				new Triangle(new Point(-120, 10, 0), new Point(0, -100, -50), new Point(0, 110, -50))
 						.setMaterial(new Material().setKd(0.1).setKr(0.6).setKg(20)),
-				new Triangle(new Point(0, 0, 50), new Point(0, 60, 50), new Point(80, 0, 50))
-						.setMaterial(new Material().setKd(0.1).setKt(0.3).setKb(20)));
-////					.setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(60))
-//				new Plane(new Point(0, 0, 100), new Vector(0, 0, 1))
-//						.setMaterial(new Material().setKd(0.1).setKt(0.9).setKb(40)));//.setEmission(new Color(0, 0, 50)));
+				new Triangle(new Point(0, 0, 50), new Point(0, 90, 50), new Point(80, 0, 50))
+						.setMaterial(new Material().setKd(0.1).setKt(0.3).setKb(20)),
+				new Plane(new Point(70, 0, -140), new Vector(-0.35, 0, 1))
+						.setMaterial(new Material().setKg(7).setKr(0.9)).setEmission(new Color(0, 30, 50)));
 
 		scene.lights.add(new SpotLight(new Color(700, 400, 400), new Point(60, 50, 0), new Vector(0, 0, -1)) //
 				.setKl(4E-5).setKq(2E-7));
 
 		scene.setBackground(new Color(0, 100, 160));
 
-		ImageWriter imageWriter = new ImageWriter("TestComboWithBlur", 200, 200);
+		ImageWriter imageWriter = new ImageWriter("TestComboWithBlur", 500, 500);
 		camera.setImageWriter(imageWriter) //
 				.setRayTracer(new RayTracerBasic(scene)) //
 				.renderImage() //
 				.writeToImage();
 	}
-	
-	
-	
-	/** Produce a picture of a sphere lighted by a spot light */
-	@Test
+
+	/** Produce a picture of a sphere within a sphere mirrored by a double mirror */
+	// @Test
 	public void twoSpheresOnMirrors() {
 		Camera camera = new Camera(new Point(0, 0, 10000), new Vector(0, 0, -1), new Vector(0, 1, 0)) //
 				.setVPSize(2500, 2500).setVPDistance(10000); //
@@ -61,17 +60,17 @@ class GlossAndBlurTests {
 
 		scene.geometries.add( //
 				new Sphere(400d, new Point(-950, -900, -1000)).setEmission(new Color(0, 50, 100)) //
-						.setMaterial(
-								new Material().setKd(0.25).setKs(0.25).setShininess(20).setKt(new Double3(0.5, 0, 0)).setKb(1)),
+						.setMaterial(new Material().setKd(0.25).setKs(0.25).setShininess(20)
+								.setKt(new Double3(0.5, 0, 0)).setKb(0)),
 				new Sphere(200d, new Point(-950, -900, -1000)).setEmission(new Color(100, 50, 20)) //
 						.setMaterial(new Material().setKd(0.25).setKs(0.25).setShininess(20)),
 				new Triangle(new Point(1500, -1500, -1500), new Point(-1500, 1500, -1500), new Point(670, 670, 3000)) //
 						.setEmission(new Color(20, 20, 20)) //
-						.setMaterial(new Material().setKr(1).setKg(5)),
+						.setMaterial(new Material().setKr(1).setKg(10)),
 				new Triangle(new Point(1500, -1500, -1500), new Point(-1500, 1500, -1500),
 						new Point(-1500, -1500, -2000)) //
 						.setEmission(new Color(20, 20, 20)) //
-						.setMaterial(new Material().setKr(new Double3(0.5, 0, 0.4)).setKg(1)));
+						.setMaterial(new Material().setKr(new Double3(0.5, 0, 0.4)).setKg(10)));
 
 		scene.lights.add(new SpotLight(new Color(1020, 400, 400), new Point(-750, -750, -150), new Vector(-1, -1, -4)) //
 				.setKl(0.00001).setKq(0.000005));
@@ -83,99 +82,31 @@ class GlossAndBlurTests {
 				.writeToImage();
 	}
 
-	
-	
-	/** Geometry combination including refraction and reflection */
-	//@Test
-//	public void geometryCombinationTest() {
-//		Camera camera = new Camera(new Point(0, 0, 1000), new Vector(0, 0, -1), new Vector(0, 1, 0)) //
-//				.setVPSize(200, 200).setVPDistance(1000);
-//
-//		scene.setAmbientLight(new AmbientLight(new Color(WHITE), 0.15));
-//
-//		scene.geometries.add(
-//				new Sphere(50d, new Point(0, 0, 0))
-//						.setMaterial(new Material().setKd(0.3).setKs(0.5).setShininess(10).setKt(0.55).setKr(0.5).setKg(3)),
-//				new Sphere(35d, new Point(60, 0, 0))
-//						.setMaterial(new Material().setKd(0.6).setKs(0.2).setShininess(3).setKr(0.4).setKt(0.2))
-//						.setEmission(new Color(20, 120, 50)),
-//				new Triangle(new Point(0, 20, 0), new Point(20, 70, 0), new Point(-20, 70, 0))
-//						.setMaterial(new Material().setKd(0.2).setKs(0.6).setShininess(8).setKt(0.6))
-//						.setEmission(new Color(RED)));
-//
-//		scene.geometries.add( //
-//				new Triangle(new Point(-150, -150, -115), new Point(150, -150, -135), new Point(75, 75, -150)) //
-//						.setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(60)), //
-//				new Triangle(new Point(-150, -150, -115), new Point(-70, 70, -140), new Point(75, 75, -150)) //
-//						.setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(60)), //
-//				new Sphere(30d, new Point(60, 50, -50)).setEmission(new Color(BLUE)) //
-//						.setMaterial(new Material().setKd(0.2).setKs(0.2).setKb(20).setShininess(30).setKt(0.6)));
-//
-//		scene.lights.add(new SpotLight(new Color(700, 400, 400), new Point(60, 50, 0), new Vector(0, 0, -1)) //
-//				.setKl(4E-5).setKq(2E-7));
-//
-//		ImageWriter imageWriter = new ImageWriter("GeometryCombination", 600, 600);
-//		camera.setImageWriter(imageWriter) //
-//				.setRayTracer(new RayTracerBasic(scene)) //
-//				.renderImage() //
-//				.writeToImage();
-//	}
-	
-	
-	
-	/**
-	 * Mega geometry combination test including all features
-	 */
-	/*
-	 * @Test public void megaTest() { Camera camera = new Camera(new Point(0, 0,
-	 * 1000), new Vector(0, 0, -1), new Vector(0, 1, 0)) // .setVPSize(200,
-	 * 200).setVPDistance(1000);
-	 * 
-	 * scene.setAmbientLight(new AmbientLight(new Color(WHITE), 0.15));
-	 * 
-	 * scene.geometries.add( new Sphere(30d, new Point(-80, 10, -50))
-	 * .setMaterial(new
-	 * Material().setKd(0.3).setKs(0.5).setShininess(10).setKt(0.55).setKr(0.5)),
-	 * new Sphere(35d, new Point(60, 0, 0)) .setMaterial(new
-	 * Material().setKd(0.6).setKs(0.2).setShininess(3).setKr(0.4).setKt(0.2))
-	 * .setEmission(new Color(252, 148, 3)), new Sphere(25d, new Point(-15, -40,
-	 * 10)) .setMaterial(new
-	 * Material().setKd(0.3).setKs(0.7).setShininess(5).setKr(0.7).setKt(0.2))
-	 * .setEmission(new Color(252, 3, 252)),
-	 * 
-	 * new Plane(new Point(0, 160, 0), new Vector(0, 1, 0)).setMaterial(new
-	 * Material().setKd(0.9).setKr(0.4)) .setEmission(new Color(170, 170, 170)),
-	 * 
-	 * new Polygon(new Point(-80, 80, -60), new Point(80, 80, -60), new Point(80,
-	 * 100, 10), new Point(-80, 100, 10)).setMaterial(new
-	 * Material().setKd(0.6).setKt(0.1)) .setEmission(new Color(3, 250, 190)),
-	 * 
-	 * new Triangle(new Point(60, 60, 20), new Point(100, 70, 0), new Point(70, 100,
-	 * 0)) .setMaterial(new
-	 * Material().setKd(0.2).setKs(0.6).setShininess(8).setKt(0.6)) .setEmission(new
-	 * Color(250, 70, 0)),
-	 * 
-	 * new Triangle(new Point(-20, 20, -60), new Point(30, 70, 0), new Point(-20,
-	 * 70, 0)) .setMaterial(new
-	 * Material().setKd(0.2).setKs(0.6).setShininess(8).setKt(0.6)) .setEmission(new
-	 * Color(RED)));
-	 * 
-	 * scene.geometries.add( // new Triangle(new Point(-150, -150, -115), new
-	 * Point(150, -150, -135), new Point(75, -75, -150)) // .setMaterial(new
-	 * Material().setKd(0.5).setKs(0.5).setShininess(60)), // new Triangle(new
-	 * Point(-150, -150, -115), new Point(-70, -70, -140), new Point(75, -75, -150))
-	 * // .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(60)), //
-	 * new Sphere(30d, new Point(60, 50, -50)).setEmission(new Color(BLUE)) //
-	 * .setMaterial(new
-	 * Material().setKd(0.2).setKs(0.2).setShininess(30).setKt(0.6)));
-	 * 
-	 * scene.lights.add(new SpotLight(new Color(700, 400, 400), new Point(60, 50,
-	 * 0), new Vector(0, 0, -1)) // .setKl(4E-5).setKq(2E-7));
-	 * 
-	 * ImageWriter imageWriter = new ImageWriter("MegaCombinationWithBlur", 400,
-	 * 400); camera.setImageWriter(imageWriter) // .setRayTracer(new
-	 * RayTracerBasic(scene)) // .setGlossAndDiffuse(70)// .renderImage() //
-	 * .writeToImage(); }
-	 */
+	/** Geometry combination presenting glossing and diffusion */
+	@Test
+	public void geometryCombinationTest() {
+		Camera camera = new Camera(new Point(40, 0, 1000), new Vector(0, 0, -1), new Vector(0, 1, 0)) //
+				.setVPSize(200, 200).setVPDistance(1000);
+
+		scene.setAmbientLight(new AmbientLight(new Color(WHITE), 0.15));
+
+		scene.geometries.add(
+				new Sphere(50d, new Point(0, 0, 0)).setMaterial(new Material().setKd(0.3).setKs(0.5).setShininess(10))
+						.setEmission(new Color(130, 80, 0)),
+				new Triangle(new Point(-10, 0, 70), new Point(0, 90, 40), new Point(80, 0, 50))
+						.setMaterial(new Material().setKt(0.3).setKb(20)).setEmission(new Color(GRAY)),
+				new Plane(new Point(70, 0, -140), new Vector(-0.35, 0, 1))
+						.setMaterial(new Material().setKg(7).setKr(0.9)).setEmission(new Color(0, 30, 50)));
+
+		scene.setBackground(new Color(30, 10, 0));
+		scene.lights.add(new SpotLight(new Color(700, 400, 400), new Point(60, 50, 0), new Vector(0, 0, -1)) //
+				.setKl(4E-5).setKq(2E-7));
+
+		ImageWriter imageWriter = new ImageWriter("BlurredNewCombo1", 500, 500);
+		camera.setImageWriter(imageWriter) //
+				.setRayTracer(new RayTracerBasic(scene)) //
+				.renderImage() //
+				.writeToImage();
+	}
 
 }

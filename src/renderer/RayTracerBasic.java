@@ -17,8 +17,8 @@ import lighting.LightSource;
  */
 
 public class RayTracerBasic extends RayTracerBase {
-	private static final int MAX_CALC_COLOR_LEVEL = 10;
-	private static final double MIN_CALC_COLOR_K = 0.001;
+	private static final int MAX_CALC_COLOR_LEVEL = 7;
+	private static final double MIN_CALC_COLOR_K = 0.007;
 	private static final double INITIAL_K = 1.0;
 
 	/**
@@ -175,7 +175,7 @@ public class RayTracerBasic extends RayTracerBase {
 		GeoPoint gp = findClosestIntersection(ray);
 		// Returns background color if no intersection points are found
 		if (gp == null)
-			return Color.BLACK;
+			return scene.background.scale(kx);
 		// If they are, color at the nearest intersection is returned
 		return isZero(gp.geometry.getNormal(gp.point).dotProduct(ray.getDir())) ? Color.BLACK
 				: calcColor(gp, ray, level - 1, kkx).scale(kx);
@@ -292,14 +292,18 @@ public class RayTracerBasic extends RayTracerBase {
 
 
 	private List<Ray> constructRefractedRays(GeoPoint gp, Vector v, Vector n, double kB) {
-		return kB == 0 ? List.of(constructRefractedRay(gp, v, n))
-				: new TargetArea(constructRefractedRay(gp, v, n), kB).constructRayBeamGrid().stream()
-						.filter(r -> r.getDir().dotProduct(n) > 0).collect(Collectors.toList());
+		Ray rfRay = constructRefractedRay(gp, v, n);
+		double res  = rfRay.getDir().dotProduct(n);
+		return kB == 0 ? List.of(rfRay)
+				: new TargetArea(rfRay, kB).constructRayBeamGrid().stream()
+						.filter(r -> r.getDir().dotProduct(n) * res > 0).collect(Collectors.toList());
 	}
 
 	private List<Ray> constructReflectedRays(GeoPoint gp, Vector v, Vector n, double kG) {
-		return kG == 0 ? List.of(constructReflectedRay(gp, v, n))
-				: new TargetArea(constructReflectedRay(gp, v, n), kG).constructRayBeamGrid().stream()
-						.filter(r -> r.getDir().dotProduct(n) > 0).collect(Collectors.toList());
+		Ray rfRay = constructReflectedRay(gp, v, n);
+		double res  = rfRay.getDir().dotProduct(n);
+		return kG == 0 ? List.of(rfRay)
+				: new TargetArea(rfRay, kG).constructRayBeamGrid().stream()
+						.filter(r -> r.getDir().dotProduct(n) * res > 0).collect(Collectors.toList());
 	}
 }

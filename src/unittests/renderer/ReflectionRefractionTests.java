@@ -45,7 +45,7 @@ public class ReflectionRefractionTests {
 	}
 
 	/** Produce a picture of a sphere lighted by a spot light */
-	@Test
+	//@Test
 	public void twoSpheresOnMirrors() {
 		Camera camera = new Camera(new Point(0, 0, 10000), new Vector(0, 0, -1), new Vector(0, 1, 0)) //
 				.setVPSize(2500, 2500).setVPDistance(10000); //
@@ -114,11 +114,8 @@ public class ReflectionRefractionTests {
 		scene.setAmbientLight(new AmbientLight(new Color(WHITE), 0.15));
 
 		scene.geometries.add(
-				new Sphere(50d, new Point(0, 0, 0))
-						.setMaterial(new Material().setKd(0.3).setKs(0.5).setShininess(10).setKt(0.55).setKr(0.5)),
-				new Sphere(35d, new Point(60, 0, 0))
-						.setMaterial(new Material().setKd(0.6).setKs(0.2).setShininess(3).setKr(0.4).setKt(0.2))
-						.setEmission(new Color(20, 120, 50)),
+				new Sphere(40d, new Point(0, 0, 0))
+						.setMaterial(new Material().setKd(0.3).setKs(0.5).setShininess(10).setKr(0.5)),
 				new Triangle(new Point(0, 20, 0), new Point(20, 70, 0), new Point(-20, 70, 0))
 						.setMaterial(new Material().setKd(0.2).setKs(0.6).setShininess(8).setKt(0.6))
 						.setEmission(new Color(RED)));

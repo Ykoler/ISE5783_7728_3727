@@ -25,9 +25,6 @@ public class TargetArea {
 		double a = vTo.getX(), b = vTo.getY(), c = vTo.getZ();
 		vRight = (a == b && b == c) ? new Vector(0, -a, a).normalize() : new Vector(b - c, c - a, a - b).normalize();
 		vUp = vRight.crossProduct(vTo);
-//		System.out.println(vTo);
-//		System.out.println(vUp);
-//		System.out.println(vRight);
 		this.height = this.width = size;
 		this.distance = DISTANCE;
 	}
