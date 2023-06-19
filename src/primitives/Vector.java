@@ -140,4 +140,14 @@ public class Vector extends Point {
 	public Vector mirror(Vector n, double nl) {
 		return this.subtract(n.scale(nl * 2));
 	}
+
+	/**
+	 * When given a vector, the function creates a vector perpendicular to it.
+	 * 
+	 * @return the resulting vector
+	 */
+	public Vector makePerpendicularVector() {
+		double a = getX(), b = getY(), c = getZ();
+		return (a == b && b == c) ? new Vector(0, -a, a).normalize() : new Vector(b - c, c - a, a - b).normalize();
+	}
 }

@@ -14,7 +14,7 @@ import primitives.*;
 
 public class TargetArea {
 	private final static double DISTANCE = 100;
-	private final static int DENSITY = 5;
+	private int density = 6;
 	private final Point p0;
 	private final Vector vRight, vUp, vTo;
 	private double width, height, distance;
@@ -28,8 +28,7 @@ public class TargetArea {
 	public TargetArea(Ray ray, double size) {
 		p0 = ray.getP0();
 		vTo = ray.getDir();
-		double a = vTo.getX(), b = vTo.getY(), c = vTo.getZ();
-		vRight = (a == b && b == c) ? new Vector(0, -a, a).normalize() : new Vector(b - c, c - a, a - b).normalize();
+		vRight = vTo.makePerpendicularVector();
 		vUp = vRight.crossProduct(vTo);
 		this.height = this.width = size;
 		this.distance = DISTANCE;
@@ -50,7 +49,7 @@ public class TargetArea {
 	}
 
 	/**
-	 * Sets width and height in builder pattern
+	 * Sets width and height
 	 * 
 	 * @param width
 	 * @param height
@@ -61,12 +60,21 @@ public class TargetArea {
 	}
 
 	/**
-	 * Sets distance in builder pattern
+	 * Sets distance
 	 * 
 	 * @param distance
 	 */
 	public void setDistance(double distance) {
 		this.distance = distance;
+	}
+
+	/**
+	 * Sets density of rays.
+	 * 
+	 * @param density
+	 */
+	public void setDensity(int density) {
+		this.density = density;
 	}
 
 	/**
@@ -99,9 +107,9 @@ public class TargetArea {
 	 */
 	public List<Ray> constructRayBeamGrid() {
 		List<Ray> rays = new LinkedList<>();
-		for (int i = 0; i < DENSITY; ++i)
-			for (int j = 0; j < DENSITY; j++)
-				rays.add(constructRay(DENSITY, DENSITY, j, i));
+		for (int i = 0; i < density; ++i)
+			for (int j = 0; j < density; j++)
+				rays.add(constructRay(density, density, j, i));
 		return rays;
 	}
 }

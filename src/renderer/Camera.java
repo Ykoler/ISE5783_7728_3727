@@ -2,7 +2,7 @@ package renderer;
 
 import primitives.*;
 import static primitives.Util.isZero;
-
+import renderer.*;
 import java.util.MissingResourceException;
 import java.util.concurrent.TimeUnit;
 
@@ -14,7 +14,8 @@ public class Camera {
 	private ImageWriter imageWriter;
 	private RayTracerBase rayTracer;
 	private TargetArea targetArea;
-
+	private int threadsCount = 0;
+	private double printInterval = 0;
 	/**
 	 * Constructs new Camera object given a starting point and direction vectors.
 	 * 
@@ -74,6 +75,28 @@ public class Camera {
 	}
 
 	/**
+	 * Sets number of threads in builder pattern.
+	 * 
+	 * @param threadNum
+	 * @return Camera that results
+	 */
+	public Camera setThreadsCount(int threadsCount) {
+		this.threadsCount = threadsCount;
+		return this;
+	}
+	
+	/**
+	 * Sets interval size for progress printing in builder pattern.
+	 * 
+	 * @param printInterval
+	 * @return Camera that results
+	 */
+	public Camera setPrintInterval(int printInterval) {
+		this.printInterval = printInterval;
+		return this;
+	}
+	
+	/**
 	 * Uses the constructRay function to build the ray from the camera to the pixel,
 	 * and then uses the traceRay function to send back the color of the nearest
 	 * intersection point along that ray.
@@ -117,6 +140,18 @@ public class Camera {
 		int nY = imageWriter.getNy();
 		int nX = imageWriter.getNx();
 
+//		if (threadsCount != 0) {
+//			Pixel.initialize(nY, nX, printInterval );
+//			while (threadsCount-- > 0) {
+//			 new Thread(() -> {
+//			 for (Pixel pixel = new Pixel(); pixel.nextPixel(); Pixel.pixelDone())
+//			 castRay(nX, nY, pixel.col, pixel.row);
+//			 }).start();
+//			}
+//			Pixel.waitToFinish();
+//			return this;
+//		}
+		
 		for (int i = 0; i < nY; ++i) {
 			for (int j = 0; j < nX; j++) {
 				imageWriter.writePixel(j, i, castRay(i, j));
