@@ -92,6 +92,10 @@ public class Point {
 	public double distance(Point other) {
 		return Math.sqrt(this.distanceSquared(other));
 	}
+	
+	public Point divideSize(int div) {
+		return new Point(this.getX()/div, this.getY()/div, this.getZ()/div);
+	}
 
 	public double getX() {
 		return xyz.d1;

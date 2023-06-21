@@ -101,6 +101,17 @@ public class Polygon extends Geometry {
 		if (points == null)
 			return null;
 
+		boolean pointInPolygon = pointInPolygon(ray);
+		if (!pointInPolygon)
+			return null;
+		points.get(0).geometry = this;
+		return points;
+	}
+
+	/**
+	 * @param ray
+	 */
+	public boolean pointInPolygon(Ray ray) {
 		Point p0 = ray.getP0();
 		Vector v = ray.getDir();
 		List<Vector> vectors = new LinkedList<>();
@@ -113,14 +124,13 @@ public class Polygon extends Geometry {
 		// sign
 		double normal = alignZero(vectors.get(vSize - 1).crossProduct(vectors.get(0)).dotProduct(v));
 		if (isZero(normal))
-			return null;
+			return false;
 		boolean sign = normal > 0;
 		for (int i = 0; i < vSize - 1; i++) {
 			normal = alignZero(vectors.get(i).crossProduct(vectors.get(i + 1)).dotProduct(v));
 			if ((normal > 0) ^ sign || isZero(normal))
-				return null;
+				return false;
 		}
-		points.get(0).geometry = this;
-		return points;
+		return true;
 	}
 }

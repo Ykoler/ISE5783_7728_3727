@@ -109,19 +109,18 @@ public class Ray {
 	 * @return closest GeoPoint
 	 */
 	public GeoPoint findClosestGeoPoint(List<GeoPoint> points) {
-		GeoPoint closest = null;
-		double d = Integer.MAX_VALUE;
-		double calcD;
-
 		if (points == null)
 			return null;
 
+		GeoPoint closest = null;
+		double d = Integer.MAX_VALUE;
+		double calcD;
 		// For each point, checks if it's closer than the previous, and if so, replaces
 		// it
-		for (GeoPoint point : points) {
-			calcD = point.point.distanceSquared(p0);
+		for (GeoPoint gp : points) {
+			calcD = gp.point.distanceSquared(p0);
 			if (calcD < d) {
-				closest = point;
+				closest = gp;
 				d = calcD;
 			}
 		}
