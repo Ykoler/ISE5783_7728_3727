@@ -3,6 +3,8 @@ package geometries;
 import java.util.LinkedList;
 import java.util.List;
 
+import primitives.Color;
+import primitives.Material;
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
@@ -48,13 +50,14 @@ public class Prism extends Geometry {
 				tmp.add(p.subtract(zero));
 		}
 		center = tmp.divideSize(8);
+		System.out.println(center);
 	}
 
 	public Vector getNormal(Point p) {
 		Ray testSide = new Ray(center, p.subtract(center));
 		for (Polygon side : sides)
 			if (side.findIntersections(testSide) != null)
-				return side.getNormal(p).scale(-1);
+				return side.getNormal(p);
 		return null;
 	}
 
@@ -69,7 +72,34 @@ public class Prism extends Geometry {
 		}
 		if (points.isEmpty() || points == null)
 			return null;
+		// System.out.println(points);
 		return points;
+	}
+
+	/**
+	 * Sets a geometry's emission.
+	 * 
+	 * @param emission the emission to set
+	 */
+	@Override
+	public Geometry setEmission(Color emission) {
+		for (Polygon side : sides) {
+			side.setEmission(emission);
+		}
+		return this;
+	}
+
+	/**
+	 * Sets a geometry's material.
+	 * 
+	 * @param material the material to set
+	 */
+	@Override
+	public Geometry setMaterial(Material material) {
+		for (Polygon side : sides) {
+			side.setMaterial(material);
+		}
+		return this;
 	}
 
 }
