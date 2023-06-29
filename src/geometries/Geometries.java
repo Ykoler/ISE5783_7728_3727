@@ -44,9 +44,9 @@ public class Geometries extends Intersectable {
 			minX = tMinX < minX ? tMinX : minX;
 			minY = tMinY < minY ? tMinY : minY;
 			minZ = tMinZ < minZ ? tMinZ : minZ;
-			maxX = x > maxX ? x : maxX;
-			maxY = y > maxY ? y : maxY;
-			maxZ = z > maxZ ? z : maxZ;
+			maxX = tMaxX > maxX ? tMaxX : maxX;
+			maxY = tMaxY > maxY ? tMaxY : maxY;
+			maxZ = tMaxZ > maxZ ? tMaxZ : maxZ;
 		}
 	}
 
@@ -64,4 +64,12 @@ public class Geometries extends Intersectable {
 		return result;
 	}
 
+	/**
+	 * returns the list of geometries
+	 * 
+	 * @return list of geometries
+	 */
+	public List<Intersectable> getGeometries() {
+		return geometries;
+	}
 }

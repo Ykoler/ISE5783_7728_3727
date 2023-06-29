@@ -58,4 +58,5 @@ public abstract class Geometry extends Intersectable {
 	 * @return The normal vector at a specified point on the surface.
 	 */
 	public abstract Vector getNormal(Point p0);
+
 }

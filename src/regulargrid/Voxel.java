@@ -1,16 +1,26 @@
-
-
 package regulargrid;
 
-import geometries.Geometries;
+import geometries.*;
+import primitives.*;
 
-
-/**
- * @author Yahel and Ashi
- */
 public class Voxel {
-	Geometries geometries = new Geometries();
-	
-	
-	
+	private final Geometries geometries;
+	private final double x, y, z;
+	private final Point center;
+
+	/**
+	 * recives a Geometries object and adds to the voxel's geometries all the
+	 * geometries that are contained in the voxel
+	 */
+
+	public Voxel(double x, double y, double z, Point center, Geometries geometries) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.center = center;
+
+		// setting geometries
+		this.geometries = geometries;
+	}
+
 }
