@@ -11,6 +11,9 @@ import primitives.*;
  */
 public abstract class Intersectable {
 
+	double minX = Double.POSITIVE_INFINITY, minY = Double.POSITIVE_INFINITY, minZ = Double.POSITIVE_INFINITY,
+			maxX = Double.NEGATIVE_INFINITY, maxY = Double.NEGATIVE_INFINITY, maxZ = Double.NEGATIVE_INFINITY;
+
 	public static class GeoPoint {
 		/** the geometry which the point is on */
 		public Geometry geometry;
@@ -85,4 +88,12 @@ public abstract class Intersectable {
 	 * @return list of intersections (in the form of GeoPoints)
 	 */
 	protected abstract List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDistance);
+	/**
+	 *#####################################################################
+	 * @return
+	 */
+	public final List<Double> getEdges() {
+		return List.of(minX, minY, minZ, maxX, maxY, maxZ);
+	}
+
 }

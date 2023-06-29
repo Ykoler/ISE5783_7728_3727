@@ -24,6 +24,12 @@ public class Sphere extends RadialGeometry {
 	public Sphere(double radius, Point p) {
 		super(radius);
 		this.center = p;
+		minX = center.getX() - radius;
+		minY = center.getY() - radius;
+		minZ = center.getZ() - radius;
+		maxX = center.getX() + radius;
+		maxY = center.getY() + radius;
+		maxZ = center.getZ() + radius;
 	}
 
 	/**

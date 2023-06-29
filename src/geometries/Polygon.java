@@ -82,6 +82,16 @@ public class Polygon extends Geometry {
 			if (positive != (edge1.crossProduct(edge2).dotProduct(n) > 0))
 				throw new IllegalArgumentException("All vertices must be ordered and the polygon must be convex");
 		}
+		
+		for (Point p : vertices) {
+			double x = p.getX(),y=p.getY(),z = p.getZ();
+			minX = x < minX ? x : minX;
+			minY = y < minY ? y : minY;
+			minZ = z < minZ ? z : minZ;
+			maxX = x > maxX ? x : maxX;
+			maxY = y > maxY ? y : maxY;
+			maxZ = z > maxZ ? z : maxZ;
+		}
 	}
 
 	@Override
