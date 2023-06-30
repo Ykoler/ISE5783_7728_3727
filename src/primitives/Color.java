@@ -37,6 +37,12 @@ public class Color {
 		rgb = Double3.ZERO;
 	}
 
+	public Color(double color) {
+		if (color < 0)
+			throw new IllegalArgumentException("Negative color component is illegal");
+		rgb = new Double3(color, color, color);
+	}
+	
 	/**
 	 * Constructor to generate a color according to RGB components Each component in
 	 * range 0..255 (for printed white color) or more [for lights]

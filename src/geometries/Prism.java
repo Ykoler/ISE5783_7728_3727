@@ -40,7 +40,6 @@ public class Prism extends Geometry {
 		sides.add(new Polygon(bottomLeftFront, bottomRightFront, topRightFront, topLeftFront));
 		sides.add(new Polygon(bottomLeftBack, bottomLeftFront, topLeftFront, topLeftBack));
 		sides.add(new Polygon(bottomLeftBack, bottomLeftFront, bottomRightFront, bottomRightBack));
-
 		List<Point> points = List.of(bottomLeftBack, bottomRightBack, bottomRightFront, bottomLeftFront, topLeftBack,
 				topRightBack, topRightFront, topLeftFront);
 		Point zero = Point.ZERO;
@@ -50,7 +49,6 @@ public class Prism extends Geometry {
 				tmp.add(p.subtract(zero));
 		}
 		center = tmp.divideSize(8);
-		System.out.println(center);
 	}
 
 	public Vector getNormal(Point p) {
@@ -59,6 +57,15 @@ public class Prism extends Geometry {
 			if (side.findIntersections(testSide) != null)
 				return side.getNormal(p);
 		return null;
+	}
+
+	public Prism(double right, double bottom, double back, double xLength, double yLength, double zLength) {
+		this(new Point(right + xLength, bottom, back + zLength), new Point(right, bottom, back + zLength),
+				new Point(right, bottom, back), new Point(right + xLength, bottom, back),
+				new Point(right + xLength, bottom + yLength, back + zLength),
+				new Point(right, bottom + yLength, back + zLength), new Point(right, bottom + yLength, back),
+				new Point(right + xLength, bottom + yLength, back));
+
 	}
 
 	@Override
