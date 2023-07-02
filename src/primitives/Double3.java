@@ -94,7 +94,7 @@ public class Double3 {
 
 	@Override
 	public int hashCode() {
-		return (int) Math.round(d1 + d2 + d3);
+		return Double.hashCode(d1) ^ Double.hashCode(d2) ^ Double.hashCode(d3);
 	}
 
 	@Override
