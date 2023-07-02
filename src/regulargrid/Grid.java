@@ -5,6 +5,7 @@ import java.util.List;
 
 import geometries.*;
 import primitives.*;
+import static primitives.Util.*;
 
 /**
  * @author ashih
@@ -67,7 +68,79 @@ public class Grid {
 		}
 	}
 
-	public Geometries travesal(Ray ray) {
-		return null;
+	/**
+	 * Checks if point is in grid
+	 * 
+	 * @param p
+	 * @return
+	 */
+	public boolean inGrid(Point p) {
+		double x = p.getX(), y = p.getY(), z = p.getZ();
+		return x >= minX && x <= maxX && y >= minY && y <= maxY && z >= minZ && z <= maxZ;
+	}
+
+	public Point gridEntryPoint(Ray ray) {
+		Point p = ray.getP0();
+		if (inGrid(p))
+			return p;
+		double[] headCoordinates = { p.getX(), p.getY(), p.getZ() };
+		Vector dir = ray.getDir();
+		double[] dirCoordinates = { dir.getX(), dir.getY(), dir.getZ() };
+
+		double[] mins = { minX, minY, minZ };
+		double[] maxs = { maxX, maxY, maxZ };
+
+		double headCoordinate, dirCoordinate;
+		// Initialize the minimum and maximum intersection distances for each axis
+		double tmin = Double.NEGATIVE_INFINITY;
+		double tmax = Double.POSITIVE_INFINITY;
+
+		// Check intersection with each axis
+		for (int i = 0; i < 3; i++) {
+			headCoordinate = headCoordinates[i];
+			dirCoordinate = dirCoordinates[i];
+			double min = mins[i];
+			double max = maxs[i];
+
+			// Check if the ray is parallel to the axis
+			if (isZero(dirCoordinate)) {
+				// Check if the ray origin is outside the box's extent on this axis
+				if (headCoordinate < min || headCoordinate > max) {
+					// No intersection
+					return null;
+				}
+			} else {
+				// Compute the intersection distances on this axis
+				double t1 = (min - headCoordinate) / dirCoordinate;
+				double t2 = (max - headCoordinate) / dirCoordinate;
+
+				// Ensure t1 <= t2
+				if (t1 > t2) {
+					double temp = t1;
+					t1 = t2;
+					t2 = temp;
+				}
+
+				// Update the minimum and maximum intersection distances
+				tmin = Math.max(tmin, t1);
+				tmax = Math.min(tmax, t2);
+
+				// Check if the box is missed or completely behind the ray
+				if (tmin > tmax) {
+					// No intersection
+					return null;
+				}
+			}
+		}
+
+		return ray.getPoint(tmin);
+	}
+
+	public Geometries travese(Ray ray) {
+		return travese(ray, false);
+	}
+
+	public Geometries travese(Ray ray, boolean multipleIntersection) {
+		if ()
 	}
 }

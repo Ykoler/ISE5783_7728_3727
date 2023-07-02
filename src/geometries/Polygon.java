@@ -53,6 +53,17 @@ public class Polygon extends Geometry {
 		// polygon with this plane.
 		// The plane holds the invariant normal (orthogonal unit) vector to the polygon
 		plane = new Plane(vertices[0], vertices[1], vertices[2]);
+		
+		for (Point p : vertices) {
+			double x = p.getX(),y=p.getY(),z = p.getZ();
+			minX = x < minX ? x : minX;
+			minY = y < minY ? y : minY;
+			minZ = z < minZ ? z : minZ;
+			maxX = x > maxX ? x : maxX;
+			maxY = y > maxY ? y : maxY;
+			maxZ = z > maxZ ? z : maxZ;
+		}
+		
 		if (size == 3)
 			return; // no need for more tests for a Triangle
 
@@ -83,15 +94,6 @@ public class Polygon extends Geometry {
 				throw new IllegalArgumentException("All vertices must be ordered and the polygon must be convex");
 		}
 		
-		for (Point p : vertices) {
-			double x = p.getX(),y=p.getY(),z = p.getZ();
-			minX = x < minX ? x : minX;
-			minY = y < minY ? y : minY;
-			minZ = z < minZ ? z : minZ;
-			maxX = x > maxX ? x : maxX;
-			maxY = y > maxY ? y : maxY;
-			maxZ = z > maxZ ? z : maxZ;
-		}
 	}
 
 	@Override
