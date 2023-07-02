@@ -18,7 +18,7 @@ import lighting.LightSource;
 
 public class RayTracerBasic extends RayTracerBase {
 	private static final int MAX_CALC_COLOR_LEVEL = 7;
-	private static final double MIN_CALC_COLOR_K = 0.007;
+	protected static final double MIN_CALC_COLOR_K = 0.007;
 	private static final double INITIAL_K = 1.0;
 
 	/**
@@ -43,7 +43,7 @@ public class RayTracerBasic extends RayTracerBase {
 	 * @param ray the ray with which the geometries will intersect
 	 * @return the closest geopoint
 	 */
-	private GeoPoint findClosestIntersection(Ray ray) {
+	protected GeoPoint findClosestIntersection(Ray ray) {
 		return ray.findClosestGeoPoint(scene.geometries.findGeoIntersections(ray));
 	}
 
@@ -233,7 +233,7 @@ public class RayTracerBasic extends RayTracerBase {
 	 * @return is the point unshaded relative to this certain light source?
 	 */
 	@SuppressWarnings("unused")
-	private boolean unshaded(GeoPoint gp, Vector l, Vector n, double nl, LightSource light) {
+	protected boolean unshaded(GeoPoint gp, Vector l, Vector n, double nl, LightSource light) {
 		Vector lightDir = l.scale(-1);
 		Ray lightRay = new Ray(gp.point, lightDir, n);
 
@@ -260,7 +260,7 @@ public class RayTracerBasic extends RayTracerBase {
 	 * @return the factor by which to scale the intensity of light from a light
 	 *         source at the given point
 	 */
-	private Double3 transparency(GeoPoint gp, Vector l, Vector n, double nl, LightSource light) {
+	protected Double3 transparency(GeoPoint gp, Vector l, Vector n, double nl, LightSource light) {
 		Vector lightDir = l.scale(-1);
 		Ray lightRay = new Ray(gp.point, lightDir, n);
 
