@@ -57,6 +57,41 @@ public class Double3 {
 		return false;
 	}
 
+	/**
+	 * @return the d1
+	 */
+	public double getD1() {
+		return d1;
+	}
+
+	/**
+	 * @return the d2
+	 */
+	public double getD2() {
+		return d2;
+	}
+
+	/**
+	 * @return the d3
+	 */
+	public double getD3() {
+		return d3;
+	}
+
+	/**
+	 * @return the zero
+	 */
+	public static Double3 getZero() {
+		return ZERO;
+	}
+
+	/**
+	 * @return the one
+	 */
+	public static Double3 getOne() {
+		return ONE;
+	}
+
 	@Override
 	public int hashCode() {
 		return (int) Math.round(d1 + d2 + d3);
