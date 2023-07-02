@@ -4,23 +4,23 @@ import geometries.*;
 import primitives.*;
 
 public class Voxel {
-	private final Geometries geometries;
-	private final double x, y, z;
-	private final Point center;
+	public Geometries geometries;
+	public final double x, y, z;
+	// private final Point center;
 
 	/**
 	 * recives a Geometries object and adds to the voxel's geometries all the
 	 * geometries that are contained in the voxel
 	 */
 
-	public Voxel(double x, double y, double z, Point center, Geometries geometries) {
+	public Voxel(double x, double y, double z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
-		this.center = center;
-
-		// setting geometries
-		this.geometries = geometries;
 	}
 
+	// public Voxel addGeometry(Intersectable geometry) {
+	// geometries.add(geometry);
+	// return this;
+	// }
 }

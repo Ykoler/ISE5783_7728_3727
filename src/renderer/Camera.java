@@ -5,10 +5,12 @@ import static primitives.Util.isZero;
 import renderer.*;
 import renderer.PixelManager.*;
 
+import java.util.LinkedList;
 import java.util.MissingResourceException;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.*
-;/**
+import java.util.stream.*;
+
+/**
  * @author Yahel and Ashi
  *
  */
@@ -26,7 +28,7 @@ public class Camera {
 	private ImageWriter imageWriter;
 	private RayTracerBase rayTracer;
 	private TargetArea targetArea;
-	private int threadsCount = 1;
+	private int threadsCount = 0;
 	private double printInterval = 0;
 
 	/**
@@ -101,11 +103,11 @@ public class Camera {
 	/**
 	 * Sets interval size for progress printing in builder pattern.
 	 * 
-	 * @param printInterval
+	 * @param d
 	 * @return Camera that results
 	 */
-	public Camera setPrintInterval(int printInterval) {
-		this.printInterval = printInterval;
+	public Camera setDebugPrint(double d) {
+		this.printInterval = d;
 		return this;
 	}
 
@@ -119,8 +121,9 @@ public class Camera {
 	 * @return the color of the closest intersection point on the ray through pixel
 	 *         i,j
 	 */
-	private Color castRay(int nX, int nY, int i, int j) {
-		return rayTracer.traceRay(constructRay(nX, nY, j, i));
+	private void castRay(int nX, int nY, int col, int row) {
+		imageWriter.writePixel(col, row, rayTracer.traceRay(constructRay(nX, nY, col, row)));
+		pixelManager.pixelDone();
 	}
 
 	/**
@@ -153,32 +156,41 @@ public class Camera {
 		int nY = imageWriter.getNy();
 		int nX = imageWriter.getNx();
 		pixelManager = new PixelManager(nY, nX, printInterval);
-		
-		if (threadsCount != 0) {
-			PixelManager.initialize(nY, nX, printInterval);
-			while (threadsCount-- > 0) {
-				new Thread(() -> {
-					for (PixelManager pixel = new PixelManager(); pixel.nextPixel(); PixelManager.pixelDone())
-						castRay(nX, nY, pixel.col, pixel.row);
-				}).start();
+		if (threadsCount == 0)
+			for (int i = 0; i < nY; ++i)
+				for (int j = 0; j < nX; ++j)
+					castRay(nX, nY, j, i);
+		else { // see further... option 2
+			var threads = new LinkedList<Thread>(); // list of threads
+			while (threadsCount-- > 0) // add appropriate number of threads
+				threads.add(new Thread(() -> { // add a thread with its code
+					Pixel pixel; // current pixel(row,col)
+					// allocate pixel(row,col) in loop until there are no more pixels
+					while ((pixel = pixelManager.nextPixel()) != null)
+						// cast ray through pixel (and color it – inside castRay)
+						castRay(nX, nY, pixel.col(), pixel.row());
+				}));
+			// start all the threads
+			for (var thread : threads)
+				thread.start();
+			// wait until all the threads have finished
+			try {
+				for (var thread : threads)
+					thread.join();
+			} catch (InterruptedException ignore) {
 			}
-			PixelManager.waitToFinish();
-			return this;
 		}
 
-		for (int i = 0; i < nY; ++i) {
-			for (int j = 0; j < nX; j++) {
-				imageWriter.writePixel(j, i, castRay(nX, nY, i, j));
-			}
-			if (i % 1 == 0) {
-				System.out.println("Reached " + (double) i / (double) nY * 100.0d + "% of tracing.");
-				System.out.println(
-						"Time elapsed: " + (double) (System.currentTimeMillis() - startTime) / 1000.0d + " seconds.");
-				System.out.println("Estimated time remaining: "
-						+ (double) (System.currentTimeMillis() - startTime) / (double) i * (double) (nY - i) / 1000.0d
-						+ " seconds.\n");
-			}
-		}
+		/*
+		 * for (int i = 0; i < nY; ++i) { for (int j = 0; j < nX; j++) {
+		 * imageWriter.writePixel(j, i, castRay(nX, nY, i, j)); } if (i % 1 == 0) {
+		 * System.out.println("Reached " + (double) i / (double) nY * 100.0d +
+		 * "% of tracing."); System.out.println( "Time elapsed: " + (double)
+		 * (System.currentTimeMillis() - startTime) / 1000.0d + " seconds.");
+		 * System.out.println("Estimated time remaining: " + (double)
+		 * (System.currentTimeMillis() - startTime) / (double) i * (double) (nY - i) /
+		 * 1000.0d + " seconds.\n"); } }
+		 */
 		return this;
 	}
 
@@ -189,7 +201,7 @@ public class Camera {
 	 * @param interval the space in pixels
 	 * @param color    color of the grid
 	 */
-	public void printGrid(int interval, Color color) {
+	public Camera printGrid(int interval, Color color) {
 		if (imageWriter == null)
 			throw new MissingResourceException("Image writer was null", getClass().getName(), "");
 		int nY = imageWriter.getNy();
@@ -200,16 +212,16 @@ public class Camera {
 		for (int i = 0; i < nY; i += 1)
 			for (int j = 0; j < nX; j += interval)
 				imageWriter.writePixel(i, j, color);
-
+		return this;
 	}
 
 	/**
 	 * Writes pixels to final image by delegating to the ImageWriter
 	 */
-	public void writeToImage() {
+	public Camera writeToImage() {
 		if (imageWriter == null)
 			throw new MissingResourceException("Image writer was null", ImageWriter.class.getCanonicalName(), "");
 		imageWriter.writeToImage();
+		return this;
 	}
-
 }
