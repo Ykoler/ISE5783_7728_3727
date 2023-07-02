@@ -66,14 +66,6 @@ public class MPtests {
 				new Triangle(new Point(110, 50, 90), new Point(125, 85, 78), new Point(122, 85, 75))
 						.setEmission(new Color(40)));
 
-//		scene.geometries.add( //
-//				new Triangle(new Point(-160, -160, -115), new Point(150, -150, -135), new Point(75, -75, -150)) //
-//						.setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(60)), //
-//				new Triangle(new Point(-160, -160, -115), new Point(-70, -70, -140), new Point(75, -75, -150)) //
-//						.setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(60)), //
-//				new Sphere(30d, new Point(60, 50, -50)).setEmission(new Color(java.awt.Color.BLUE)) //
-//						.setMaterial(new Material().setKd(0.2).setKs(0.2).setShininess(30).setKt(0.6)));
-
 		scene.lights.add(new SpotLight(new Color(1500, 1300, 3000), new Point(600, 500, 0), new Vector(0, 0, -1)) //
 				.setKl(4E-5).setKq(2E-7));
 

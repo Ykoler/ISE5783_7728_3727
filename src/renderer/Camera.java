@@ -3,19 +3,32 @@ package renderer;
 import primitives.*;
 import static primitives.Util.isZero;
 import renderer.*;
+import renderer.PixelManager.*;
+
 import java.util.MissingResourceException;
 import java.util.concurrent.TimeUnit;
-
-/**
+import java.util.stream.*
+;/**
  * @author Yahel and Ashi
  *
  */
 public class Camera {
+
+	/**
+	 * Pixel manager for supporting:
+	 * <ul>
+	 * <li>multi-threading</li>
+	 * <li>debug print of progress percentage in Console window/tab</li>
+	 * <ul>
+	 */
+	private PixelManager pixelManager;
+
 	private ImageWriter imageWriter;
 	private RayTracerBase rayTracer;
 	private TargetArea targetArea;
-	private int threadsCount = 0;
+	private int threadsCount = 1;
 	private double printInterval = 0;
+
 	/**
 	 * Constructs new Camera object given a starting point and direction vectors.
 	 * 
@@ -80,11 +93,11 @@ public class Camera {
 	 * @param threadNum
 	 * @return Camera that results
 	 */
-	public Camera setThreadsCount(int threadsCount) {
+	public Camera setMultiThreading(int threadsCount) {
 		this.threadsCount = threadsCount;
 		return this;
 	}
-	
+
 	/**
 	 * Sets interval size for progress printing in builder pattern.
 	 * 
@@ -95,7 +108,7 @@ public class Camera {
 		this.printInterval = printInterval;
 		return this;
 	}
-	
+
 	/**
 	 * Uses the constructRay function to build the ray from the camera to the pixel,
 	 * and then uses the traceRay function to send back the color of the nearest
@@ -106,8 +119,8 @@ public class Camera {
 	 * @return the color of the closest intersection point on the ray through pixel
 	 *         i,j
 	 */
-	private Color castRay(int i, int j) {
-		return rayTracer.traceRay(constructRay(imageWriter.getNx(), imageWriter.getNy(), j, i));
+	private Color castRay(int nX, int nY, int i, int j) {
+		return rayTracer.traceRay(constructRay(nX, nY, j, i));
 	}
 
 	/**
@@ -139,22 +152,23 @@ public class Camera {
 
 		int nY = imageWriter.getNy();
 		int nX = imageWriter.getNx();
-
-//		if (threadsCount != 0) {
-//			Pixel.initialize(nY, nX, printInterval );
-//			while (threadsCount-- > 0) {
-//			 new Thread(() -> {
-//			 for (Pixel pixel = new Pixel(); pixel.nextPixel(); Pixel.pixelDone())
-//			 castRay(nX, nY, pixel.col, pixel.row);
-//			 }).start();
-//			}
-//			Pixel.waitToFinish();
-//			return this;
-//		}
+		pixelManager = new PixelManager(nY, nX, printInterval);
 		
+		if (threadsCount != 0) {
+			PixelManager.initialize(nY, nX, printInterval);
+			while (threadsCount-- > 0) {
+				new Thread(() -> {
+					for (PixelManager pixel = new PixelManager(); pixel.nextPixel(); PixelManager.pixelDone())
+						castRay(nX, nY, pixel.col, pixel.row);
+				}).start();
+			}
+			PixelManager.waitToFinish();
+			return this;
+		}
+
 		for (int i = 0; i < nY; ++i) {
 			for (int j = 0; j < nX; j++) {
-				imageWriter.writePixel(j, i, castRay(i, j));
+				imageWriter.writePixel(j, i, castRay(nX, nY, i, j));
 			}
 			if (i % 1 == 0) {
 				System.out.println("Reached " + (double) i / (double) nY * 100.0d + "% of tracing.");
