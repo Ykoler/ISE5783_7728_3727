@@ -23,11 +23,11 @@ public class Grid {
 	private HashMap<Double3, Voxel> grid;
 	private Ray currentRay;
 	private Set<Intersectable> scanned = new HashSet<Intersectable>();
+	private final double EPS = 0.0000001;
 
 	public Grid(Geometries geometries, int density) {
 		// initiallizing map
 		grid = new HashMap<Double3, Voxel>();
-
 		List<Double> edges = geometries.getEdges();
 		minX = edges.get(0);
 		minY = edges.get(1);
@@ -40,6 +40,7 @@ public class Grid {
 		zSize = (maxZ - minZ) / density;
 		this.density = density;
 
+		outerGeometries = new Geometries();
 		for (Intersectable geometry : geometries.getGeometries()) {
 			edges = geometry.getEdges();
 			double xS = edges.get(0);
@@ -160,95 +161,81 @@ public class Grid {
 
 	public Geometries traverse(boolean multipleIntersection) {
 		Geometries geometries = new Geometries();
-
-		Point head = currentRay.getP0();
-		Vector dir = currentRay.getDir();
-
-		Double3 currentVoxelIndex = voxelOfPoint(head);
-
-		// Find the voxel that the ray starts in
-		int x = (int) currentVoxelIndex.getD1();
-		int y = (int) currentVoxelIndex.getD2();
-		int z = (int) currentVoxelIndex.getD3();
+		Vector dir = currentRay.getDir().normalize();
 
 		double dirX = dir.getX();
 		double dirY = dir.getY();
 		double dirZ = dir.getZ();
-
-		double headX = head.getX();
-		double headY = head.getY();
-		double headZ = head.getZ();
 
 		// Determine the direction of the ray in each dimension
 		int stepX = (int) Math.signum(dirX);
 		int stepY = (int) Math.signum(dirY);
 		int stepZ = (int) Math.signum(dirZ);
 
-		// Calculate the distance that the ray must travel to cross a voxel boundary in
-		// each dimension
-		double tDeltaX = xSize / Math.abs(dirX);
-		double tDeltaY = ySize / Math.abs(dirY);
-		double tDeltaZ = zSize / Math.abs(dirZ);
-
-		// Calculate the distance that the ray must travel to reach the next voxel
-		// boundary in each dimension
-		double tMaxX = (stepX > 0 ? (x + 1) * xSize + minX - headX : x * xSize + minX - headX) * tDeltaX;
-		double tMaxY = (stepY > 0 ? (y + 1) * ySize + minY - headY : y * ySize + minY - headY) * tDeltaY;
-		double tMaxZ = (stepZ > 0 ? (z + 1) * zSize + minZ - headZ : z * zSize + minZ - headZ) * tDeltaZ;
-
-		// Calculate the index of the voxel that is just outside the grid in each
-		// dimension
-		int justOutX = (stepX > 0 ? x : -1);
-		int justOutY = (stepY > 0 ? y : -1);
-		int justOutZ = (stepZ > 0 ? z : -1);
-
-		// Initialize the list of geometries that the ray intersects with to null
-		Geometries list = null;
+		boolean checkIfOut;
 
 		// Loop until we find a voxel with a non-empty object list or we fall out of the
 		// end of the grid
 		do {
-			// Determine which voxel boundary the ray will cross first
-			if (tMaxX < tMaxY) {
-				if (tMaxX < tMaxZ) {
-					// The ray crosses a voxel boundary in the x direction
-					x += stepX;
-					if (x == justOutX)
-						return null; // The ray is outside the grid
-					tMaxX += tDeltaX;
-				} else {
-					// The ray crosses a voxel boundary in the z direction
-					z += stepZ;
-					if (z == justOutZ)
-						return null; // The ray is outside the grid
-					tMaxZ += tDeltaZ;
-				}
-			} else {
-				if (tMaxY < tMaxZ) {
-					// The ray crosses a voxel boundary in the y direction
-					y += stepY;
-					if (y == justOutY)
-						return null; // The ray is outside the grid
-					tMaxY += tDeltaY;
-				} else {
-					// The ray crosses a voxel boundary in the z direction
-					z += stepZ;
-					if (z == justOutZ)
-						return null; // The ray is outside the grid
-					tMaxZ += tDeltaZ;
-				}
-			}
+			// Calculate the distance that the ray must travel to cross a voxel boundary in
+			// each dimension
 
+			Point head = currentRay.getP0();
+			Double3 currentVoxelIndex = voxelOfPoint(head);
+
+			// Find the voxel that the ray starts in
+			int x = (int) currentVoxelIndex.getD1();
+			int y = (int) currentVoxelIndex.getD2();
+			int z = (int) currentVoxelIndex.getD3();
+
+			double headX = head.getX();
+			double headY = head.getY();
+			double headZ = head.getZ();
+
+			// Calculate the distance that the ray must travel to reach the next voxel
+			// boundary in each dimension
+			double tDeltaX = stepX > 0 ? x + xSize - headX : x - xSize + headX;
+			double tDeltaY = stepY > 0 ? y + ySize - headY : y - ySize + headY;
+			double tDeltaZ = stepZ > 0 ? z + zSize - headZ : z - zSize + headZ;
+
+			double tMaxX = tDeltaX / dirX;
+			double tMaxY = tDeltaY / dirY;
+			double tMaxZ = tDeltaZ / dirZ;
+
+			// Determine which voxel boundary the ray will cross first
+			if (tMaxX < tMaxY && tMaxX < tMaxZ) {
+				// The ray crosses a voxel boundary in the x direction
+				x += stepX;
+				checkIfOut = stepX > 0 ? headX + tMaxX + EPS > maxX : headX - tMaxX - EPS < minX;
+				if (checkIfOut)
+					return null; // The ray is outside the grid
+				currentRay = new Ray(currentRay.getPoint(tDeltaX / tMaxX), dir);
+			} else if (tMaxY < tMaxX && tMaxY < tMaxZ) {
+				// The ray crosses a voxel boundary in the y direction
+				y += stepY;
+				checkIfOut = stepY > 0 ? headY + tMaxY + EPS > maxY : headY - tMaxY - EPS < minY;
+				if (checkIfOut)
+					return null; // The ray is outside the grid
+				currentRay = new Ray(currentRay.getPoint(tDeltaY / tMaxY), dir);
+			} else {
+				// The ray crosses a voxel boundary in the z direction
+				z += stepZ;
+				checkIfOut = stepZ > 0 ? headZ + tMaxZ + EPS > maxZ : headZ - tMaxZ - EPS < minZ;
+				if (checkIfOut)
+					return null; // The ray is outside the grid
+				currentRay = new Ray(currentRay.getPoint(tDeltaZ / tMaxZ), dir);
+			}
 			// Get the list of geometries in the current voxel
-			for (Intersectable element : grid.get(currentVoxelIndex).geometries.getGeometries()) {
-				if (!scanned.contains(element)) {
-					geometries.add(element);
-					scanned.add(element);
+			if (grid.containsKey(currentVoxelIndex)) {
+				for (Intersectable element : grid.get(currentVoxelIndex).geometries.getGeometries()) {
+					if (!scanned.contains(element)) {
+						geometries.add(element);
+						scanned.add(element);
+					}
 				}
 			}
+			//System.out.println(currentRay);
 		} while (geometries.getGeometries().isEmpty());
-		if (geometries.getGeometries().isEmpty())
-			return null;
 
 		// Return the list of geometries that the ray intersects with
 		return geometries;

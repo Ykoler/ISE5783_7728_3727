@@ -8,7 +8,15 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import java.util.List;
 import primitives.*;
+import renderer.Camera;
+import renderer.ImageWriter;
+import renderer.RayTracerBasic;
+import renderer.RayTracerGrid;
+import scene.Scene;
+import geometries.Plane;
 import geometries.Sphere;
+import lighting.AmbientLight;
+import lighting.SpotLight;
 
 /**
  * Unit test for Sphere class
@@ -126,5 +134,31 @@ class SphereTests {
 		// center line
 		assertNull(sphere.findIntersections(new Ray(new Point(1, 2, 0), new Vector(1, 0, 0))),
 				"There shouldn't be any intersections");
+	}
+	
+	@Test
+	void sphereRenderTest() {
+		Scene scene = new Scene("Test scene");
+
+		Camera camera = new Camera(new Point(0, 0, 1000), new Vector(0, 0, -1), new Vector(0, 1, 0)) //
+				.setVPSize(200, 200).setVPDistance(1000);
+
+		scene.setAmbientLight(new AmbientLight(new Color(java.awt.Color.WHITE), 0.15));
+
+		scene.setBackground(new Color(10, 150, 180));
+
+		scene.geometries.add(
+
+				new Sphere(20, new Point(20, 20, 0)).setMaterial(new Material().setKd(0.3))
+						.setEmission(Color.ORANGE));
+
+		scene.lights.add(new SpotLight(new Color(1500, 1300, 3000), new Point(600, 500, 0), new Vector(0, 0, -1)) //
+				.setKl(4E-5).setKq(2E-7));
+
+		ImageWriter imageWriter = new ImageWriter("SphereRenderTest", 700, 700);
+		camera.setImageWriter(imageWriter) //
+				.setRayTracer(new RayTracerBasic(scene)) //
+				.renderImage() //
+				.writeToImage();
 	}
 }

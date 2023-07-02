@@ -24,19 +24,27 @@ public class RayTracerGrid extends RayTracerBasic {
 	}
 
 	@Override
+	public Color traceRay(Ray ray) {
+		return super.traceRay(ray);
+	}
+
+	@Override
 	protected GeoPoint findClosestIntersection(Ray ray) {
 		Geometries outerGeometries = grid.getOuterGeometries();
 		GeoPoint closestPoint = null;
 		if (outerGeometries != null)
 			closestPoint = ray.findClosestGeoPoint(outerGeometries.findGeoIntersections(ray));
 		double result = grid.cutsGrid(ray);
-
-		double distanceToOuterGeometries = outerGeometries == null ? Double.POSITIVE_INFINITY
+		System.out.println(result);
+		double distanceToOuterGeometries = closestPoint == null ? Double.POSITIVE_INFINITY
 				: closestPoint.point.distance(ray.getP0());
 
 		if (distanceToOuterGeometries < result)
 			return closestPoint;
 
+		if (result == Double.POSITIVE_INFINITY)
+			return null;
+		
 		Geometries geometries = grid.traverse();
 		while (geometries != null) {
 			GeoPoint point = ray.findClosestGeoPoint(geometries.findGeoIntersections(ray));
