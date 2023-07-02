@@ -20,19 +20,39 @@ public class RayTracerGrid extends RayTracerBasic {
 
 	public RayTracerGrid(Scene scene) {
 		super(scene);
+		grid = new Grid(scene.geometries, 10);
 	}
 
 	@Override
 	protected GeoPoint findClosestIntersection(Ray ray) {
-		return ray.findClosestGeoPoint(grid.travese(ray).findGeoIntersections(ray));
+		Geometries outerGeometries = grid.getOuterGeometries();
+		GeoPoint closestPoint = null;
+		if (outerGeometries != null)
+			closestPoint = ray.findClosestGeoPoint(outerGeometries.findGeoIntersections(ray));
+		double result = grid.cutsGrid(ray);
+
+		double distanceToOuterGeometries = outerGeometries == null ? Double.POSITIVE_INFINITY
+				: closestPoint.point.distance(ray.getP0());
+
+		if (distanceToOuterGeometries < result)
+			return closestPoint;
+
+		Geometries geometries = grid.traverse();
+		while (geometries != null) {
+			GeoPoint point = ray.findClosestGeoPoint(geometries.findGeoIntersections(ray));
+			if (point != null)
+				return point.point.distance(ray.getP0()) < distanceToOuterGeometries ? point : closestPoint;
+			geometries = grid.traverse();
+		}
+		return closestPoint;
 	}
 
 	@Override
 	protected boolean unshaded(GeoPoint gp, Vector l, Vector n, double nl, LightSource light) {
 		Vector lightDir = l.scale(-1);
 		Ray lightRay = new Ray(gp.point, lightDir, n);
-
-		var intersections = grid.travese(lightRay, true).findGeoIntersections(lightRay, light.getDistance(gp.point));
+		grid.cutsGrid(lightRay);
+		var intersections = grid.traverse(true).findGeoIntersections(lightRay, light.getDistance(gp.point));
 		if (intersections == null)
 			return true;
 		for (GeoPoint p : intersections)
@@ -45,8 +65,8 @@ public class RayTracerGrid extends RayTracerBasic {
 	protected Double3 transparency(GeoPoint gp, Vector l, Vector n, double nl, LightSource light) {
 		Vector lightDir = l.scale(-1);
 		Ray lightRay = new Ray(gp.point, lightDir, n);
-
-		var intersections = grid.travese(lightRay, true).findGeoIntersections(lightRay, light.getDistance(gp.point));
+		grid.cutsGrid(lightRay);
+		var intersections = grid.traverse(true).findGeoIntersections(lightRay, light.getDistance(gp.point));
 		Double3 ktr = Double3.ONE;
 		if (intersections == null)
 			return ktr;
