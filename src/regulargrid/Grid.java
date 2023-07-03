@@ -93,7 +93,7 @@ public class Grid {
 		double[] headCoordinates = { p.getX(), p.getY(), p.getZ() };
 		Vector dir = ray.getDir();
 		double[] dirCoordinates = { dir.getX(), dir.getY(), dir.getZ() };
-		
+
 		double[] mins = { minX, minY, minZ };
 		double[] maxs = { maxX, maxY, maxZ };
 
@@ -253,5 +253,119 @@ public class Grid {
 				|| alignZero(y - maxY) == 0 || alignZero(z - maxZ) == 0)
 			return true;
 		return false;
+	}
+
+	public Geometries voxelTraversal(Point rayStart, Point rayEnd) {
+		Geometries geometries = new Geometries();
+
+		// This id of the first/current voxel hit by the ray.
+		// Using floor (round down) is actually very important,
+		// the implicit int-casting will round up for negative numbers.
+		Point currentVoxel = new Point((int) Math.floor(rayStart.getX() / xSize),
+				(int) Math.floor(rayStart.getY() / ySize), (int) Math.floor(rayStart.getZ() / zSize));
+
+		// The id of the last voxel hit by the ray.
+		// TODO: what happens if the end point is on a border?
+		Point lastVoxel = new Point((int) Math.floor(rayEnd.getX() / xSize), (int) Math.floor(rayEnd.getY() / ySize),
+				(int) Math.floor(rayEnd.getZ() / zSize));
+
+		// Compute normalized ray direction.
+		Vector ray = rayEnd.subtract(rayStart).normalize();
+		// ray.normalize();
+
+		// In which direction the voxel ids are incremented.
+		double x = ray.getX();
+		int stepX = (x >= 0) ? 1 : -1;
+		double y = ray.getY();
+		int stepY = (y >= 0) ? 1 : -1;
+		double z = ray.getZ();
+		int stepZ = (z >= 0) ? 1 : -1;
+
+		// Distance along the ray to the next voxel border from the current position
+		// (tMaxX, tMaxY, tMaxZ).
+		double nextVoxelBoundaryX = (currentVoxel.getX() + stepX) * xSize;
+		double nextVoxelBoundaryY = (currentVoxel.getY() + stepY) * ySize;
+		double nextVoxelBoundaryZ = (currentVoxel.getZ() + stepZ) * zSize;
+
+		// tMaxX, tMaxY, tMaxZ --
+		// distance until next intersection with voxel-border
+		// the value of t at which the ray crosses the first vertical voxel boundary
+		double tMaxX = (x != 0) ? (nextVoxelBoundaryX - rayStart.getX()) / x : Double.MAX_VALUE; //
+		double tMaxY = (y != 0) ? (nextVoxelBoundaryY - rayStart.getY()) / y : Double.MAX_VALUE; //
+		double tMaxZ = (z != 0) ? (nextVoxelBoundaryZ - rayStart.getZ()) / z : Double.MAX_VALUE; //
+
+		// tDeltaX, tDeltaY, tDeltaZ --
+		// how far along the ray we must move for the horizontal component to equal the
+		// width of a voxel
+		// the direction in which we traverse the grid
+		// can only be Double.MAX_VALUE if we never go in that direction
+		double tDeltaX = (x != 0) ? xSize / x * stepX : Double.MAX_VALUE;
+		double tDeltaY = (y != 0) ? ySize / y * stepY : Double.MAX_VALUE;
+		double tDeltaZ = (z != 0) ? zSize / z * stepZ : Double.MAX_VALUE;
+
+		Point diff = new Point(0, 0, 0);
+		boolean negRay = false;
+		if (currentVoxel.getX() != lastVoxel.getX() && x < 0) {
+			diff = diff.add(new Vector(-1, 0, 0));
+			negRay = true;
+		}
+		if (currentVoxel.getY() != lastVoxel.getY() && y < 0) {
+			diff = diff.add(new Vector(0, -1, 0));
+			negRay = true;
+		}
+		if (currentVoxel.getZ() != lastVoxel.getZ() && z < 0) {
+			diff = diff.add(new Vector(0, 0, -1));
+			negRay = true;
+		}
+		Double3 index = new Double3(currentVoxel.getX(), currentVoxel.getY(), currentVoxel.getZ());
+		if (grid.containsKey(index)) {
+			for (Intersectable element : grid.get(index).geometries.getGeometries()) {
+				if (!geometries.getGeometries().contains(element))
+					geometries.add(element);
+			}
+		}
+		if (negRay) {
+			currentVoxel = currentVoxel.add(diff.subtract(Point.ZERO));
+			if (grid.containsKey(index)) {
+				for (Intersectable element : grid.get(index).geometries.getGeometries()) {
+					if (!geometries.getGeometries().contains(element))
+						geometries.add(element);
+				}
+			}
+		}
+
+		while (!lastVoxel.equals(currentVoxel)) {
+			if (tMaxX < tMaxY) {
+				if (tMaxX < tMaxZ) {
+					currentVoxel = currentVoxel.add(new Vector(stepX, 0, 0));
+					tMaxX += tDeltaX;
+				} else {
+					currentVoxel = currentVoxel.add(new Vector(0, 0, stepZ));
+					tMaxZ += tDeltaZ;
+				}
+			} else {
+				if (tMaxY < tMaxZ) {
+					currentVoxel = currentVoxel.add(new Vector(0, stepY, 0));
+					tMaxY += tDeltaY;
+				} else {
+					currentVoxel = currentVoxel.add(new Vector(0, 0, stepZ));
+					tMaxZ += tDeltaZ;
+				}
+			}
+			if (grid.containsKey(index)) {
+				for (Intersectable element : grid.get(index).geometries.getGeometries()) {
+					if (!geometries.getGeometries().contains(element))
+						geometries.add(element);
+				}
+			}
+		}
+		return geometries;
+	}
+
+	public double getOutBounds() {
+		// calculates the maximun length of the diagonal of the grid
+		return Math
+				.sqrt(Math.pow((xSize * density), 2) + Math.pow((ySize * density), 2) + Math.pow((zSize * density), 2));
+
 	}
 }
