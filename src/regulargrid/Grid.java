@@ -110,13 +110,16 @@ public class Grid {
 			double min = mins[i];
 			double max = maxs[i];
 
+			// System.out.println(ray);
 			// Check if the ray is parallel to the axis
 			if (isZero(dirCoordinate)) {
 				// Check if the ray origin is outside the box's extent on this axis
 				if (headCoordinate < min || headCoordinate > max) {
 					// No intersection
+					// System.out.println("aaa");
 					return null;
 				}
+				ts[i] = Double.POSITIVE_INFINITY;
 			} else {
 				// Compute the intersection distances on this axis
 				double t1 = (min - headCoordinate) / dirCoordinate;
@@ -129,6 +132,7 @@ public class Grid {
 				// Check if the box is missed or completely behind the ray
 				if (tmin > tmax) {
 					// No intersection
+					// System.out.println("bbb");
 					return null;
 				}
 			}
@@ -144,11 +148,13 @@ public class Grid {
 		}
 		Point entry;
 		for (int i = 0; i < 3; i++) {
+			if (ts[i] == Double.POSITIVE_INFINITY)
+				return null;
 			entry = ray.getPoint(ts[i]);
-			if (onEdge(entry)) {
-				System.out.println(entry);
+//			System.out.println("entry");
+//			System.out.println(entry);
+			if (onEdge(entry))
 				return entry;
-			}
 		}
 		return null;
 	}
@@ -260,10 +266,13 @@ public class Grid {
 
 	private boolean onEdge(Point p) {
 		double x = p.getX(), y = p.getY(), z = p.getZ();
-		if ((alignZero(x - minX) == 0 || alignZero(x - maxX) == 0)
-				&& (alignZero(y - minY) == 0 || alignZero(y - maxY) == 0)
-				&& (alignZero(z - minZ) == 0 || alignZero(z - maxZ) == 0))
+		if (((alignZero(x - minX) == 0 || alignZero(x - maxX) == 0) && y >= minY && y <= maxY && z >= minZ && z <= maxZ)
+				|| ((alignZero(y - minY) == 0 || alignZero(y - maxY) == 0) && x >= minX && x <= maxX && z >= minZ
+						&& z <= maxZ)
+				|| ((alignZero(z - minZ) == 0 || alignZero(z - maxZ) == 0) && y >= minY && y <= maxY && x >= minX
+						&& x <= maxX)) {
 			return true;
+		}
 		return false;
 	}
 

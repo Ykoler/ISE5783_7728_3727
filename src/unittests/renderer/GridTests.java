@@ -17,6 +17,9 @@ public class GridTests {
 		Ray ray = new Ray(new Point(0, 0, 0), new Vector(0, 0, 1));
 		assertEquals(new Point(0, 0, 0), grid.gridEntryPoint(ray), "getEntryPoint() wrong result");
 		
+		assertEquals(new Point(0, 60, 100), grid.gridEntryPoint(new Ray(new Point(0, 60, 200), new Vector(0, 0, -1))),
+				"getEntryPoint() wrong result");
+		
 		assertEquals(new Point(0, 0, 100), grid.gridEntryPoint(new Ray(new Point(0, 0, 200), new Vector(0, 0, -1))),
 				"getEntryPoint() wrong result");
 
