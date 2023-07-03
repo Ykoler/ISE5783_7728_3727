@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
+import static java.lang.Math.floor;
 import geometries.*;
 import primitives.*;
 import static primitives.Util.*;
@@ -19,7 +19,7 @@ import static primitives.Util.*;
 public class Grid {
 	private double minX, maxX, minY, maxY, minZ, maxZ;
 	// sizes of voxels
-	private int xSize, ySize, zSize;
+	private double xSize, ySize, zSize;
 	private int density;
 	private Geometries outerGeometries;
 	private HashMap<Double3, Voxel> grid;
@@ -37,9 +37,9 @@ public class Grid {
 		maxX = edges.get(3);
 		maxY = edges.get(4);
 		maxZ = edges.get(5);
-		xSize = (int) (maxX - minX) / density;
-		ySize = (int) (maxY - minY) / density;
-		zSize = (int) (maxZ - minZ) / density;
+		xSize = (maxX - minX) / density;
+		ySize = (maxY - minY) / density;
+		zSize = (maxZ - minZ) / density;
 		this.density = density;
 
 		outerGeometries = new Geometries();
@@ -52,21 +52,23 @@ public class Grid {
 			}
 			double yS = edges.get(1);
 			double zS = edges.get(2);
-			int x = (int) ((edges.get(3) - xS) / xSize);
-			int y = (int) ((edges.get(4) - yS) / ySize);
-			int z = (int) ((edges.get(5) - zS) / zSize);
-			Double3 index;
-			int xV = (int) (xS - (xS - minX) % xSize);
-			int yV = (int) (yS - (yS - minY) % ySize);
-			int zV = (int) (zS - (zS - minZ) % zSize);
-			for (int i = xV; i < xV + x * xSize; i += xSize) {
-				for (int j = yV; j < yV + y * ySize; j += ySize) {
-					for (int k = zV; k < zV + z * zSize; k += zSize) {
+			int x = floor(((edges.get(3) - xS) / xSize)) > 0 ? (int) floor(((edges.get(3) - xS) / xSize)) : 1;
+			int y = floor(((edges.get(4) - yS) / ySize)) > 0 ? (int) floor(((edges.get(4) - yS) / ySize)) : 1;
+			int z = floor(((edges.get(5) - zS) / zSize)) > 0 ? (int) floor(((edges.get(5) - zS) / zSize)) : 1;
+			Double3 index = coordinateToIndex(new Point(xS, yS, zS));
+			int xV = (int) index.getD1(), yV = (int) index.getD2(), zV = (int) index.getD3();
+			int xC = (int) floor((xS - (xS - minX) % xSize));
+			int yC = (int) floor((yS - (yS - minY) % ySize));
+			int zC = (int) floor((zS - (zS - minZ) % zSize));
+			for (int i = xV; i < xV + x; i++) {
+				for (int j = yV; j < yV + y; j++) {
+					for (int k = zV; k < zV + z; k++) {
 						index = new Double3(i, j, k);
 						if (grid.containsKey(index)) {
 							grid.get(index).geometries.add(geometry);
 						} else {
-							Voxel voxel = new Voxel(i, j, k);
+							Voxel voxel = new Voxel(xC + (i - xV) * xSize, yC + (j - yV) * ySize,
+									zC + (k - zV) * zSize);
 							voxel.geometries.add(geometry);
 							grid.put(index, voxel);
 						}
@@ -74,6 +76,14 @@ public class Grid {
 				}
 			}
 		}
+	}
+
+	private Double3 coordinateToIndex(Point p) {
+		double x = p.getX(), y = p.getY(), z = p.getZ();
+		int xI = (int) floor((x - (x - minX) % xSize) / xSize);
+		int yI = (int) floor((y - (y - minY) % ySize) / ySize);
+		int zI = (int) floor((z - (z - minZ) % zSize) / zSize);
+		return new Double3(xI, yI, zI);
 	}
 
 	/**
@@ -151,8 +161,8 @@ public class Grid {
 			if (ts[i] == Double.POSITIVE_INFINITY)
 				return null;
 			entry = ray.getPoint(ts[i]);
-//			System.out.println("entry");
-//			System.out.println(entry);
+			// System.out.println("entry");
+			// System.out.println(entry);
 			if (onEdge(entry))
 				return entry;
 		}
@@ -198,16 +208,16 @@ public class Grid {
 			Point head = currentRay.getP0();
 			if (head == null)
 				return geometries;
-			Double3 currentVoxelIndex = voxelOfPoint(head);
+			Double3 currentVoxelIndex = coordinateToIndex(head);
 
 			// Find the voxel that the ray starts in
-			int x = (int) currentVoxelIndex.getD1();
-			int y = (int) currentVoxelIndex.getD2();
-			int z = (int) currentVoxelIndex.getD3();
-
 			double headX = head.getX();
 			double headY = head.getY();
 			double headZ = head.getZ();
+
+			double x = (headX - (headX - minX) % xSize);
+			double y = (headY - (headY - minY) % ySize);
+			double z = (headZ - (headZ - minZ) % zSize);
 
 			// Calculate the distance that the ray must travel to reach the next voxel
 			// boundary in each dimension
@@ -233,16 +243,13 @@ public class Grid {
 			// System.out.println(currentRay);
 			if (tMaxX < tMaxY && tMaxX < tMaxZ) {
 				// The ray crosses a voxel boundary in the x direction
-				checkIfOut = stepX > 0 ? headX + tDeltaX + EPS + tMaxX + EPS > maxX
-						: headX + tDeltaX + EPS - tMaxX - EPS < minX;
+				checkIfOut = stepX > 0 ? headX + tDeltaX + EPS > maxX : headX - tDeltaX - EPS < minX;
 			} else if (tMaxY < tMaxX && tMaxY < tMaxZ) {
 				// The ray crosses a voxel boundary in the y direction
-				checkIfOut = stepY > 0 ? headY + tDeltaY + EPS + tMaxY + EPS > maxY
-						: headY + tDeltaY + EPS - tMaxY - EPS < minY;
+				checkIfOut = stepY > 0 ? headY + tDeltaY + EPS > maxY : headY - tDeltaY - EPS < minY;
 			} else {
 				// The ray crosses a voxel boundary in the z direction
-				checkIfOut = stepZ > 0 ? headZ + tDeltaY + EPS + tMaxZ + EPS > maxZ
-						: headZ + tDeltaY + EPS - tMaxZ - EPS < minZ;
+				checkIfOut = stepZ > 0 ? headZ + tDeltaZ + EPS > maxZ : headZ - tDeltaZ - EPS < minZ;
 			}
 			headX += (stepX > 0 ? EPS + tDeltaX : -(EPS + tDeltaX));
 			headY += (stepY > 0 ? EPS + tDeltaY : -(EPS + tDeltaY));
@@ -257,10 +264,10 @@ public class Grid {
 	}
 
 	private Double3 voxelOfPoint(Point p) {
-		double pX = p.getX() - EPS, pY = p.getY() - EPS, pZ = p.getZ() - EPS;
-		int x = (int) (pX - ((pX - minX) % xSize));
-		int y = (int) (pY - ((pY - minY) % ySize));
-		int z = (int) (pZ - ((pZ - minZ) % zSize));
+		double pX = p.getX(), pY = p.getY(), pZ = p.getZ();
+		int x = (int) ((pX - ((pX - minX) % xSize)) - EPS);
+		int y = (int) ((pY - ((pY - minY) % ySize)) - EPS);
+		int z = (int) ((pZ - ((pZ - minZ) % zSize)) - EPS);
 		return new Double3(x, y, z);
 	}
 
@@ -276,117 +283,4 @@ public class Grid {
 		return false;
 	}
 
-	public Geometries voxelTraversal(Point rayStart, Point rayEnd) {
-		Geometries geometries = new Geometries();
-
-		// This id of the first/current voxel hit by the ray.
-		// Using floor (round down) is actually very important,
-		// the implicit int-casting will round up for negative numbers.
-		Point currentVoxel = new Point((int) Math.floor(rayStart.getX() / xSize),
-				(int) Math.floor(rayStart.getY() / ySize), (int) Math.floor(rayStart.getZ() / zSize));
-
-		// The id of the last voxel hit by the ray.
-		// TODO: what happens if the end point is on a border?
-		Point lastVoxel = new Point((int) Math.floor(rayEnd.getX() / xSize), (int) Math.floor(rayEnd.getY() / ySize),
-				(int) Math.floor(rayEnd.getZ() / zSize));
-
-		// Compute normalized ray direction.
-		Vector ray = rayEnd.subtract(rayStart).normalize();
-		// ray.normalize();
-
-		// In which direction the voxel ids are incremented.
-		double x = ray.getX();
-		int stepX = (x >= 0) ? 1 : -1;
-		double y = ray.getY();
-		int stepY = (y >= 0) ? 1 : -1;
-		double z = ray.getZ();
-		int stepZ = (z >= 0) ? 1 : -1;
-
-		// Distance along the ray to the next voxel border from the current position
-		// (tMaxX, tMaxY, tMaxZ).
-		double nextVoxelBoundaryX = (currentVoxel.getX() + stepX) * xSize;
-		double nextVoxelBoundaryY = (currentVoxel.getY() + stepY) * ySize;
-		double nextVoxelBoundaryZ = (currentVoxel.getZ() + stepZ) * zSize;
-
-		// tMaxX, tMaxY, tMaxZ --
-		// distance until next intersection with voxel-border
-		// the value of t at which the ray crosses the first vertical voxel boundary
-		double tMaxX = (x != 0) ? (nextVoxelBoundaryX - rayStart.getX()) / x : Double.MAX_VALUE; //
-		double tMaxY = (y != 0) ? (nextVoxelBoundaryY - rayStart.getY()) / y : Double.MAX_VALUE; //
-		double tMaxZ = (z != 0) ? (nextVoxelBoundaryZ - rayStart.getZ()) / z : Double.MAX_VALUE; //
-
-		// tDeltaX, tDeltaY, tDeltaZ --
-		// how far along the ray we must move for the horizontal component to equal the
-		// width of a voxel
-		// the direction in which we traverse the grid
-		// can only be Double.MAX_VALUE if we never go in that direction
-		double tDeltaX = (x != 0) ? xSize / x * stepX : Double.MAX_VALUE;
-		double tDeltaY = (y != 0) ? ySize / y * stepY : Double.MAX_VALUE;
-		double tDeltaZ = (z != 0) ? zSize / z * stepZ : Double.MAX_VALUE;
-
-		Point diff = new Point(0, 0, 0);
-		boolean negRay = false;
-		if (currentVoxel.getX() != lastVoxel.getX() && x < 0) {
-			diff = diff.add(new Vector(-1, 0, 0));
-			negRay = true;
-		}
-		if (currentVoxel.getY() != lastVoxel.getY() && y < 0) {
-			diff = diff.add(new Vector(0, -1, 0));
-			negRay = true;
-		}
-		if (currentVoxel.getZ() != lastVoxel.getZ() && z < 0) {
-			diff = diff.add(new Vector(0, 0, -1));
-			negRay = true;
-		}
-		Double3 index = new Double3(currentVoxel.getX(), currentVoxel.getY(), currentVoxel.getZ());
-		if (grid.containsKey(index)) {
-			for (Intersectable element : grid.get(index).geometries.getGeometries()) {
-				if (!geometries.getGeometries().contains(element))
-					geometries.add(element);
-			}
-		}
-		if (negRay) {
-			currentVoxel = currentVoxel.add(diff.subtract(Point.ZERO));
-			if (grid.containsKey(index)) {
-				for (Intersectable element : grid.get(index).geometries.getGeometries()) {
-					if (!geometries.getGeometries().contains(element))
-						geometries.add(element);
-				}
-			}
-		}
-
-		while (!lastVoxel.equals(currentVoxel)) {
-			if (tMaxX < tMaxY) {
-				if (tMaxX < tMaxZ) {
-					currentVoxel = currentVoxel.add(new Vector(stepX, 0, 0));
-					tMaxX += tDeltaX;
-				} else {
-					currentVoxel = currentVoxel.add(new Vector(0, 0, stepZ));
-					tMaxZ += tDeltaZ;
-				}
-			} else {
-				if (tMaxY < tMaxZ) {
-					currentVoxel = currentVoxel.add(new Vector(0, stepY, 0));
-					tMaxY += tDeltaY;
-				} else {
-					currentVoxel = currentVoxel.add(new Vector(0, 0, stepZ));
-					tMaxZ += tDeltaZ;
-				}
-			}
-			if (grid.containsKey(index)) {
-				for (Intersectable element : grid.get(index).geometries.getGeometries()) {
-					if (!geometries.getGeometries().contains(element))
-						geometries.add(element);
-				}
-			}
-		}
-		return geometries;
-	}
-
-	public double getOutBounds() {
-		// calculates the maximun length of the diagonal of the grid
-		return Math
-				.sqrt(Math.pow((xSize * density), 2) + Math.pow((ySize * density), 2) + Math.pow((zSize * density), 2));
-
-	}
 }

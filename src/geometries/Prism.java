@@ -80,7 +80,8 @@ public class Prism extends Geometry {
 
 	}
 
-	public Prism(double right, double bottom, double back, double xLength, double yLength, double zLength, boolean flipped) {
+	public Prism(double right, double bottom, double back, double xLength, double yLength, double zLength,
+			boolean flipped) {
 		this(new Point(right + xLength / 2, bottom + xLength / 2, back + zLength),
 				new Point(right, bottom, back + zLength), new Point(right, bottom, back),
 				new Point(right + xLength / 2, bottom + xLength / 2, back),

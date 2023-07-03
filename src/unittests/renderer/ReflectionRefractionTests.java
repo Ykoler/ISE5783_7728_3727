@@ -45,7 +45,7 @@ public class ReflectionRefractionTests {
 	}
 
 	/** Produce a picture of a sphere lighted by a spot light */
-	//@Test
+	// @Test
 	public void twoSpheresOnMirrors() {
 		Camera camera = new Camera(new Point(0, 0, 10000), new Vector(0, 0, -1), new Vector(0, 1, 0)) //
 				.setVPSize(2500, 2500).setVPDistance(10000); //

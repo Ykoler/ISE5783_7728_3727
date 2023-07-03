@@ -149,7 +149,7 @@ class SphereTests {
 
 		scene.geometries.add(
 
-				new Sphere(400, new Point(20, 20, 0)).setMaterial(new Material().setKd(0.3).setKs(0.6).setShininess(10))
+				new Sphere(2.5, new Point(0, 0, 0)).setMaterial(new Material().setKd(0.3).setKs(0.6).setShininess(10))
 						.setEmission(Color.ORANGE));
 
 		scene.lights.add(new SpotLight(new Color(1500, 1300, 3000), new Point(600, 500, 0), new Vector(0, 0, -1)) //

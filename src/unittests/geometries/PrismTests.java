@@ -86,12 +86,11 @@ class PrismTests {
 
 		scene.lights.add(new SpotLight(new Color(70000, 40000, 40000), new Point(15, 60, 0), new Vector(0, 0, -1)) //
 				.setKl(4E-5).setKq(2E-7));
-		
 
 //
 //		Ray ray = new Ray(new Point(5, 5, 5), new Vector(0, 1, 0));
 //		tracer.traceRay(ray)
-		
+
 		ImageWriter imageWriter = new ImageWriter("PrismTest", 800, 800);
 		camera.setImageWriter(imageWriter) //
 				.setRayTracer(new RayTracerBasic(scene)) //

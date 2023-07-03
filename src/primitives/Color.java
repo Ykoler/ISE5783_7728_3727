@@ -1,4 +1,5 @@
 package primitives;
+
 import static java.awt.Color.*;
 
 /**
@@ -31,7 +32,6 @@ public class Color {
 	public static final Color WHITE = new Color(java.awt.Color.WHITE);
 	public static final Color YELLOW = new Color(java.awt.Color.YELLOW);
 
-
 	/** Default constructor - to generate Black Color (privately) */
 	private Color() {
 		rgb = Double3.ZERO;
@@ -42,7 +42,7 @@ public class Color {
 			throw new IllegalArgumentException("Negative color component is illegal");
 		rgb = new Double3(color, color, color);
 	}
-	
+
 	/**
 	 * Constructor to generate a color according to RGB components Each component in
 	 * range 0..255 (for printed white color) or more [for lights]

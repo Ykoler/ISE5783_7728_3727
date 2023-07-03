@@ -88,8 +88,10 @@ public abstract class Intersectable {
 	 * @return list of intersections (in the form of GeoPoints)
 	 */
 	protected abstract List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDistance);
+
 	/**
-	 *#####################################################################
+	 * #####################################################################
+	 * 
 	 * @return
 	 */
 	public final List<Double> getEdges() {
