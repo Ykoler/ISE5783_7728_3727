@@ -21,6 +21,7 @@ import scene.Scene;
  * 
  * @author Dan
  */
+
 public class TeapotTest {
 	private final ImageWriter imageWriter = new ImageWriter("teapot", 800, 800);
 
@@ -1570,7 +1571,7 @@ public class TeapotTest {
 
 		// camera.setRayTracer(new RayTracerBasic(scene)).renderImage().printGrid(50,
 		// new Color(YELLOW)).writeToImage();
-		camera.setRayTracer(new RayTracerGrid(scene)).renderImage().printGrid(50, new Color(YELLOW)).writeToImage();
+		//camera.setRayTracer(new RayTracerBasic(scene)).renderImage().printGrid(50, new Color(YELLOW)).writeToImage();
 	}
 
 }

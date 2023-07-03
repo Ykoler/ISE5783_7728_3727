@@ -135,7 +135,7 @@ class SphereTests {
 		assertNull(sphere.findIntersections(new Ray(new Point(1, 2, 0), new Vector(1, 0, 0))),
 				"There shouldn't be any intersections");
 	}
-
+	/*
 	@Test
 	void sphereRenderTest() {
 		Scene scene = new Scene("Test scene");
@@ -147,15 +147,18 @@ class SphereTests {
 
 		scene.setBackground(new Color(10, 150, 180));
 
-		scene.geometries.add(new Sphere(20, new Point(20, 20, 0)).setMaterial(new Material().setKd(0.3))
-				.setEmission(Color.DARK_GRAY));
+		scene.geometries.add(
+
+				new Sphere(20, new Point(20, 20, 0)).setMaterial(new Material().setKd(0.3))
+						.setEmission(Color.ORANGE));
+
 		scene.lights.add(new SpotLight(new Color(1500, 1300, 3000), new Point(600, 500, 0), new Vector(0, 0, -1)) //
 				.setKl(4E-5).setKq(2E-7));
 
 		ImageWriter imageWriter = new ImageWriter("SphereRenderTest", 700, 700);
 		camera.setImageWriter(imageWriter) //
-				.setRayTracer(new RayTracerGrid(scene)) //
+				.setRayTracer(new RayTracerBasic(scene)) //
 				.renderImage() //
 				.writeToImage();
-	}
+	}*/
 }

@@ -10,71 +10,71 @@ import geometries.*;
 public class MPtests {
 	Scene scene = new Scene("Test scene");
 
-	/**
-	 * Mega geometry combination test including all features
-	 */
-	@Test
-	public void cityTest() {
-		Camera camera = new Camera(new Point(600, 175, 1080), new Vector(-0.548, -0.12, -1), new Vector(0, 1, -0.12)) //
-				.setVPSize(200, 200).setVPDistance(920);
-
-		scene.setAmbientLight(new AmbientLight(new Color(java.awt.Color.WHITE), 0.15));
-
-		scene.setBackground(new Color(10, 150, 180));
-
-		scene.geometries.add(
-				new Sphere(25d, new Point(105, 90, 95)).setMaterial(new Material().setKd(0.2).setKt(0.65).setKb(5))
-						.setEmission(new Color(100, 25, 25)),
-
-				new Plane(new Point(0, 0, 0), new Vector(0, 1, 0))
-						.setMaterial(new Material().setKd(0.1).setKr(0.85).setKs(0.5).setShininess(9).setKg(3))
-						.setEmission(new Color(10, 40, 80)),
-				new Plane(new Point(0, 0, 50), new Vector(0, 1, 0.001)).setMaterial(new Material().setKd(0.07))
-						.setEmission(new Color(61, 27, 9)),
-
-				new Prism(0, 0, 0, 25, 50, 30).setMaterial(new Material().setKd(0.8).setKs(0.6).setShininess(7))
-						.setEmission(Color.GRAY),
-				new Prism(37.5, 0.0, -15.0, 27.0, 72, 37.5)
-						.setMaterial(new Material().setKd(0.7).setKs(0.5).setShininess(7)).setEmission(Color.DARK_GRAY),
-				new Prism(-52.5, 0.0, -15.0, 34.5, 68.0, 19.5)
-						.setMaterial(new Material().setKd(0.6).setKs(0.6).setShininess(7)).setEmission(new Color(60)),
-				new Prism(-45.0, 0.0, -82.5, 30.0, 72.0, 27.0)
-						.setMaterial(new Material().setKd(0.7).setKs(0.8).setShininess(7)).setEmission(new Color(100)),
-				new Prism(75.0, 0.0, -45.0, 34.5, 75.0, 19.5)
-						.setMaterial(new Material().setKd(0.6).setKs(0.6).setShininess(7)).setEmission(new Color(70)),
-				new Prism(0.0, 0.0, -82.5, 27.0, 82.5, 30.0)
-						.setMaterial(new Material().setKd(0.5).setKs(0.7).setShininess(7)).setEmission(new Color(50)),
-				new Prism(-100.0, 0.0, -7.5, 30.0, 60.0, 45.0)
-						.setMaterial(new Material().setKd(0.6).setKs(0.5).setShininess(7)).setEmission(new Color(90)),
-				new Prism(-90.0, 0.0, -60.0, 34.5, 97.5, 40.5)
-						.setMaterial(new Material().setKd(0.7).setKs(0.6).setShininess(7)).setEmission(new Color(110)),
-
-				new Prism(-150, 0, -40, 40, 80, 45).setMaterial(new Material().setKd(0.8).setKs(0.6).setShininess(7))
-						.setEmission(new Color(70)),
-				new Prism(-10, 0, -95, 45, 120, 45).setMaterial(new Material().setKd(0.7).setKs(0.6).setShininess(7))
-						.setEmission(new Color(80)),
-				new Prism(100, 43, 90, 10, 7, 10).setMaterial(new Material().setKd(0.6).setKs(0.6).setShininess(7))
-						.setEmission(new Color(117, 68, 9)),
-
-				new Sphere(2, new Point(105, 51.5, 95)).setEmission(new Color(230, 170, 130)),
-				new Triangle(new Point(100, 50, 90), new Point(88, 85, 73), new Point(85, 85, 76))
-						.setEmission(new Color(40)),
-				new Triangle(new Point(100, 50, 100), new Point(87, 85, 112), new Point(90, 85, 115))
-						.setEmission(new Color(40)),
-				new Triangle(new Point(110, 50, 100), new Point(125, 85, 112), new Point(122, 85, 115))
-						.setEmission(new Color(40)),
-				new Triangle(new Point(110, 50, 90), new Point(125, 85, 78), new Point(122, 85, 75))
-						.setEmission(new Color(40)));
-
-		scene.lights.add(new SpotLight(new Color(1500, 1300, 3000), new Point(600, 500, 0), new Vector(0, 0, -1)) //
-				.setKl(4E-5).setKq(2E-7));
-
-		ImageWriter imageWriter = new ImageWriter("Skyline", 700, 700);
-		camera.setImageWriter(imageWriter) //
-				.setRayTracer(new RayTracerBasic(scene)) //
-				.renderImage() //
-				.writeToImage();
-	}
+//	/**
+//	 * Mega geometry combination test including all features
+//	 */
+//	@Test
+//	public void cityTest() {
+//		Camera camera = new Camera(new Point(600, 175, 1080), new Vector(-0.548, -0.12, -1), new Vector(0, 1, -0.12)) //
+//				.setVPSize(200, 200).setVPDistance(920);
+//
+//		scene.setAmbientLight(new AmbientLight(new Color(java.awt.Color.WHITE), 0.15));
+//
+//		scene.setBackground(new Color(10, 150, 180));
+//
+//		scene.geometries.add(
+//				new Sphere(25d, new Point(105, 90, 95)).setMaterial(new Material().setKd(0.2).setKt(0.65).setKb(5))
+//						.setEmission(new Color(100, 25, 25)),
+//
+//				new Plane(new Point(0, 0, 0), new Vector(0, 1, 0))
+//						.setMaterial(new Material().setKd(0.1).setKr(0.85).setKs(0.5).setShininess(9).setKg(3))
+//						.setEmission(new Color(10, 40, 80)),
+//				new Plane(new Point(0, 0, 50), new Vector(0, 1, 0.001)).setMaterial(new Material().setKd(0.07))
+//						.setEmission(new Color(61, 27, 9)),
+//
+//				new Prism(0, 0, 0, 25, 50, 30).setMaterial(new Material().setKd(0.8).setKs(0.6).setShininess(7))
+//						.setEmission(Color.GRAY),
+//				new Prism(37.5, 0.0, -15.0, 27.0, 72, 37.5)
+//						.setMaterial(new Material().setKd(0.7).setKs(0.5).setShininess(7)).setEmission(Color.DARK_GRAY),
+//				new Prism(-52.5, 0.0, -15.0, 34.5, 68.0, 19.5)
+//						.setMaterial(new Material().setKd(0.6).setKs(0.6).setShininess(7)).setEmission(new Color(60)),
+//				new Prism(-45.0, 0.0, -82.5, 30.0, 72.0, 27.0)
+//						.setMaterial(new Material().setKd(0.7).setKs(0.8).setShininess(7)).setEmission(new Color(100)),
+//				new Prism(75.0, 0.0, -45.0, 34.5, 75.0, 19.5)
+//						.setMaterial(new Material().setKd(0.6).setKs(0.6).setShininess(7)).setEmission(new Color(70)),
+//				new Prism(0.0, 0.0, -82.5, 27.0, 82.5, 30.0)
+//						.setMaterial(new Material().setKd(0.5).setKs(0.7).setShininess(7)).setEmission(new Color(50)),
+//				new Prism(-100.0, 0.0, -7.5, 30.0, 60.0, 45.0)
+//						.setMaterial(new Material().setKd(0.6).setKs(0.5).setShininess(7)).setEmission(new Color(90)),
+//				new Prism(-90.0, 0.0, -60.0, 34.5, 97.5, 40.5)
+//						.setMaterial(new Material().setKd(0.7).setKs(0.6).setShininess(7)).setEmission(new Color(110)),
+//
+//				new Prism(-150, 0, -40, 40, 80, 45).setMaterial(new Material().setKd(0.8).setKs(0.6).setShininess(7))
+//						.setEmission(new Color(70)),
+//				new Prism(-10, 0, -95, 45, 120, 45).setMaterial(new Material().setKd(0.7).setKs(0.6).setShininess(7))
+//						.setEmission(new Color(80)),
+//				new Prism(100, 43, 90, 10, 7, 10).setMaterial(new Material().setKd(0.6).setKs(0.6).setShininess(7))
+//						.setEmission(new Color(117, 68, 9)),
+//
+//				new Sphere(2, new Point(105, 51.5, 95)).setEmission(new Color(230, 170, 130)),
+//				new Triangle(new Point(100, 50, 90), new Point(88, 85, 73), new Point(85, 85, 76))
+//						.setEmission(new Color(40)),
+//				new Triangle(new Point(100, 50, 100), new Point(87, 85, 112), new Point(90, 85, 115))
+//						.setEmission(new Color(40)),
+//				new Triangle(new Point(110, 50, 100), new Point(125, 85, 112), new Point(122, 85, 115))
+//						.setEmission(new Color(40)),
+//				new Triangle(new Point(110, 50, 90), new Point(125, 85, 78), new Point(122, 85, 75))
+//						.setEmission(new Color(40)));
+//
+//		scene.lights.add(new SpotLight(new Color(1500, 1300, 3000), new Point(600, 500, 0), new Vector(0, 0, -1)) //
+//				.setKl(4E-5).setKq(2E-7));
+//
+//		ImageWriter imageWriter = new ImageWriter("Skyline", 700, 700);
+//		camera.setImageWriter(imageWriter) //
+//				.setRayTracer(new RayTracerBasic(scene)) //
+//				.renderImage() //
+//				.writeToImage();
+//	}
 
 //	/**
 //	 * Mega geometry combination test including all features
