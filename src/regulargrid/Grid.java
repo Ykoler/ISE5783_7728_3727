@@ -1,5 +1,6 @@
 package regulargrid;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -35,9 +36,9 @@ public class Grid {
 		maxX = edges.get(3);
 		maxY = edges.get(4);
 		maxZ = edges.get(5);
-		xSize = (int)(maxX - minX) / density;
-		ySize = (int)(maxY - minY) / density;
-		zSize = (int)(maxZ - minZ) / density;
+		xSize = (int) (maxX - minX) / density;
+		ySize = (int) (maxY - minY) / density;
+		zSize = (int) (maxZ - minZ) / density;
 		this.density = density;
 
 		outerGeometries = new Geometries();
@@ -92,14 +93,14 @@ public class Grid {
 		double[] headCoordinates = { p.getX(), p.getY(), p.getZ() };
 		Vector dir = ray.getDir();
 		double[] dirCoordinates = { dir.getX(), dir.getY(), dir.getZ() };
-
+		
 		double[] mins = { minX, minY, minZ };
 		double[] maxs = { maxX, maxY, maxZ };
 
 		double headCoordinate, dirCoordinate;
-		// Initialize the minimum and maximum intersection distances for each axis
-		double tmin = Double.NEGATIVE_INFINITY;
-		double tmax = Double.POSITIVE_INFINITY;
+
+		double tmax, tmin;
+		double[] ts = new double[3];
 
 		// Check intersection with each axis
 		for (int i = 0; i < 3; i++) {
@@ -120,17 +121,10 @@ public class Grid {
 				double t1 = (min - headCoordinate) / dirCoordinate;
 				double t2 = (max - headCoordinate) / dirCoordinate;
 
-				// Ensure t1 <= t2
-				if (t1 > t2) {
-					double temp = t1;
-					t1 = t2;
-					t2 = temp;
-				}
-
 				// Update the minimum and maximum intersection distances
-				tmin = Math.max(tmin, t1);
-				tmax = Math.min(tmax, t2);
-
+				tmin = Math.max(t1, t2);
+				tmax = Math.min(t1, t2);
+				ts[i] = tmin;
 				// Check if the box is missed or completely behind the ray
 				if (tmin > tmax) {
 					// No intersection
@@ -138,8 +132,14 @@ public class Grid {
 				}
 			}
 		}
-
-		return ray.getPoint(tmin);
+		Arrays.sort(ts);
+		Point entry;
+		for (int i = 0; i < 3; i++) {
+			entry = ray.getPoint(ts[i]);
+			if (onEdge(entry))
+				return entry;
+		}
+		return null;
 	}
 
 	public Geometries getOuterGeometries() {
@@ -179,7 +179,7 @@ public class Grid {
 			// Calculate the distance that the ray must travel to cross a voxel boundary in
 			// each dimension
 			Point head = currentRay.getP0();
-			if(head == null)
+			if (head == null)
 				return geometries;
 			Double3 currentVoxelIndex = voxelOfPoint(head);
 
@@ -213,7 +213,7 @@ public class Grid {
 				}
 			}
 			// Determine which voxel boundary the ray will cross first
-			//System.out.println(currentRay);
+			// System.out.println(currentRay);
 			if (tMaxX < tMaxY && tMaxX < tMaxZ) {
 				// The ray crosses a voxel boundary in the x direction
 				checkIfOut = stepX > 0 ? headX + tDeltaX + EPS + tMaxX + EPS > maxX
@@ -245,5 +245,13 @@ public class Grid {
 		int y = (int) (pY - ((pY - minY) % ySize));
 		int z = (int) (pZ - ((pZ - minZ) % zSize));
 		return new Double3(x, y, z);
+	}
+
+	private boolean onEdge(Point p) {
+		double x = p.getX(), y = p.getY(), z = p.getZ();
+		if (alignZero(x - minX) == 0 || alignZero(y - minY) == 0 || alignZero(z - minZ) == 0 || alignZero(x - maxX) == 0
+				|| alignZero(y - maxY) == 0 || alignZero(z - maxZ) == 0)
+			return true;
+		return false;
 	}
 }
