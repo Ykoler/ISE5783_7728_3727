@@ -145,8 +145,10 @@ public class Grid {
 		Point entry;
 		for (int i = 0; i < 3; i++) {
 			entry = ray.getPoint(ts[i]);
-			if (onEdge(entry))
+			if (onEdge(entry)) {
+				System.out.println(entry);
 				return entry;
+			}
 		}
 		return null;
 	}
@@ -258,8 +260,9 @@ public class Grid {
 
 	private boolean onEdge(Point p) {
 		double x = p.getX(), y = p.getY(), z = p.getZ();
-		if (alignZero(x - minX) == 0 || alignZero(y - minY) == 0 || alignZero(z - minZ) == 0 || alignZero(x - maxX) == 0
-				|| alignZero(y - maxY) == 0 || alignZero(z - maxZ) == 0)
+		if ((alignZero(x - minX) == 0 || alignZero(x - maxX) == 0)
+				&& (alignZero(y - minY) == 0 || alignZero(y - maxY) == 0)
+				&& (alignZero(z - minZ) == 0 || alignZero(z - maxZ) == 0))
 			return true;
 		return false;
 	}
