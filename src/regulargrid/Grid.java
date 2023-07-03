@@ -1,6 +1,7 @@
 package regulargrid;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -122,8 +123,8 @@ public class Grid {
 				double t2 = (max - headCoordinate) / dirCoordinate;
 
 				// Update the minimum and maximum intersection distances
-				tmin = Math.max(t1, t2);
-				tmax = Math.min(t1, t2);
+				tmin = Math.min(t1, t2);
+				tmax = Math.max(t1, t2);
 				ts[i] = tmin;
 				// Check if the box is missed or completely behind the ray
 				if (tmin > tmax) {
@@ -132,7 +133,15 @@ public class Grid {
 				}
 			}
 		}
-		Arrays.sort(ts);
+		for (int i = 0; i < ts.length - 1; i++) {
+			for (int j = 0; j < ts.length - i - 1; j++) {
+				if (Math.abs(ts[j]) > Math.abs(ts[j + 1])) {
+					double temp = ts[j];
+					ts[j] = ts[j + 1];
+					ts[j + 1] = temp;
+				}
+			}
+		}
 		Point entry;
 		for (int i = 0; i < 3; i++) {
 			entry = ray.getPoint(ts[i]);
