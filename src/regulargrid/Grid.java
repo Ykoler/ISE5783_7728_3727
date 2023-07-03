@@ -57,9 +57,9 @@ public class Grid {
 			int xV = (int) (xS - (xS - minX) % xSize);
 			int yV = (int) (yS - (yS - minY) % ySize);
 			int zV = (int) (zS - (zS - minZ) % zSize);
-			for (int i = xV; i <= xV + x * xSize; i += xSize) {
-				for (int j = yV; j <= yV + y * ySize; j += ySize) {
-					for (int k = zV; k <= zV + z * zSize; k += zSize) {
+			for (int i = xV; i < xV + x * xSize; i += xSize) {
+				for (int j = yV; j < yV + y * ySize; j += ySize) {
+					for (int k = zV; k < zV + z * zSize; k += zSize) {
 						index = new Double3(i, j, k);
 						if (grid.containsKey(index)) {
 							grid.get(index).geometries.add(geometry);
