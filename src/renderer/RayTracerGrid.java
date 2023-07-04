@@ -20,9 +20,9 @@ public class RayTracerGrid extends RayTracerBasic {
 
 	private Grid grid;
 
-	public RayTracerGrid(Scene scene) {
+	public RayTracerGrid(Scene scene, int density) {
 		super(scene);
-		grid = new Grid(scene.geometries, 2);
+		grid = new Grid(scene.geometries, density);
 	}
 
 	@Override
@@ -34,7 +34,7 @@ public class RayTracerGrid extends RayTracerBasic {
 	protected GeoPoint findClosestIntersection(Ray ray) {
 		Geometries outerGeometries = grid.getOuterGeometries();
 		GeoPoint closestPoint = null;
-		if (outerGeometries != null)
+		if (!outerGeometries.getGeometries().isEmpty())
 			closestPoint = ray.findClosestGeoPoint(outerGeometries.findGeoIntersections(ray));
 		double result = grid.cutsGrid(ray);
 		double distanceToOuterGeometries = closestPoint == null ? Double.POSITIVE_INFINITY
@@ -45,13 +45,22 @@ public class RayTracerGrid extends RayTracerBasic {
 
 		if (result == Double.POSITIVE_INFINITY)
 			return null;
+		// if(true)
+		// return ray.findClosestGeoPoint(grid.getGeomet().findGeoIntersections(ray));
 
 		Geometries geometries = grid.traverse();
-		while (!geometries.getGeometries().isEmpty()) {
+		// while (!geometries.getGeometries().isEmpty()) {
+		// GeoPoint point =
+		// ray.findClosestGeoPoint(geometries.findGeoIntersections(ray));
+		// if (point != null)
+		// return point.point.distance(ray.getP0()) < distanceToOuterGeometries ? point
+		// : closestPoint;
+		// geometries = grid.traverse();
+		// }
+		if (!geometries.getGeometries().isEmpty()) {
 			GeoPoint point = ray.findClosestGeoPoint(geometries.findGeoIntersections(ray));
 			if (point != null)
 				return point.point.distance(ray.getP0()) < distanceToOuterGeometries ? point : closestPoint;
-			geometries = grid.traverse();
 		}
 		return closestPoint;
 	}

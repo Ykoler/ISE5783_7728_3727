@@ -7,7 +7,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 import primitives.*;
+import renderer.Camera;
+import renderer.ImageWriter;
+import renderer.RayTracerGrid;
+import scene.Scene;
+import geometries.Sphere;
 import geometries.Triangle;
+import lighting.AmbientLight;
+import lighting.PointLight;
+import lighting.SpotLight;
+
 import static primitives.Util.isZero;
 
 import java.util.List;
@@ -74,5 +83,33 @@ class TriangleTests {
 		// TC06: Ray on edge's continuation
 		assertNull(t.findIntersections(new Ray(new Point(0.5, 0.5, 1), new Vector(-0.5, -1, 0.5))),
 				"ERROR: findIntersections() did not return null");
+	}
+
+	@Test
+	void triangleRenderTest() {
+		Scene scene = new Scene("Test scene");
+
+		Camera camera = new Camera(new Point(0, 0, 1000), new Vector(0, 0, -1), new Vector(0, 1, 0)) //
+				.setVPSize(200, 200).setVPDistance(1000);
+
+		scene.setAmbientLight(new AmbientLight(new Color(java.awt.Color.WHITE), 0.15));
+
+		scene.setBackground(new Color(10, 150, 180));
+
+		scene.geometries.add(new Triangle(new Point(-100, 0, -100), new Point(100, 0, -100), new Point(0, 100, -100)) //
+				.setEmission(new Color(java.awt.Color.BLUE)),
+				new Triangle(new Point(-100, -100, -100), new Point(100, -100, -100), new Point(0, 100, -100)) //
+						.setEmission(new Color(java.awt.Color.MAGENTA)));
+
+		scene.lights.add(new SpotLight(new Color(1500, 1300, 3000), new Point(600, 500, 0), new Vector(0, 0, -1)) //
+				.setKl(4E-5).setKq(2E-7));
+		scene.lights.add(new PointLight(new Color(500, 250, 250), new Point(-200, -200, 0)) //
+				.setKl(0.00001).setKq(0.000005));
+
+		ImageWriter imageWriter = new ImageWriter("TriangleRenderTest", 800, 800);
+		camera.setImageWriter(imageWriter) //
+				.setRayTracer(new RayTracerGrid(scene, 2)) //
+				.renderImage() //
+				.writeToImage();
 	}
 }

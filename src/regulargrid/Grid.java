@@ -24,10 +24,15 @@ public class Grid {
 	private Geometries outerGeometries;
 	private HashMap<Double3, Voxel> grid;
 	private Ray currentRay;
+	private boolean finished = false;
 	private Set<Intersectable> scanned = new HashSet<Intersectable>();
 	private final double EPS = 0.0000001;
+	private Geometries geometries;
 
 	public Grid(Geometries geometries, int density) {
+
+		this.geometries = geometries;
+
 		// initiallizing map
 		grid = new HashMap<Double3, Voxel>();
 		List<Double> edges = geometries.getEdges();
@@ -52,14 +57,17 @@ public class Grid {
 			}
 			double yS = edges.get(1);
 			double zS = edges.get(2);
-			int x = floor(((edges.get(3) - xS) / xSize)) > 0 ? (int) floor(((edges.get(3) - xS) / xSize)) : 1;
-			int y = floor(((edges.get(4) - yS) / ySize)) > 0 ? (int) floor(((edges.get(4) - yS) / ySize)) : 1;
-			int z = floor(((edges.get(5) - zS) / zSize)) > 0 ? (int) floor(((edges.get(5) - zS) / zSize)) : 1;
+			int x = (int) Math.ceil(((edges.get(3) - xS) / xSize));// > 0 ? (int) floor(((edges.get(3) - xS) / xSize)) :
+																	// 1;
+			int y = (int) Math.ceil(((edges.get(4) - yS) / ySize));// > 0 ? (int) floor(((edges.get(4) - yS) / ySize)) :
+																	// 1;
+			int z = (int) Math.ceil(((edges.get(5) - zS) / zSize));// > 0 ? (int) floor(((edges.get(5) - zS) / zSize)) :
+																	// 1;
 			Double3 index = coordinateToIndex(new Point(xS, yS, zS));
 			int xV = (int) index.getD1(), yV = (int) index.getD2(), zV = (int) index.getD3();
-			int xC = (int) floor((xS - (xS - minX) % xSize));
-			int yC = (int) floor((yS - (yS - minY) % ySize));
-			int zC = (int) floor((zS - (zS - minZ) % zSize));
+			double xC = (xS - (xS - minX) % xSize);
+			double yC = (yS - (yS - minY) % ySize);
+			double zC = (zS - (zS - minZ) % zSize);
 			for (int i = xV; i < xV + x; i++) {
 				for (int j = yV; j < yV + y; j++) {
 					for (int k = zV; k < zV + z; k++) {
@@ -95,6 +103,10 @@ public class Grid {
 	public boolean inGrid(Point p) {
 		double x = p.getX(), y = p.getY(), z = p.getZ();
 		return x >= minX && x <= maxX && y >= minY && y <= maxY && z >= minZ && z <= maxZ;
+	}
+
+	public Geometries getGeomet() {
+		return geometries;
 	}
 
 	public Point gridEntryPoint(Ray ray) {
@@ -174,6 +186,7 @@ public class Grid {
 	}
 
 	public double cutsGrid(Ray ray) {
+		finished = false;
 		Point entry = gridEntryPoint(ray);
 		currentRay = new Ray(entry, ray.getDir());
 		if (entry == null) {
@@ -188,7 +201,7 @@ public class Grid {
 
 	public Geometries traverse(boolean multipleIntersection) {
 		Geometries geometries = new Geometries();
-		Vector dir = currentRay.getDir().normalize();
+		Vector dir = currentRay.getDir();
 
 		double dirX = dir.getX();
 		double dirY = dir.getY();
@@ -206,18 +219,21 @@ public class Grid {
 			// Calculate the distance that the ray must travel to cross a voxel boundary in
 			// each dimension
 			Point head = currentRay.getP0();
-			if (head == null)
+			if (head == null || finished)
 				return geometries;
-			Double3 currentVoxelIndex = coordinateToIndex(head);
 
 			// Find the voxel that the ray starts in
 			double headX = head.getX();
 			double headY = head.getY();
 			double headZ = head.getZ();
 
-			double x = (headX - (headX - minX) % xSize);
-			double y = (headY - (headY - minY) % ySize);
-			double z = (headZ - (headZ - minZ) % zSize);
+			double dX = stepX > 0 ? headX + EPS : headX - EPS;
+			double dY = stepY > 0 ? headY + EPS : headY - EPS;
+			double dZ = stepZ > 0 ? headZ + EPS : headZ - EPS;
+
+			double x = (dX - (dX - minX) % xSize);
+			double y = (dY - (dY - minY) % ySize);
+			double z = (dZ - (dZ - minZ) % zSize);
 
 			// Calculate the distance that the ray must travel to reach the next voxel
 			// boundary in each dimension
@@ -229,6 +245,8 @@ public class Grid {
 			double tMaxY = Math.abs(tDeltaY / dirY);
 			double tMaxZ = Math.abs(tDeltaZ / dirZ);
 
+			Double3 currentVoxelIndex = coordinateToIndex(new Point(dX, dY, dZ));
+
 			// Get the list of geometries in the current voxel
 			if (grid.containsKey(currentVoxelIndex)) {
 				for (Intersectable element : grid.get(currentVoxelIndex).geometries.getGeometries()) {
@@ -236,7 +254,8 @@ public class Grid {
 					 * if (!scanned.contains(element)) { geometries.add(element);
 					 * scanned.add(element); }
 					 */
-					geometries.add(element);
+					if (element.findIntersections(currentRay) != null)
+						geometries.add(element);
 				}
 			}
 			// Determine which voxel boundary the ray will cross first
@@ -244,31 +263,24 @@ public class Grid {
 			if (tMaxX < tMaxY && tMaxX < tMaxZ) {
 				// The ray crosses a voxel boundary in the x direction
 				checkIfOut = stepX > 0 ? headX + tDeltaX + EPS > maxX : headX - tDeltaX - EPS < minX;
+				currentRay = new Ray(currentRay.getPoint((stepX > 0 ? tDeltaX : -tDeltaX) / dirX), dir);
 			} else if (tMaxY < tMaxX && tMaxY < tMaxZ) {
 				// The ray crosses a voxel boundary in the y direction
 				checkIfOut = stepY > 0 ? headY + tDeltaY + EPS > maxY : headY - tDeltaY - EPS < minY;
+				currentRay = new Ray(currentRay.getPoint((stepY > 0 ? tDeltaY : -tDeltaY) / dirY), dir);
 			} else {
 				// The ray crosses a voxel boundary in the z direction
 				checkIfOut = stepZ > 0 ? headZ + tDeltaZ + EPS > maxZ : headZ - tDeltaZ - EPS < minZ;
+				currentRay = new Ray(currentRay.getPoint((stepZ > 0 ? tDeltaZ : -tDeltaZ) / dirZ), dir);
 			}
-			headX += (stepX > 0 ? EPS + tDeltaX : -(EPS + tDeltaX));
-			headY += (stepY > 0 ? EPS + tDeltaY : -(EPS + tDeltaY));
-			headZ += (stepZ > 0 ? EPS + tDeltaZ : -(EPS + tDeltaZ));
-			currentRay = new Ray(new Point(headX, headY, headZ), dir);
-			if (checkIfOut)
+			if (checkIfOut) {
+				finished = true;
 				return geometries; // The ray is outside the grid
-		} while (geometries.getGeometries().isEmpty());
+			}
+		} while (geometries.getGeometries().isEmpty() || multipleIntersection);
 
 		// Return the list of geometries that the ray intersects with
 		return geometries;
-	}
-
-	private Double3 voxelOfPoint(Point p) {
-		double pX = p.getX(), pY = p.getY(), pZ = p.getZ();
-		int x = (int) ((pX - ((pX - minX) % xSize)) - EPS);
-		int y = (int) ((pY - ((pY - minY) % ySize)) - EPS);
-		int z = (int) ((pZ - ((pZ - minZ) % zSize)) - EPS);
-		return new Double3(x, y, z);
 	}
 
 	private boolean onEdge(Point p) {

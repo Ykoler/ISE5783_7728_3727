@@ -15,8 +15,7 @@ import renderer.RayTracerGrid;
 import scene.Scene;
 import geometries.Plane;
 import geometries.Sphere;
-import lighting.AmbientLight;
-import lighting.SpotLight;
+import lighting.*;
 
 /**
  * Unit test for Sphere class
@@ -149,15 +148,45 @@ class SphereTests {
 
 		scene.geometries.add(
 
-				new Sphere(2.5, new Point(0, 0, 0)).setMaterial(new Material().setKd(0.3).setKs(0.6).setShininess(10))
-						.setEmission(Color.ORANGE));
+				new Sphere(100, new Point(0, 0, 0)).setMaterial(new Material().setKd(0.3).setKs(0.6).setShininess(10))
+						.setEmission(Color.ORANGE),
+				new Sphere(50, new Point(0, 300, 0)));
 
 		scene.lights.add(new SpotLight(new Color(1500, 1300, 3000), new Point(600, 500, 0), new Vector(0, 0, -1)) //
 				.setKl(4E-5).setKq(2E-7));
+		scene.lights.add(new PointLight(new Color(500, 250, 250), new Point(-200, -200, 0)) //
+				.setKl(0.00001).setKq(0.000005));
 
 		ImageWriter imageWriter = new ImageWriter("SphereRenderTest", 700, 700);
 		camera.setImageWriter(imageWriter) //
-				.setRayTracer(new RayTracerGrid(scene)) //
+				.setRayTracer(new RayTracerGrid(scene, 10)) //
+				.renderImage() //
+				.writeToImage();
+	}
+
+	@Test
+	void sphereStressTest() {
+		Scene scene = new Scene("Test scene");
+
+		Camera camera = new Camera(new Point(0, 0, 1000), new Vector(0, 0, -1), new Vector(0, 1, 0)) //
+				.setVPSize(200, 200).setVPDistance(1000).setMultiThreading(3).setDebugPrint(0.1);
+
+		scene.setAmbientLight(new AmbientLight(new Color(java.awt.Color.WHITE), 0.15));
+
+		scene.setBackground(new Color(10, 150, 180));
+
+		for (int i = 1; i < 100; i++)
+			scene.geometries.add(new Sphere(4, new Point(-100 + (i % 10) * 10, -100 + Math.floorDiv(i, 10) * 10, 0))
+					.setEmission(Color.ORANGE));
+
+		scene.lights.add(new SpotLight(new Color(1500, 1300, 3000), new Point(600, 500, 0), new Vector(0, 0, -1)) //
+				.setKl(4E-5).setKq(2E-7));
+		scene.lights.add(new PointLight(new Color(500, 250, 250), new Point(-200, -200, 0)) //
+				.setKl(0.00001).setKq(0.000005));
+
+		ImageWriter imageWriter = new ImageWriter("SphereStressTest", 700, 700);
+		camera.setImageWriter(imageWriter) //
+				.setRayTracer(new RayTracerGrid(scene, 10)) //
 				.renderImage() //
 				.writeToImage();
 	}

@@ -21,6 +21,7 @@ public class Polygon extends Geometry {
 	/** Associated plane in which the polygon lays */
 	protected final Plane plane;
 	private final int size;
+	private final static double DELTA = 0.00001;
 
 	/**
 	 * Polygon constructor based on vertices list. The list must be ordered by edge
@@ -63,6 +64,13 @@ public class Polygon extends Geometry {
 			maxY = y > maxY ? y : maxY;
 			maxZ = z > maxZ ? z : maxZ;
 		}
+
+		minX -= DELTA;
+		minY -= DELTA;
+		minZ -= DELTA;
+		maxX += DELTA;
+		maxY += DELTA;
+		maxZ += DELTA;
 
 		if (size == 3)
 			return; // no need for more tests for a Triangle

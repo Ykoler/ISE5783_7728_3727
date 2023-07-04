@@ -137,7 +137,7 @@ class PlaneTests {
 
 		ImageWriter imageWriter = new ImageWriter("PlaneRenderTest", 700, 700);
 		camera.setImageWriter(imageWriter) //
-				.setRayTracer(new RayTracerGrid(scene)) //
+				.setRayTracer(new RayTracerGrid(scene, 1)) //
 				.renderImage() //
 				.writeToImage();
 	}
