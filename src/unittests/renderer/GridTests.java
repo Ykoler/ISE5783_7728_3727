@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test;
 import geometries.*;
 import renderer.*;
 import primitives.*;
-import scene.Scene;
-import regulargrid.*;
 
 public class GridTests {
 

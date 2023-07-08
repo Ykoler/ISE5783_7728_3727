@@ -27,8 +27,8 @@ public class TeapotTest {
 
 	private final Camera camera = new Camera(new Point(0, 0, -1000), new Vector(0, 0, 1), new Vector(0, 1, 0)) //
 			.setVPDistance(1000).setVPSize(200, 200) //
-			.setImageWriter(imageWriter) //
-			.setMultiThreading(3).setDebugPrint(0.1);
+			.setImageWriter(imageWriter); //
+	// .setMultiThreading(3).setDebugPrint(0.1);
 
 	private final Scene scene = new Scene("Test scene");
 
@@ -1571,8 +1571,7 @@ public class TeapotTest {
 
 		// camera.setRayTracer(new RayTracerBasic(scene)).renderImage().printGrid(50,
 		// new Color(YELLOW)).writeToImage();
-		// camera.setRayTracer(new RayTracerBasic(scene)).renderImage().printGrid(50,
-		// new Color(YELLOW)).writeToImage();
+		camera.setRayTracer(new RayTracerGrid(scene, 30)).renderImage().printGrid(50, new Color(YELLOW)).writeToImage();
 	}
 
 }

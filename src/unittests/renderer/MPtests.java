@@ -1,12 +1,6 @@
 package unittests.renderer;
 
-import org.junit.jupiter.api.Test;
-import primitives.*;
 import scene.*;
-import renderer.*;
-import lighting.*;
-import geometries.*;
-
 public class MPtests {
 	Scene scene = new Scene("Test scene");
 
