@@ -5,7 +5,7 @@ import static primitives.Util.isZero;
 
 import java.util.LinkedList;
 import java.util.List;
-
+import java.util.Random;
 import primitives.*;
 
 /**
@@ -18,6 +18,7 @@ public class TargetArea {
 	private final Point p0;
 	private final Vector vRight, vUp, vTo;
 	private double width, height, distance;
+	private Random random = new Random();
 
 	/**
 	 * Constructor for TargetArea class
@@ -87,7 +88,7 @@ public class TargetArea {
 	 * @param i  current pixel's y index
 	 * @return resulting Ray
 	 */
-	public Ray constructRay(int nX, int nY, int j, int i) {
+	public Ray constructRay(int nX, int nY, double j, double i) {
 		Point pIJ = p0.add(vTo.scale(distance));
 		// Calculate distance on x,y axes to the designated point
 		double yI = (((nY - 1) / 2.0) - i) * (height / nY);
@@ -101,7 +102,7 @@ public class TargetArea {
 	}
 
 	/**
-	 * Constructs a grid of rays in the target area
+	 * Constructs a grid of rays in the target area in jittered distribution.
 	 * 
 	 * @return list of rays
 	 */
@@ -109,7 +110,7 @@ public class TargetArea {
 		List<Ray> rays = new LinkedList<>();
 		for (int i = 0; i < density; ++i)
 			for (int j = 0; j < density; j++)
-				rays.add(constructRay(density, density, j, i));
+				rays.add(constructRay(density, density, random.nextDouble() - 0.5 + j, random.nextDouble() - 0.5 + i));
 		return rays;
 	}
 }

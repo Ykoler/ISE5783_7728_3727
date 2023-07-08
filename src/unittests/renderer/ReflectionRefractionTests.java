@@ -133,7 +133,7 @@ public class ReflectionRefractionTests {
 
 		ImageWriter imageWriter = new ImageWriter("GeometryCombination", 600, 600);
 		camera.setImageWriter(imageWriter) //
-				.setRayTracer(new RayTracerBasic(scene)) //
+				.setRayTracer(new RayTracerGrid(scene, 10)) //
 				.renderImage() //
 				.writeToImage();
 	}
@@ -186,7 +186,7 @@ public class ReflectionRefractionTests {
 
 		ImageWriter imageWriter = new ImageWriter("MegaCombination", 600, 600);
 		camera.setImageWriter(imageWriter) //
-				.setRayTracer(new RayTracerBasic(scene)) //
+				.setRayTracer(new RayTracerGrid(scene, 10)) //
 				.renderImage() //
 				.writeToImage();
 	}

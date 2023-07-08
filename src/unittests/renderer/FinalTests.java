@@ -240,13 +240,12 @@ public class FinalTests {
 //		}
 		scene.geometries.add(floor);
 
-		scene.lights.add(
-				new SpotLight(new Color(200), new Point(0, ceilingHeight - 60, 40), new Vector(0, -1, -0.2)) //
-						.setKl(4E-5).setKq(2E-7));
+		scene.lights.add(new SpotLight(new Color(200), new Point(0, ceilingHeight - 60, 40), new Vector(0, -1, -0.2)) //
+				.setKl(4E-5).setKq(2E-7));
 
 		ImageWriter imageWriter = new ImageWriter("Snowmen", 450, 450);
 		camera.setImageWriter(imageWriter) //
-				.setRayTracer(new RayTracerGrid(scene,30)) //
+				.setRayTracer(new RayTracerGrid(scene, 30)) //
 				.renderImage() //
 				.writeToImage();
 	}

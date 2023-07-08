@@ -1,6 +1,7 @@
 package unittests.renderer;
 
 import scene.*;
+
 public class MPtests {
 	Scene scene = new Scene("Test scene");
 
