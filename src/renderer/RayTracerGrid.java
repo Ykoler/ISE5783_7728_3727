@@ -7,7 +7,6 @@ import geometries.Intersectable.GeoPoint;
 import lighting.LightSource;
 import primitives.*;
 import scene.*;
-import geometries.*;
 
 /**
  * a class that represents a ray tracer that traces a grid of voxels(greatly
@@ -19,6 +18,12 @@ public class RayTracerGrid extends RayTracerBasic {
 
 	private Grid grid;
 
+	/**
+	 * constructor for the ray tracer grid
+	 * 
+	 * @param scene
+	 * @param density
+	 */
 	public RayTracerGrid(Scene scene, int density) {
 		super(scene);
 		grid = new Grid(scene.geometries, density);
@@ -36,16 +41,15 @@ public class RayTracerGrid extends RayTracerBasic {
 		if (!outerGeometries.getGeometries().isEmpty())
 			closestPoint = ray.findClosestGeoPoint(outerGeometries.findGeoIntersections(ray));
 		double result = grid.cutsGrid(ray);
-		double distanceToOuterGeometries = closestPoint == null ? Double.POSITIVE_INFINITY
-				: closestPoint.point.distance(ray.getP0());
-
-		if (distanceToOuterGeometries < result)
-			return closestPoint;
-
 		if (result == Double.POSITIVE_INFINITY)
 			return null;
 
-		List<GeoPoint> intersections = grid.getGeomet().findGeoIntersections(ray);
+		double distanceToOuterGeometries = closestPoint == null ? Double.POSITIVE_INFINITY
+				: closestPoint.point.distance(ray.getP0());
+		if (distanceToOuterGeometries < result)
+			return closestPoint;
+
+		var intersections = grid.traverse(ray, false);
 		GeoPoint point = ray.findClosestGeoPoint(intersections);
 		if (point != null) {
 			return point.point.distance(ray.getP0()) < distanceToOuterGeometries ? point : closestPoint;
@@ -62,10 +66,7 @@ public class RayTracerGrid extends RayTracerBasic {
 		if (res == Double.POSITIVE_INFINITY)
 			intersections = grid.getOuterGeometries().findGeoIntersections(lightRay);
 		else {
-			// Geometries targets = grid.traverse(true);
-			// intersections = targets == null ? null
-			// : targets.findGeoIntersections(lightRay, light.getDistance(gp.point));
-			intersections = grid.traverse(lightRay);
+			intersections = grid.traverse(lightRay, true);
 		}
 		if (intersections == null)
 			return true;
@@ -84,10 +85,7 @@ public class RayTracerGrid extends RayTracerBasic {
 		if (res == Double.POSITIVE_INFINITY)
 			intersections = grid.getOuterGeometries().findGeoIntersections(lightRay);
 		else {
-			// Geometries targets = grid.traverse(true);
-			// intersections = targets == null ? null
-			// : targets.findGeoIntersections(lightRay, light.getDistance(gp.point));
-			intersections = grid.traverse(lightRay);
+			intersections = grid.traverse(lightRay, true);
 		}
 		Double3 ktr = Double3.ONE;
 		if (intersections == null)

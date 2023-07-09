@@ -1571,7 +1571,7 @@ public class TeapotTest {
 
 		// camera.setRayTracer(new RayTracerBasic(scene)).renderImage().printGrid(50,
 		// new Color(YELLOW)).writeToImage();
-		camera.setRayTracer(new RayTracerGrid(scene, 30)).renderImage().printGrid(50, new Color(YELLOW)).writeToImage();
+		camera.setRayTracer(new RayTracerBasic(scene)).renderImage().printGrid(50, new Color(YELLOW)).writeToImage();
 	}
 
 }

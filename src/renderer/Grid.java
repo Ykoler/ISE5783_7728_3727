@@ -10,10 +10,10 @@ import primitives.*;
 import static primitives.Util.*;
 
 /**
- * @author ashih
- *
+ * a class that represents a grid of voxels(greatly improves performance)
+ * 
+ * @autor Yahel and Ashi
  */
-
 public class Grid {
 	private double minX, maxX, minY, maxY, minZ, maxZ;
 	// sizes of voxels
@@ -23,6 +23,13 @@ public class Grid {
 	private final double EPS = 0.0000001;
 	private Geometries geometries;
 
+	/**
+	 * constructor for the grid, mapping the each geometry to the voxels it is in
+	 * and filtering the outer geometries
+	 * 
+	 * @param geometries the geometries to be mapped
+	 * @param density    the density of the grid along each axis
+	 */
 	public Grid(Geometries geometries, int density) {
 
 		this.geometries = geometries;
@@ -30,17 +37,19 @@ public class Grid {
 		// initiallizing map
 		grid = new HashMap<Double3, Geometries>();
 		List<Double> edges = geometries.getEdges();
-		minX = edges.get(0);// - EPS;
-		minY = edges.get(1);// - EPS;
-		minZ = edges.get(2);// - EPS;
-		maxX = edges.get(3);// + EPS;
-		maxY = edges.get(4);// + EPS;
-		maxZ = edges.get(5);// + EPS;
+		minX = edges.get(0);
+		minY = edges.get(1);
+		minZ = edges.get(2);
+		maxX = edges.get(3);
+		maxY = edges.get(4);
+		maxZ = edges.get(5);
+
 		xSize = (maxX - minX) / density;
 		ySize = (maxY - minY) / density;
 		zSize = (maxZ - minZ) / density;
 
 		outerGeometries = new Geometries();
+
 		for (Intersectable geometry : geometries.getGeometries()) {
 			edges = geometry.getEdges();
 			double xS = edges.get(0);
@@ -53,11 +62,16 @@ public class Grid {
 			int x = (int) Math.ceil(((edges.get(3) - xS) / xSize));
 			int y = (int) Math.ceil(((edges.get(4) - yS) / ySize));
 			int z = (int) Math.ceil(((edges.get(5) - zS) / zSize));
+			Double3 target = coordinateToIndex(new Point(edges.get(3), edges.get(4), edges.get(5)));
+			int xT = (int) target.getD1(), yT = (int) target.getD2(), zT = (int) target.getD3();
 			Double3 index = coordinateToIndex(new Point(xS, yS, zS));
 			int xV = (int) index.getD1(), yV = (int) index.getD2(), zV = (int) index.getD3();
-			for (int i = xV; i < xV + x; i++) {
-				for (int j = yV; j < yV + y; j++) {
-					for (int k = zV; k < zV + z; k++) {
+			xT = xV + x;
+			yT = yV + y;
+			zT = zV + z;
+			for (int i = xV - 1; i <= xT; i++) {
+				for (int j = yV - 1; j <= yT; j++) {
+					for (int k = zV - 1; k <= zT; k++) {
 						index = new Double3(i, j, k);
 						if (grid.containsKey(index)) {
 							grid.get(index).add(geometry);
@@ -70,6 +84,12 @@ public class Grid {
 		}
 	}
 
+	/**
+	 * maps a point to the coordinates of the voxel it is in
+	 * 
+	 * @param p the point to be mapped
+	 * @return the coordinates of the voxel
+	 */
 	private Double3 coordinateToIndex(Point p) {
 		double x = p.getX(), y = p.getY(), z = p.getZ();
 		int xI = (int) floor((x - (x - minX) % xSize) / xSize);
@@ -81,18 +101,20 @@ public class Grid {
 	/**
 	 * Checks if point is in grid
 	 * 
-	 * @param p
-	 * @return
+	 * @param p the point to be checked
+	 * @return true if the point is in the grid, false otherwise
 	 */
 	public boolean inGrid(Point p) {
 		double x = p.getX(), y = p.getY(), z = p.getZ();
 		return x >= minX && x <= maxX && y >= minY && y <= maxY && z >= minZ && z <= maxZ;
 	}
 
-	public Geometries getGeomet() {
-		return geometries;
-	}
-
+	/**
+	 * finds the entry point of a ray into the grid
+	 * 
+	 * @param ray the ray to be checked
+	 * @return the entry point of the ray into the grid
+	 */
 	public Point gridEntryPoint(Ray ray) {
 		Point p = ray.getP0();
 		if (inGrid(p))
@@ -161,10 +183,22 @@ public class Grid {
 		return null;
 	}
 
+	/**
+	 * getter for the outer geometries
+	 * 
+	 * @return the outer geometries
+	 */
 	public Geometries getOuterGeometries() {
 		return outerGeometries;
 	}
 
+	/**
+	 * finds the distance between the entry point of a ray into the grid and the
+	 * origin of the ray
+	 * 
+	 * @param ray the ray to be checked
+	 * @return the distance between the entry point of the ray and its origin
+	 */
 	public double cutsGrid(Ray ray) {
 		Point entry = gridEntryPoint(ray);
 		if (entry == null) {
@@ -173,12 +207,25 @@ public class Grid {
 		return ray.getP0().distance(entry);
 	}
 
+	/**
+	 * traverses the grid and finds the intersections of the ray with the geometries
+	 * 
+	 * @param ray the ray to be checked
+	 * @return the list of intersections
+	 */
 	public List<GeoPoint> traverse(Ray ray) {
 		return traverse(ray, false);
 	}
 
-	public List<GeoPoint> traverse(Ray currentRay, boolean multipleIntersection) {
-		currentRay = new Ray(gridEntryPoint(currentRay), currentRay.getDir());
+	/**
+	 * traverses the grid and finds the intersections of the ray with the geometries
+	 * 
+	 * @param i_currentRay         the ray to be checked
+	 * @param multipleIntersection whether to return multiple intersections or not
+	 * @return the list of intersections
+	 */
+	public List<GeoPoint> traverse(Ray i_currentRay, boolean multipleIntersection) {
+		Ray currentRay = new Ray(gridEntryPoint(i_currentRay), i_currentRay.getDir());
 		List<GeoPoint> intersections = new ArrayList<>();
 		Vector dir = currentRay.getDir();
 
@@ -191,15 +238,13 @@ public class Grid {
 		int stepY = (int) Math.signum(dirY);
 		int stepZ = (int) Math.signum(dirZ);
 
-		boolean checkIfOut;
+		boolean checkIfOut = false;
 		// Loop until we find a voxel with a non-empty object list or we fall out of the
 		// end of the grid
 		do {
 			// Calculate the distance that the ray must travel to cross a voxel boundary in
 			// each dimension
 			Point head = currentRay.getP0();
-			if (head == null)
-				return null;
 
 			// Find the voxel that the ray starts in
 			double headX = head.getX();
@@ -227,10 +272,9 @@ public class Grid {
 			double t;
 
 			Double3 currentVoxelIndex = coordinateToIndex(new Point(dX, dY, dZ));
-
 			// Get the list of geometries in the current voxel
 			if (grid.containsKey(currentVoxelIndex)) {
-				List<GeoPoint> geoIntersections = grid.get(currentVoxelIndex).findGeoIntersections(currentRay);
+				List<GeoPoint> geoIntersections = grid.get(currentVoxelIndex).findGeoIntersections(i_currentRay);
 				if (geoIntersections != null)
 					intersections.addAll(geoIntersections);
 			}
@@ -250,11 +294,8 @@ public class Grid {
 				checkIfOut = stepZ > 0 ? headZ + tDeltaZ + EPS > maxZ : headZ - tDeltaZ - EPS < minZ;
 				t = (stepZ > 0 ? tDeltaZ : -tDeltaZ) / dirZ;
 			}
-			if (checkIfOut) {
-				return null; // The ray is outside the grid
-			}
 			currentRay = new Ray(currentRay.getPoint(t), dir);
-		} while (intersections.isEmpty() || multipleIntersection);
+		} while (!checkIfOut && (intersections.isEmpty() || multipleIntersection));
 
 		// Return the list of geometries that the ray intersects with
 		return intersections;

@@ -18,34 +18,33 @@ public class FinalTests {
 		final double floorHeight = 16;
 		final double floorLength = 120;
 		final double floorWidth = 100;
-		final double ceilingHeight = 240;
 		final double eps = 0.42;
 		final Color smileColor = new Color(90, 20, 10);
 		final double smileCircleRadius = 2;
 
-		Camera camera = new Camera(new Point(0, 170, 950), new Vector(0, -0.1, -1), new Vector(0, 1, -0.1)) //
+		Camera camera = new Camera(new Point(0, 150, 1000), new Vector(0, -0.1, -1), new Vector(0, 1, -0.1)) //
 				.setVPSize(200, 200).setVPDistance(800).setMultiThreading(3).setDebugPrint(0.2);
 
-		scene.setAmbientLight(new AmbientLight(new Color(java.awt.Color.WHITE), 0.16));
+		scene.setAmbientLight(new AmbientLight(new Color(java.awt.Color.WHITE), 0.18));
 
 		scene.setBackground(Color.BLACK);
 
 		scene.geometries.add(
-		// Walls
-//				new Plane(new Point(-floorLength - floorHeight, 0, 0), new Vector(1, 0, 0))
-//						.setMaterial(new Material().setKd(0.3).setKs(0.2).setShininess(9))
-//						.setEmission(new Color(240, 175, 170)),
-//				new Plane(new Point(floorLength + floorHeight, 0, 0), new Vector(-1, 0, 0))
-//						.setMaterial(new Material().setKd(0.3).setKs(0.2).setShininess(9))
-//						.setEmission(new Color(170, 215, 250)),
-//				new Plane(new Point(0, -floorHeight, 0), new Vector(0, 1, 0))
-//						.setMaterial(new Material().setKd(0.3).setKs(0.2).setShininess(9)).setEmission(new Color(100)),
-//				new Plane(new Point(0, 201 + floorHeight, 0), new Vector(0, -1, 0))
-//						.setMaterial(new Material().setKd(0.3).setKs(0.2).setShininess(9)).setEmission(new Color(150)),
+				// Walls
+				new Plane(new Point(-floorLength, 0, 0), new Vector(1, 0, 0))
+						.setMaterial(new Material().setKd(0.3).setKs(0.2).setShininess(9))
+						.setEmission(new Color(240, 175, 170)),
+				new Plane(new Point(floorLength, 0, 0), new Vector(-1, 0, 0))
+						.setMaterial(new Material().setKd(0.3).setKs(0.2).setShininess(9))
+						.setEmission(new Color(170, 215, 250)),
+				new Plane(new Point(0, -floorHeight, 0), new Vector(0, 1, 0))
+						.setMaterial(new Material().setKd(0.3).setKs(0.2).setShininess(9)).setEmission(new Color(100)),
+				new Plane(new Point(0, 201, 0), new Vector(0, -1, 0))
+						.setMaterial(new Material().setKd(0.3).setKs(0.2).setShininess(9)).setEmission(new Color(150)),
 				new Plane(new Point(0, 0, -floorWidth), new Vector(0, 0, 1))
-						.setMaterial(new Material().setKr(1).setKg(0)),
-				new Plane(new Point(0, 0, floorWidth), new Vector(0, 0, -1))
-						.setMaterial(new Material().setKt(0.8).setKr(1)).setEmission(new Color(5)),
+						.setMaterial(new Material().setKr(1).setKg(7)),
+				new Plane(new Point(0, 0, floorWidth), new Vector(0, 0, -1)).setMaterial(new Material().setKt(0.7))
+						.setEmission(new Color(5)),
 
 				// CubeMan body
 				new Prism(-75, 0, -25, 50, 50, 50).setMaterial(new Material().setKd(0.7).setKs(0.6).setShininess(7))
@@ -150,21 +149,20 @@ public class FinalTests {
 		int len = (int) Math.floor(floorLength / floorHeight);
 		int wid = (int) Math.floor(floorWidth / floorHeight);
 
-		double r = floorHeight / 2;
-
 		// Floor spheres
 		for (int i = 0; i < 2 * len + 1; i++) {
-			for (int j = 0; j < 3 * wid; j++) {
+			for (int j = 0; j < 4 * wid; j++) {
 				if ((i + j) % 2 == 0) {
-					floor.add(new Sphere(r,
-							new Point(-floorLength + i * floorHeight + r, -r, -floorWidth + j * floorHeight + r))
+					floor.add(new Sphere(floorHeight / 2,
+							new Point(-floorLength + i * floorHeight + floorHeight / 2, -floorHeight / 2,
+									-floorWidth + j * floorHeight + floorHeight / 2))
 							.setMaterial(new Material().setKd(0.5)).setEmission(new Color(90, 20, 10)));
 				}
 			}
 		}
 		// Floor cubes
 		for (int i = 0; i < 2 * len + 1; i++) {
-			for (int j = 0; j < 3 * wid; j++) {
+			for (int j = 0; j < 4 * wid; j++) {
 				if ((i + j) % 2 != 0) {
 					floor.add(new Prism(-floorLength + i * floorHeight + eps, -floorHeight + eps,
 							-floorWidth + j * floorHeight + eps, floorHeight - 2 * eps, floorHeight - 2 * eps,
@@ -172,81 +170,14 @@ public class FinalTests {
 				}
 			}
 		}
-
-//		// Ceiling spheres
-//		for (int i = 0; i < 2 * len + 1; i++) {
-//			for (int j = 0; j < 3 * wid; j++) {
-//				if ((i + j) % 2 == 0) {
-//					floor.add(new Sphere(r,
-//							new Point(-floorLength + i * floorHeight + r, ceilingHeight - r,
-//									-floorWidth + j * floorHeight + r))
-//							.setMaterial(new Material().setKd(0.5)).setEmission(new Color(90, 20, 10)));
-//				}
-//			}
-//		}
-//		// Ceiling cubes
-//		for (int i = 0; i < 2 * len + 1; i++) {
-//			for (int j = 0; j < 3 * wid; j++) {
-//				if ((i + j) % 2 != 0) {
-//					floor.add(new Prism(-floorLength + i * floorHeight + eps, ceilingHeight - floorHeight + eps,
-//							-floorWidth + j * floorHeight + eps, floorHeight - 2 * eps, floorHeight - 2 * eps,
-//							floorHeight - 2 * eps).setMaterial(new Material().setKd(0.5)).setEmission(new Color(50)));
-//				}
-//			}
-//		}
-
-//		// Left wall spheres
-//		for (int i = 0; i < 2 * len + 1; i++) {
-//			for (int j = 0; j < 3 * wid; j++) {
-//				if ((i + j) % 2 != 0) {
-//					floor.add(new Sphere(r,
-//							new Point(-floorLength - floorHeight / 2, floorHeight * i - r,
-//									-floorWidth + j * floorHeight + floorHeight / 2))
-//							.setMaterial(new Material().setKd(0.5)).setEmission(new Color(90, 20, 10)));
-//				}
-//			}
-//		}
-//		// Left wall cubes
-//		for (int i = 0; i < 2 * len + 1; i++) {
-//			for (int j = 0; j < 3 * wid; j++) {
-//				if ((i + j) % 2 == 0) {
-//					floor.add(new Prism(-floorLength - floorHeight, -floorHeight + i * floorHeight + eps,
-//							-floorWidth + j * floorHeight + eps, floorHeight - 2 * eps, floorHeight - 2 * eps,
-//							floorHeight - 2 * eps).setMaterial(new Material().setKd(0.5)).setEmission(new Color(50)));
-//				}
-//			}
-//		}
-//
-//		// Right wall spheres
-//		for (int i = 0; i < 2 * len + 1; i++) {
-//			for (int j = 0; j < 3 * wid; j++) {
-//				if ((i + j) % 2 != 0) {
-//					floor.add(new Sphere(r,
-//							new Point(floorLength - floorHeight / 2, floorHeight * i - r,
-//									-floorWidth + j * floorHeight + floorHeight / 2))
-//							.setMaterial(new Material().setKd(0.5)).setEmission(new Color(90, 20, 10)));
-//				}
-//			}
-//		}
-//		// Right wall cubes
-//		for (int i = 0; i < 2 * len + 1; i++) {
-//			for (int j = 0; j < 3 * wid; j++) {
-//				if ((i + j) % 2 == 0) {
-//					floor.add(new Prism(floorLength - floorHeight, -floorHeight + i * floorHeight + eps,
-//							-floorWidth + j * floorHeight + eps, floorHeight - 2 * eps, floorHeight - 2 * eps,
-//							floorHeight - 2 * eps).setMaterial(new Material().setKd(0.5)).setEmission(new Color(50)));
-//				}
-//			}
-//		}
 		scene.geometries.add(floor);
 
-		scene.lights.add(
-				new SpotLight(new Color(200), new Point(0, ceilingHeight - 60, 40), new Vector(0, -1, -0.2)) //
-						.setKl(4E-5).setKq(2E-7));
+		scene.lights.add(new SpotLight(new Color(200), new Point(0, 200, 0), new Vector(0, -1, 0)) //
+				.setKl(4E-5).setKq(2E-7));
 
 		ImageWriter imageWriter = new ImageWriter("Snowmen", 450, 450);
 		camera.setImageWriter(imageWriter) //
-				.setRayTracer(new RayTracerGrid(scene,30)) //
+				.setRayTracer(new RayTracerBasic(scene)) //
 				.renderImage() //
 				.writeToImage();
 	}
