@@ -8,13 +8,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import java.util.List;
 import primitives.*;
-import renderer.Camera;
-import renderer.ImageWriter;
-import renderer.RayTracerBasic;
-import renderer.RayTracerGrid;
+import renderer.*;
 import scene.Scene;
-import geometries.Plane;
-import geometries.Sphere;
+import geometries.*;
 import lighting.*;
 
 /**

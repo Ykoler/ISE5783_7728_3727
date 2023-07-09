@@ -177,7 +177,7 @@ public class FinalTests {
 
 		ImageWriter imageWriter = new ImageWriter("Snowmen", 450, 450);
 		camera.setImageWriter(imageWriter) //
-				.setRayTracer(new RayTracerBasic(scene)) //
+				.setRayTracer(new RayTracerGrid(scene, 25)) //
 				.renderImage() //
 				.writeToImage();
 	}

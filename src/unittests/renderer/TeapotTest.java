@@ -13,7 +13,7 @@ import primitives.Vector;
 import renderer.Camera;
 import renderer.ImageWriter;
 import renderer.RayTracerBasic;
-import renderer.RayTracerGrid;
+//import renderer.RayTracerGrid;
 import scene.Scene;
 
 /**

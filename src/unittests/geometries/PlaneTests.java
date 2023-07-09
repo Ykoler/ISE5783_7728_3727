@@ -10,17 +10,10 @@ import static primitives.Util.isZero;
 
 import java.util.List;
 
-import geometries.Plane;
-import geometries.Prism;
-import geometries.Sphere;
-import geometries.Triangle;
-import lighting.AmbientLight;
-import lighting.SpotLight;
+import geometries.*;
+import lighting.*;
 import primitives.*;
-import renderer.Camera;
-import renderer.ImageWriter;
-import renderer.RayTracerBasic;
-import renderer.RayTracerGrid;
+import renderer.*;
 import scene.Scene;
 
 /**

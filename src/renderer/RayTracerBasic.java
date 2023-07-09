@@ -149,19 +149,17 @@ public class RayTracerBasic extends RayTracerBase {
 	 * @return the averaged color of the ray beam
 	 */
 	private Color calcRayBeamColor(int level, Double3 k, Double3 kB, List<Ray> rays) {
-		if (rays.size() == 1) {
+		int size = rays.size();
+		if (size == 0) return Color.BLACK;
+		
+		if (rays.size() == 1)
 			return calcGlobalEffect(rays.get(0), level, k, kB);
-		}
-		Color color = Color.BLACK;
-		int size = 0;
-		for (Ray rT : rays) {
-			color = color.add(calcGlobalEffect(rT, level, k, kB));
-			size++;
-		}
 
-		if (size == 0)
-			return color;
-		return color.reduce((double) size);
+		Color color = Color.BLACK;
+		for (Ray rT : rays)
+			color = color.add(calcGlobalEffect(rT, level, k, kB));
+
+		return color.reduce(size);
 	}
 
 	/**

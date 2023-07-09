@@ -16,7 +16,6 @@ import primitives.Vector;
 
 public class Prism extends Geometry {
 	public List<Polygon> sides = new LinkedList<>();
-	private final double EPS = 0.01;
 	private final Point center;
 
 	/**

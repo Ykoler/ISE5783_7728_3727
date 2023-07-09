@@ -10,7 +10,7 @@ import primitives.*;
 import static primitives.Util.*;
 
 /**
- * a class that represents a grid of voxels(greatly improves performance)
+ * a class that represents a grid of voxels (greatly improves performance)
  * 
  * @autor Yahel and Ashi
  */
@@ -21,7 +21,6 @@ public class Grid {
 	private Geometries outerGeometries;
 	private HashMap<Double3, Geometries> grid;
 	private final double EPS = 0.0000001;
-	private Geometries geometries;
 
 	/**
 	 * constructor for the grid, mapping the each geometry to the voxels it is in
@@ -32,9 +31,7 @@ public class Grid {
 	 */
 	public Grid(Geometries geometries, int density) {
 
-		this.geometries = geometries;
-
-		// initiallizing map
+		// initializing map
 		grid = new HashMap<Double3, Geometries>();
 		List<Double> edges = geometries.getEdges();
 		minX = edges.get(0);
@@ -59,16 +56,10 @@ public class Grid {
 			}
 			double yS = edges.get(1);
 			double zS = edges.get(2);
-			int x = (int) Math.ceil(((edges.get(3) - xS) / xSize));
-			int y = (int) Math.ceil(((edges.get(4) - yS) / ySize));
-			int z = (int) Math.ceil(((edges.get(5) - zS) / zSize));
 			Double3 target = coordinateToIndex(new Point(edges.get(3), edges.get(4), edges.get(5)));
 			int xT = (int) target.getD1(), yT = (int) target.getD2(), zT = (int) target.getD3();
 			Double3 index = coordinateToIndex(new Point(xS, yS, zS));
 			int xV = (int) index.getD1(), yV = (int) index.getD2(), zV = (int) index.getD3();
-			xT = xV + x;
-			yT = yV + y;
-			zT = zV + z;
 			for (int i = xV - 1; i <= xT; i++) {
 				for (int j = yV - 1; j <= yT; j++) {
 					for (int k = zV - 1; k <= zT; k++) {

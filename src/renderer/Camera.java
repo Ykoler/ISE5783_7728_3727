@@ -2,13 +2,10 @@ package renderer;
 
 import primitives.*;
 import static primitives.Util.isZero;
-import renderer.*;
-import renderer.PixelManager.*;
+import static renderer.PixelManager.*;
 
 import java.util.LinkedList;
 import java.util.MissingResourceException;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.*;
 
 /**
  * @author Yahel and Ashi
@@ -147,7 +144,6 @@ public class Camera {
 	 * @return the Camera itself
 	 */
 	public Camera renderImage() {
-		var startTime = System.currentTimeMillis();
 		if (imageWriter == null)
 			throw new MissingResourceException("Image writer was null", getClass().getName(), "");
 		if (rayTracer == null)
@@ -181,16 +177,6 @@ public class Camera {
 			}
 		}
 
-		/*
-		 * for (int i = 0; i < nY; ++i) { for (int j = 0; j < nX; j++) {
-		 * imageWriter.writePixel(j, i, castRay(nX, nY, i, j)); } if (i % 1 == 0) {
-		 * System.out.println("Reached " + (double) i / (double) nY * 100.0d +
-		 * "% of tracing."); System.out.println( "Time elapsed: " + (double)
-		 * (System.currentTimeMillis() - startTime) / 1000.0d + " seconds.");
-		 * System.out.println("Estimated time remaining: " + (double)
-		 * (System.currentTimeMillis() - startTime) / (double) i * (double) (nY - i) /
-		 * 1000.0d + " seconds.\n"); } }
-		 */
 		return this;
 	}
 
