@@ -120,6 +120,12 @@ public class Camera {
 	 */
 	private void castRay(int nX, int nY, int col, int row) {
 		imageWriter.writePixel(col, row, rayTracer.traceRay(constructRay(nX, nY, col, row)));
+		if(col==0 && row%10==0)
+		{
+			System.out.print("Traced: ");
+			System.out.print((float)row/(float)nY*100);
+			System.out.println("%");
+		}
 		pixelManager.pixelDone();
 	}
 
